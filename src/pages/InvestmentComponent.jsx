@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChakraProvider, extendTheme, Box, Text, Button, HStack, Image } from '@chakra-ui/react';
 import Stepper from '../components/Stepper'; // Adjust the import path as necessary
+import SubStepCounter from '../components/SubStepCounter'; // Adjust the import path as necessary
 
 const theme = extendTheme({
   colors: {
@@ -18,11 +19,14 @@ const investmentOptions = [5000, 10000, 30000, 50000, 150000];
 
 const InvestmentComponent = () => {
   const [selectedAmount, setSelectedAmount] = useState(null);
+  const currentSubStep = 10;
+  const totalSubSteps = 24;
 
   return (
     <ChakraProvider theme={theme}>
       <Box padding="8" bg="gray.50" minH="100vh">
         <Stepper currentStep={1} />
+        <SubStepCounter currentSubStep={currentSubStep} totalSubSteps={totalSubSteps} />
         <Text fontSize="xl" fontWeight="bold" textAlign="center" mb="4">
           Quel montant souhaitez-vous placer chez Yomoni ?
         </Text>
