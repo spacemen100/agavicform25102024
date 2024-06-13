@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChakraProvider, extendTheme, Box, Text, Button, HStack, Image } from '@chakra-ui/react';
+import Stepper from '../components/Stepper'; // Adjust the import path as necessary
 
 const theme = extendTheme({
   colors: {
@@ -21,6 +22,7 @@ const InvestmentComponent = () => {
   return (
     <ChakraProvider theme={theme}>
       <Box padding="8" bg="gray.50" minH="100vh">
+        <Stepper currentStep={1} />
         <Text fontSize="xl" fontWeight="bold" textAlign="center" mb="4">
           Quel montant souhaitez-vous placer chez Yomoni ?
         </Text>
