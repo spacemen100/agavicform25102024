@@ -1,7 +1,6 @@
 import React from 'react';
 import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react';
 import Stepper from './components/Stepper';
-import SubStepCounter from './components/SubStepCounter';
 import Header from './components/Header';
 import Banner from './components/Banner';
 import InvestmentComponent from './pages/InvestmentComponent';
@@ -20,8 +19,6 @@ const theme = extendTheme({
 
 const App: React.FC = () => {
   const currentStep = 1; // Example: the current step is "Projet"
-  const currentSubStep = 1; // Example: current sub-step
-  const totalSubSteps = 24; // Example: total number of sub-steps
 
   return (
     <ChakraProvider theme={theme}>
@@ -29,7 +26,6 @@ const App: React.FC = () => {
       <Banner />
       <Box padding="8" bg="gray.50" minH="100vh">
         <Stepper currentStep={currentStep} />
-        <SubStepCounter currentSubStep={currentSubStep} totalSubSteps={totalSubSteps} />
       </Box>
       <InvestmentComponent/>
     </ChakraProvider>
