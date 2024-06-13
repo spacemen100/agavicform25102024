@@ -1,14 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes as Switch } from 'react-router-dom';
 import Home from '../pages/Home';
-import Project from '../pages/Project';
+
+const routes = [
+  { path: '/', name: 'Home', component: <Home />, hidden: true },
+];
 
 const Routes: React.FC = () => {
   return (
     <Router>
       <Switch>
-        <Route path="/" element={<Home />} />
-        <Route path="/project" element={<Project />} />
+        {routes.map((route, index) => (
+          <Route key={index} path={route.path} element={route.component} />
+        ))}
       </Switch>
     </Router>
   );
