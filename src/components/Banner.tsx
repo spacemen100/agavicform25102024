@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, AlertIcon, AlertTitle, AlertDescription, CloseButton, Box, Link } from '@chakra-ui/react';
+import { Alert, AlertTitle, AlertDescription, CloseButton, Box, Link } from '@chakra-ui/react';
 
 const Banner: React.FC = () => {
   return (
