@@ -1,19 +1,43 @@
 import React from 'react';
-import { Box, Flex, Text, Button, Image } from '@chakra-ui/react';
+import { Box, Text, Button, Flex, Image, Spacer, extendTheme, ChakraProvider } from '@chakra-ui/react';
+
+const theme = extendTheme({
+  colors: {
+    navy: '#0A1128',
+    white: '#FFFFFF',
+  },
+});
 
 const Header: React.FC = () => {
   return (
-    <Box bg="#0a0c2a" color="white" px={4} py={2}>
-      <Flex justify="space-between" align="center" maxW="1200px" mx="auto">
+    <ChakraProvider theme={theme}>
+      <Box bg="navy" paddingY="2" paddingX="4">
         <Flex align="center">
-          <Image src="/path/to/logo.png" alt="Yomoni Logo" height="40px" mr={3} />
-          <Text fontSize="xl" fontWeight="bold">Yomoni</Text>
+          {/* Logo Section */}
+          <Image src="/agaviclogo.png" alt="Logo" height="30px" />
+          
+          {/* Text Section */}
+          <Text color="white" fontSize="lg" ml="4">
+            AGAVIC
+          </Text>
+
+          <Spacer />
+
+          {/* Button Section */}
+          <Button
+            variant="outline"
+            color="white"
+            borderColor="white"
+            _hover={{ bg: 'white', color: 'navy' }}
+            borderRadius="8px"
+            paddingX="6"
+            paddingY="4"
+          >
+            Une question ?
+          </Button>
         </Flex>
-        <Button variant="outline" borderColor="white" color="white" _hover={{ bg: '#1a1c4a' }}>
-          Une question ?
-        </Button>
-      </Flex>
-    </Box>
+      </Box>
+    </ChakraProvider>
   );
 };
 
