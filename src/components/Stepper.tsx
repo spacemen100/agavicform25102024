@@ -8,10 +8,17 @@ interface Step {
 
 interface StepperProps {
   currentStep: number;
-  steps: Step[];
 }
 
-const Stepper: React.FC<StepperProps> = ({ currentStep, steps }) => {
+const steps: Step[] = [
+  { number: 1, label: 'Projet' },
+  { number: 2, label: 'Recommandation' },
+  { number: 3, label: 'Souscription' },
+  { number: 4, label: 'Justificatifs' },
+  { number: 5, label: 'Signature' },
+];
+
+const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
   return (
     <Box bg="white" borderRadius="md" boxShadow="md" padding="4" width="100%">
       <HStack spacing="4" justify="center">

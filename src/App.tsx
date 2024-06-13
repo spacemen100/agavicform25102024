@@ -4,6 +4,7 @@ import Stepper from './components/Stepper';
 import SubStepCounter from './components/SubStepCounter';
 import Header from './components/Header';
 import Banner from './components/Banner';
+import InvestmentComponent from './pages/InvestmentComponent';
 
 const theme = extendTheme({
   colors: {
@@ -17,14 +18,6 @@ const theme = extendTheme({
   },
 });
 
-const steps = [
-  { number: 1, label: 'Projet' },
-  { number: 2, label: 'Recommandation' },
-  { number: 3, label: 'Souscription' },
-  { number: 4, label: 'Justificatifs' },
-  { number: 5, label: 'Signature' },
-];
-
 const App: React.FC = () => {
   const currentStep = 1; // Example: the current step is "Projet"
   const currentSubStep = 1; // Example: current sub-step
@@ -35,9 +28,10 @@ const App: React.FC = () => {
       <Header />
       <Banner />
       <Box padding="8" bg="gray.50" minH="100vh">
-        <Stepper currentStep={currentStep} steps={steps} />
+        <Stepper currentStep={currentStep} />
         <SubStepCounter currentSubStep={currentSubStep} totalSubSteps={totalSubSteps} />
       </Box>
+      <InvestmentComponent/>
     </ChakraProvider>
   );
 };
