@@ -48,7 +48,6 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
                             onClick={() => handleSelect(amount)}
                             px={6}
                             py={6}
-                            size="xxl"
                             textAlign="left"
                             justifyContent="flex-start"
                             _hover={{ bg: 'gray.200' }}
