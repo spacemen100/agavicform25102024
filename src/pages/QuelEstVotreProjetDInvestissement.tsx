@@ -23,7 +23,7 @@ const QuelEstVotreProjetDInvestissement: React.FC = () => {
 
   return (
     <Box p={5} maxW="600px" mx="auto">
-      <Text fontSize="xl" fontWeight="bold" mb={5}>Quel est votre projet d’investissement ?</Text>
+      <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">Quel est votre projet d’investissement ?</Text>
       <SimpleGrid columns={[1, 2]} spacing={5}>
         {buttons.map(button => (
           <Button
@@ -40,7 +40,7 @@ const QuelEstVotreProjetDInvestissement: React.FC = () => {
           </Button>
         ))}
       </SimpleGrid>
-      <Button colorScheme="orange" mt={5}>Suivant</Button>
+      <Button colorScheme="orange" mt={5} width="100%">Suivant</Button>
     </Box>
   );
 };
