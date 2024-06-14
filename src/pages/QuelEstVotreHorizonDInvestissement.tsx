@@ -16,22 +16,23 @@ const theme = extendTheme({
     },
 });
 
-const monthlyInvestmentOptions = [50, 100, 200, 500, 1000];
+const investmentHorizonOptions = [1, 3, 5, 10, 15, 20];
 
-const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
-    const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+const QuelEstVotreHorizonDInvestissement: React.FC = () => {
+    const [selectedHorizon, setSelectedHorizon] = useState<number | null>(null);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
 
-    const handleSelect = (amount: number) => {
-        setSelectedAmount(amount);
+    const handleSelect = (horizon: number) => {
+        setSelectedHorizon(horizon);
     };
 
     const handleNext = () => {
-        if (selectedAmount !== null) {
+        if (selectedHorizon !== null) {
             // Ajouter ici la logique pour naviguer vers la prochaine étape si nécessaire
+            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
@@ -39,42 +40,38 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={3} totalSubSteps={24} title="Parlons de votre projet" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={4} totalSubSteps={24} title="Parlons de votre projet" />
             <Box p={5} maxW="1000px" mx="auto">
-                <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">Quel montant régulier souhaitez-vous placer chaque mois ?</Text>
+                <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">Dans combien de temps souhaitez-vous profiter de cet investissement ?</Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
-                    Placer de l'argent tous les mois pourrait faire une grande différence dans quelques années. 55 % de nos clients ont fait ce choix et placent en moyenne 200 € par mois.
+                    Cette information nous permet de vous proposer une simulation en accord avec votre horizon d'investissement. Votre argent pourra être débloqué avant sans difficulté et sans frais.
                 </Text>
-                <Text fontSize="md" textAlign="center" mb={6}>Sélectionnez parmi les choix suivants :</Text>
                 <HStack justifyContent="center" spacing="4" flexWrap="wrap">
-                    {monthlyInvestmentOptions.map((amount) => (
+                    {investmentHorizonOptions.map((horizon) => (
                         <Button
-                            key={amount}
+                            key={horizon}
                             variant="outline"
                             size="lg"
-                            colorScheme={selectedAmount === amount ? 'green' : 'blue'}
-                            onClick={() => handleSelect(amount)}
+                            colorScheme={selectedHorizon === horizon ? 'green' : 'blue'}
+                            onClick={() => handleSelect(horizon)}
                             px={6}
                             py={6}
                             textAlign="left"
                             justifyContent="flex-start"
                             _hover={{ bg: 'gray.200' }}
-                            borderColor={selectedAmount === amount ? 'green.400' : 'gray.200'}
+                            borderColor={selectedHorizon === horizon ? 'green.400' : 'gray.200'}
                         >
-                            {amount.toLocaleString('fr-FR')} € / mois
+                            {horizon} ans
                         </Button>
                     ))}
                 </HStack>
-                {selectedAmount !== null && (
+                {selectedHorizon !== null && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
                         <Text fontSize="2xl" color="green.500">
-                            {selectedAmount.toLocaleString('fr-FR')} € / mois
+                            {selectedHorizon} ans
                         </Text>
                     </Box>
                 )}
-                <Text textAlign="center" mt="8">
-                    Les versements sont modulables : placez le montant que vous souhaitez, à la fréquence que vous souhaitez. Ils sont modifiables à tout moment, et toujours sans frais !
-                </Text>
                 <HStack justifyContent="flex-end" mt="8" spacing="4">
                     <Button
                         colorScheme="gray"
@@ -108,7 +105,7 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
                             Sélection requise
                         </AlertDialogHeader>
                         <AlertDialogBody>
-                            Veuillez sélectionner un montant avant de continuer. 😊
+                            Veuillez sélectionner un horizon d'investissement avant de continuer. 😊
                         </AlertDialogBody>
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={onClose}>
@@ -122,4 +119,4 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
     );
 };
 
-export default QuelMontantRegulierSouhaitezVousPlacer;
+export default QuelEstVotreHorizonDInvestissement;
