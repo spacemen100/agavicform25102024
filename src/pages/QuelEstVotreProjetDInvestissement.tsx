@@ -30,7 +30,7 @@ const QuelEstVotreProjetDInvestissement: React.FC = () => {
 
     return (
         <ChakraProvider> {/* Enveloppez votre composant principal avec ChakraProvider */}
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={10} totalSubSteps={24} title="Parlons de votre projet" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={1} totalSubSteps={24} title="Parlons de votre projet" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">Quel est votre projet d’investissement ?</Text>
                 <SimpleGrid columns={[1, 2]} spacing={5}>
@@ -54,7 +54,7 @@ const QuelEstVotreProjetDInvestissement: React.FC = () => {
                     ))}
                 </SimpleGrid>
                 <Box textAlign="right">
-                    <Button colorScheme="orange" size="xxl" mt={5} px={6} py={6}>Suivant</Button> {/* Ajouter du padding au bouton Suivant */}
+                    <Button colorScheme="green" size="xxl" mt={5} px={6} py={6}>Suivant</Button> {/* Ajouter du padding au bouton Suivant */}
                 </Box>
             </Box>
         </ChakraProvider>
