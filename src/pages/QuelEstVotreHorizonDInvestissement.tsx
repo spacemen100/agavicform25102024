@@ -15,6 +15,10 @@ import {
     Input,
     InputGroup,
     InputRightAddon,
+    Alert,
+    AlertIcon,
+    AlertTitle,
+    CloseButton,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
@@ -35,7 +39,11 @@ const theme = extendTheme({
 const QuelEstVotreHorizonDInvestissement: React.FC = () => {
     const [selectedHorizon, setSelectedHorizon] = useState<number | null>(null);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
-    const onClose = () => setIsAlertOpen(false);
+    const [isInvalidInput, setIsInvalidInput] = useState(false);
+    const onClose = () => {
+        setIsAlertOpen(false);
+        setIsInvalidInput(false);
+    };
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
 
@@ -43,8 +51,10 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
         const value = parseInt(event.target.value, 10);
         if (value >= 2 && value <= 30) {
             setSelectedHorizon(value);
+            setIsInvalidInput(false);
         } else {
             setSelectedHorizon(null);
+            setIsInvalidInput(true);
         }
     };
 
@@ -76,10 +86,20 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
                             placeholder="Entrez un nombre entre 2 et 30 ans"
                             size="lg"
                             textAlign="center"
+                            isInvalid={isInvalidInput}
                         />
                         <InputRightAddon children="ans" />
                     </InputGroup>
                 </Box>
+
+                {isInvalidInput && (
+                    <Alert status="error" mb={4} borderRadius="md">
+                        <AlertIcon />
+                        <AlertTitle mr={2}></AlertTitle>
+                        Votre horizon d’investissement doit être compris entre 2 et 30 ans.
+                        <CloseButton position="absolute" right="8px" top="8px" onClick={() => setIsInvalidInput(false)} />
+                    </Alert>
+                )}
 
                 {selectedHorizon !== null && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
