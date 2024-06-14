@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { ChakraProvider, extendTheme, Box, Text, Button, HStack, Image } from '@chakra-ui/react';
+import React, { useState, useRef } from 'react';
+import { ChakraProvider, extendTheme, Box, Text, Button, HStack, Image, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
 
 const theme = extendTheme({
@@ -19,6 +20,9 @@ const investmentOptions = [5000, 10000, 30000, 50000, 150000];
 
 const QuelMontantSouhaitezVousPlacer: React.FC = () => {
     const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
+    const onClose = () => setIsAlertOpen(false);
+    const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
 
     const handleSelect = (amount: number) => {
@@ -29,7 +33,7 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
         if (selectedAmount !== null) {
             navigate('/quel-montant-regulier-souhaitez-vous-placer');
         } else {
-            alert('Veuillez sélectionner un montant avant de continuer.');
+            setIsAlertOpen(true);
         }
     };
 
@@ -98,6 +102,29 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
                     </Button>
                 </HStack>
             </Box>
+
+            <AlertDialog
+                isOpen={isAlertOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            <WarningIcon color="orange" mr={2} />
+                            Sélection requise
+                        </AlertDialogHeader>
+                        <AlertDialogBody>
+                            Veuillez sélectionner un montant avant de continuer. 😊
+                        </AlertDialogBody>
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onClose}>
+                                OK
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
         </ChakraProvider>
     );
 };
