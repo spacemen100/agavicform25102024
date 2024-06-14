@@ -31,7 +31,7 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
 
     const handleNext = () => {
         if (selectedAmount !== null) {
-            // Ajouter ici la logique pour naviguer vers la prochaine étape si nécessaire
+            navigate('/quel-est-votre-horizon-d-investissement');
         } else {
             setIsAlertOpen(true);
         }
