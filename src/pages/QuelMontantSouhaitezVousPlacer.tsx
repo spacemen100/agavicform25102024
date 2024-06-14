@@ -3,7 +3,6 @@ import { ChakraProvider, extendTheme, Box, Text, Button, HStack, Image } from '@
 import { useNavigate } from 'react-router-dom';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
 
-
 const theme = extendTheme({
     colors: {
         navy: '#0A1128',
@@ -24,6 +23,7 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
 
     const handleSelect = (amount: number) => {
         setSelectedAmount(amount);
+        navigate('/quel-montant-regulier-souhaitez-vous-placer');
     };
 
     const handleNext = () => {
@@ -32,8 +32,8 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-                <StepperWithSubStepCounter currentStep={1} currentSubStep={2} totalSubSteps={24} title="Parlons de votre projet" />
-                <Box p={5} maxW="1000px" mx="auto">
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={2} totalSubSteps={24} title="Parlons de votre projet" />
+            <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">Quel montant souhaitez-vous placer chez AGAVIC ?</Text>
                 <Text fontSize="md" textAlign="center" mb={6}>Sélectionnez parmi les choix suivants :</Text>
                 <HStack justifyContent="center" spacing="4" flexWrap="wrap">
@@ -49,7 +49,7 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
                             textAlign="left"
                             justifyContent="flex-start"
                             _hover={{ bg: 'gray.200' }}
-                            borderColor={selectedAmount === amount ? 'green.400' : 'gray.200'} // Modifier la couleur de la bordure ici
+                            borderColor={selectedAmount === amount ? 'green.400' : 'gray.200'}
                         >
                             {amount.toLocaleString('fr-FR')} €
                         </Button>
