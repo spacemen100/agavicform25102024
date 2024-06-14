@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 const Home: React.FC = () => {
   return (
     <Flex align="center" justify="center" height="100vh" direction="column">
-      <Heading mb={6}>Welcome to Yomoni</Heading>
-      <Link to="/project">
-        <Button colorScheme="teal" size="lg">Start Project</Button>
+      <Heading mb={6}>Bienvenue chez AGAVIC</Heading>
+      <Link to="/quel-est-votre-projet-d-investissement">
+        <Button colorScheme="teal" size="lg">Commence ton projet</Button>
       </Link>
     </Flex>
   );
