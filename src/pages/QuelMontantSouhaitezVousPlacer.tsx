@@ -23,11 +23,14 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
 
     const handleSelect = (amount: number) => {
         setSelectedAmount(amount);
-        navigate('/quel-montant-regulier-souhaitez-vous-placer');
     };
 
     const handleNext = () => {
-        // Ajouter ici la logique pour naviguer vers la prochaine étape si nécessaire
+        if (selectedAmount !== null) {
+            navigate('/quel-montant-regulier-souhaitez-vous-placer');
+        } else {
+            alert('Veuillez sélectionner un montant avant de continuer.');
+        }
     };
 
     return (
