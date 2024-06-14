@@ -1,5 +1,21 @@
 import React, { useState, useRef } from 'react';
-import { ChakraProvider, extendTheme, Box, Text, Button, HStack, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Input, InputGroup, InputRightAddon } from '@chakra-ui/react';
+import {
+    ChakraProvider,
+    extendTheme,
+    Box,
+    Text,
+    Button,
+    HStack,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
+    Input,
+    InputGroup,
+    InputRightAddon,
+} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
@@ -44,24 +60,27 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
         <ChakraProvider theme={theme}>
             <StepperWithSubStepCounter currentStep={1} currentSubStep={4} totalSubSteps={24} title="Parlons de votre projet" />
             <Box p={5} maxW="1000px" mx="auto">
-                <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">Dans combien de temps souhaitez-vous profiter de cet investissement ?</Text>
+                <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
+                    Dans combien de temps souhaitez-vous profiter de cet investissement ?
+                </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
                     Cette information nous permet de vous proposer une simulation en accord avec votre horizon d'investissement. Votre argent pourra être débloqué avant sans difficulté et sans frais.
                 </Text>
-                <Box textAlign="center" mb={6}>
-                    <InputGroup size="lg">
+                <Box justifyContent="center" mb={6} maxWidth={400} mx="auto">
+                    <InputGroup size="lg" width="auto">
                         <Input
                             type="number"
                             min={2}
                             max={30}
                             onChange={handleInputChange}
-                        placeholder="Entrez un nombre entre 2 et 30 ans"
-                                                    size="lg"
-                        width="auto"
+                            placeholder="Entrez un nombre entre 2 et 30 ans"
+                            size="lg"
+                            textAlign="center"
                         />
                         <InputRightAddon children="ans" />
                     </InputGroup>
                 </Box>
+
                 {selectedHorizon !== null && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
                         <Text fontSize="2xl" color="green.500">
@@ -70,31 +89,16 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
                     </Box>
                 )}
                 <HStack justifyContent="flex-end" mt="8" spacing="4">
-                    <Button
-                        colorScheme="gray"
-                        variant="outline"
-                        onClick={() => navigate(-1)}
-                        px={6}
-                        py={6}
-                        size="lg">
+                    <Button colorScheme="gray" variant="outline" onClick={() => navigate(-1)} px={6} py={6} size="lg">
                         Retour
                     </Button>
-                    <Button
-                        colorScheme="green"
-                        onClick={handleNext}
-                        px={6}
-                        py={6}
-                        size="lg">
+                    <Button colorScheme="green" onClick={handleNext} px={6} py={6} size="lg">
                         Suivant
                     </Button>
                 </HStack>
             </Box>
 
-            <AlertDialog
-                isOpen={isAlertOpen}
-                leastDestructiveRef={cancelRef}
-                onClose={onClose}
-            >
+            <AlertDialog isOpen={isAlertOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
                 <AlertDialogOverlay>
                     <AlertDialogContent>
                         <AlertDialogHeader fontSize="lg" fontWeight="bold">
