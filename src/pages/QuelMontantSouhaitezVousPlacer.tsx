@@ -36,7 +36,7 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
         <ChakraProvider theme={theme}>
             <Box bg="gray.50" minH="100vh" p={5} maxWidth="1000px" mx="auto">
                 <StepperWithSubStepCounter currentStep={1} currentSubStep={10} totalSubSteps={24} title="Parlons de votre projet" />
-                <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">Quel montant souhaitez-vous placer chez Yomoni ?</Text>
+                <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">Quel montant souhaitez-vous placer chez AGAVIC ?</Text>
                 <Text fontSize="md" textAlign="center" mb={6}>Sélectionnez parmi les choix suivants :</Text>
                 <HStack justifyContent="center" spacing="4" flexWrap="wrap">
                     {investmentOptions.map((amount) => (
@@ -51,8 +51,7 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
                             size="xxl"
                             textAlign="left"
                             justifyContent="flex-start"
-                            leftIcon={null} 
-                            _hover={{ bg: 'gray.200' }} 
+                            _hover={{ bg: 'gray.200' }}
                         >
                             {amount.toLocaleString('fr-FR')} €
                         </Button>
