@@ -1,9 +1,9 @@
 import React from 'react';
-import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react';
-import Stepper from './components/Stepper';
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Header from './components/Header';
 import Banner from './components/Banner';
-import InvestmentComponent from './pages/InvestmentComponent';
+import Routes from './routes/Routes';
 
 const theme = extendTheme({
   colors: {
@@ -18,13 +18,13 @@ const theme = extendTheme({
 });
 
 const App: React.FC = () => {
-  const currentStep = 1; // Example: the current step is "Projet"
-
   return (
     <ChakraProvider theme={theme}>
-      <Header />
-      <Banner />
-      <InvestmentComponent/>
+      <Router>
+        <Header />
+        <Banner />
+        <Routes />
+      </Router>
     </ChakraProvider>
   );
 };
