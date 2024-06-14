@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, SimpleGrid, Icon, Text, ChakraProvider } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom'; // Importer useNavigate depuis react-router-dom
 import {
     FcApproval, FcDisapprove, FcProcess, FcBusinessContact, FcReadingEbook, FcManager, FcParallelTasks
 } from 'react-icons/fc';
@@ -7,9 +8,14 @@ import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
 
 const QuelEstVotreProjetDInvestissement: React.FC = () => {
     const [selected, setSelected] = useState<string | null>(null);
+    const navigate = useNavigate(); // Initialiser useNavigate
 
     const handleSelect = (option: string) => {
         setSelected(option);
+        // Rediriger vers la nouvelle route si l'option sélectionnée n'est pas "Organiser ma trésorerie pro"
+        if (option !== 'tresorerie') {
+            navigate('/quel-montant-souhaitez-vous-placer');
+        }
     };
 
     const buttons = [
