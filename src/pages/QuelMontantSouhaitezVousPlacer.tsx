@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { ChakraProvider, extendTheme, Box, Text, Button, HStack, Image } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
-import {
-    FcApproval, FcDisapprove, FcProcess, FcBusinessContact, FcReadingEbook, FcManager, FcParallelTasks
-} from 'react-icons/fc';
+
 
 const theme = extendTheme({
     colors: {
@@ -35,7 +33,7 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
     return (
         <ChakraProvider theme={theme}>
             <Box bg="gray.50" minH="100vh" p={5} maxWidth="1000px" mx="auto">
-                <StepperWithSubStepCounter currentStep={1} currentSubStep={10} totalSubSteps={24} title="Parlons de votre projet" />
+                <StepperWithSubStepCounter currentStep={1} currentSubStep={2} totalSubSteps={24} title="Parlons de votre projet" />
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">Quel montant souhaitez-vous placer chez AGAVIC ?</Text>
                 <Text fontSize="md" textAlign="center" mb={6}>Sélectionnez parmi les choix suivants :</Text>
                 <HStack justifyContent="center" spacing="4" flexWrap="wrap">
@@ -51,13 +49,14 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
                             textAlign="left"
                             justifyContent="flex-start"
                             _hover={{ bg: 'gray.200' }}
+                            borderColor={selectedAmount === amount ? 'green.400' : 'gray.200'} // Modifier la couleur de la bordure ici
                         >
                             {amount.toLocaleString('fr-FR')} €
                         </Button>
                     ))}
                 </HStack>
                 {selectedAmount !== null && (
-                    <Box textAlign="center" mt="4">
+                    <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
                         <Text fontSize="2xl" color="green.500">
                             {selectedAmount.toLocaleString('fr-FR')} €
                         </Text>
