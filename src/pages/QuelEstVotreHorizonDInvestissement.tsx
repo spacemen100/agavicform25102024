@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ChakraProvider, extendTheme, Box, Text, Button, HStack, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Input } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, Box, Text, Button, HStack, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Input, InputGroup, InputRightAddon } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
@@ -49,15 +49,18 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
                     Cette information nous permet de vous proposer une simulation en accord avec votre horizon d'investissement. Votre argent pourra être débloqué avant sans difficulté et sans frais.
                 </Text>
                 <Box textAlign="center" mb={6}>
-                    <Input
-                        type="number"
-                        min={2}
-                        max={30}
-                        onChange={handleInputChange}
+                    <InputGroup size="lg">
+                        <Input
+                            type="number"
+                            min={2}
+                            max={30}
+                            onChange={handleInputChange}
                         placeholder="Entrez un nombre entre 2 et 30 ans"
-                        size="lg"
+                                                    size="lg"
                         width="auto"
-                    />
+                        />
+                        <InputRightAddon children="ans" />
+                    </InputGroup>
                 </Box>
                 {selectedHorizon !== null && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
