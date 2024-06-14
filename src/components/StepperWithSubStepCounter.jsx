@@ -26,7 +26,7 @@ const StepperWithSubStepCounter: React.FC<StepperProps> = ({ currentStep, curren
 
   return (
     <Box bg="white" borderRadius="md" boxShadow="md" padding="4" width="100%">
-      <HStack spacing="4" justify="center" mb="4">
+      <HStack spacing="4" justify="center" mb="4" wrap="wrap">
         {steps.map((step) => (
           <Flex key={step.number} align="center">
             <Circle
@@ -56,11 +56,17 @@ const StepperWithSubStepCounter: React.FC<StepperProps> = ({ currentStep, curren
           </Flex>
         ))}
       </HStack>
-      <Flex spacing={400} justify="center" >
-        <Text fontWeight="bold" color="gray.500" pr="250">
+      <Flex 
+        spacing={400} justify="center"
+        align="center" 
+        mx={{ base: "2", md: "4" }} 
+        direction={{ base: "column", md: "row" }} 
+        textAlign={{ base: "center", md: "left" }}
+      >
+        <Text fontWeight="bold" color="gray.500" mb={{ base: "2", md: "0" }} pr={{ base: "0", md: "250" }}>
           {title}
         </Text>
-        <Flex align="center" pl="250">
+        <Flex align="center" pl={{ base: "0", md: "250" }}>
           <Text fontWeight="bold" color="gray.500" mr="2">
             Question {currentSubStep}/{totalSubSteps}
           </Text>
