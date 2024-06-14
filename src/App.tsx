@@ -24,9 +24,6 @@ const App: React.FC = () => {
     <ChakraProvider theme={theme}>
       <Header />
       <Banner />
-      <Box padding="8" bg="gray.50" minH="100vh">
-        <Stepper currentStep={currentStep} />
-      </Box>
       <InvestmentComponent/>
     </ChakraProvider>
   );

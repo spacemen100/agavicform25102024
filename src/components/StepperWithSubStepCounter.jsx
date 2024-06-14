@@ -25,7 +25,7 @@ const StepperWithSubStepCounter: React.FC<StepperProps> = ({ currentStep, curren
   const progressPercentage = (currentSubStep / totalSubSteps) * 100;
 
   return (
-    <Box bg="white" borderRadius="md" boxShadow="md" padding="4" width="100%">
+    <Box bg="white" borderRadius="md" boxShadow="md" padding="4" width="100%" mb={50}>
       <HStack spacing="4" justify="center" mb="4" wrap="wrap">
         {steps.map((step) => (
           <Flex key={step.number} align="center">
