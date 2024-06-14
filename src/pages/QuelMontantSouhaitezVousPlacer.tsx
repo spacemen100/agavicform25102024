@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChakraProvider, extendTheme, Box, Text, Button, HStack, Image } from '@chakra-ui/react';
-import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter'; // Adjust the import path as necessary
+import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter'; // Vérifiez le chemin d'importation
 
 const theme = extendTheme({
   colors: {
@@ -16,8 +16,8 @@ const theme = extendTheme({
 
 const investmentOptions = [5000, 10000, 30000, 50000, 150000];
 
-const InvestmentComponent = () => {
-  const [selectedAmount, setSelectedAmount] = useState(null);
+const QuelMontantSouhaitezVousPlacer: React.FC = () => {
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const currentSubStep = 10;
   const totalSubSteps = 24;
   const title = "Parlons de votre projet";
@@ -71,7 +71,7 @@ const InvestmentComponent = () => {
             </Text>
           </HStack>
         </Box>
-        <HStack justifyContent="center" mt="8" spacing="4">
+        <HStack justifyContent="flex-end" mt="8" spacing="4"> {/* Aligner les boutons à droite */}
           <Button colorScheme="gray" variant="outline">
             Retour
           </Button>
@@ -84,4 +84,4 @@ const InvestmentComponent = () => {
   );
 };
 
-export default InvestmentComponent;
+export default QuelMontantSouhaitezVousPlacer;
