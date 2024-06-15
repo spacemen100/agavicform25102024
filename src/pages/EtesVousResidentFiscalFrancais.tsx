@@ -44,7 +44,7 @@ const EtesVousResidentFiscalFrancais: React.FC = () => {
 
     const handleNext = () => {
         if (residentFiscal !== undefined) {
-            navigate('/prochaine-etape'); // Remplacez par la route suivante
+            navigate('/esg-preference'); // Correction de la route suivante
         } else {
             setIsAlertOpen(true);
         }

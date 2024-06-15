@@ -44,7 +44,7 @@ const ESGPreference: React.FC = () => {
 
     const handleNext = () => {
         if (esgPreference !== undefined) {
-            navigate('/prochaine-etape'); // Remplacez par la route suivante
+            navigate('/nombre-enfants-a-charge'); 
         } else {
             setIsAlertOpen(true);
         }
