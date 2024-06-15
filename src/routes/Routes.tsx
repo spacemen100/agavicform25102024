@@ -1,21 +1,30 @@
+// Import des dépendances nécessaires
 import React from 'react';
 import { Route, Routes as Switch } from 'react-router-dom';
+
+// Import des composants de page
 import Home from '../pages/Home';
 import QuelEstVotreProjetDInvestissement from '../pages/QuelEstVotreProjetDInvestissement';
 import QuelMontantSouhaitezVousPlacer from '../pages/QuelMontantSouhaitezVousPlacer';
 import QuelMontantRegulierSouhaitezVousPlacer from '../pages/QuelMontantRegulierSouhaitezVousPlacer';
 import QuelEstVotreHorizonDInvestissement from '../pages/QuelEstVotreHorizonDInvestissement';
-import QuelEstVotreDateDeNaissance from '../pages/QuelEstVotreDateDeNaissance'; // Importez le nouveau composant
+import ESGPreference from '../pages/ESGPreference';
+import QuelEstVotreDateDeNaissance from '../pages/QuelEstVotreDateDeNaissance';
+import EtesVousResidentFiscalFrancais from '../pages/EtesVousResidentFiscalFrancais';
 
+// Définition des routes
 export const routes = [
   { path: '/', name: 'Home', component: <Home />, hidden: true },
   { path: '/quel-est-votre-projet-d-investissement', name: 'QuelEstVotreProjetDInvestissement', component: <QuelEstVotreProjetDInvestissement />, hidden: true },
   { path: '/quel-montant-souhaitez-vous-placer', name: 'QuelMontantSouhaitezVousPlacer', component: <QuelMontantSouhaitezVousPlacer />, hidden: true },
   { path: '/quel-montant-regulier-souhaitez-vous-placer', name: 'QuelMontantRegulierSouhaitezVousPlacer', component: <QuelMontantRegulierSouhaitezVousPlacer />, hidden: true },
   { path: '/quel-est-votre-horizon-d-investissement', name: 'QuelEstVotreHorizonDInvestissement', component: <QuelEstVotreHorizonDInvestissement />, hidden: true },
-  { path: '/quel-est-votre-date-de-naissance', name: 'QuelEstVotreDateDeNaissance', component: <QuelEstVotreDateDeNaissance />, hidden: true }, // Ajoutez la nouvelle route
+  { path: '/esg-preference', name: 'ESGPreference', component: <ESGPreference />, hidden: true },
+  { path: '/quel-est-votre-date-de-naissance', name: 'QuelEstVotreDateDeNaissance', component: <QuelEstVotreDateDeNaissance />, hidden: true },
+  { path: '/etes-vous-resident-fiscal-francais', name: 'EtesVousResidentFiscalFrancais', component: <EtesVousResidentFiscalFrancais />, hidden: true },
 ];
 
+// Composant des routes
 const Routes: React.FC = () => {
   return (
     <Switch>

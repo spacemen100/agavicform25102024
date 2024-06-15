@@ -71,11 +71,11 @@ const QuelEstVotreDateDeNaissance: React.FC = () => {
 
     const handleNext = () => {
         if (birthDate !== null) {
-            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/etes-vous-resident-fiscal-francais'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
-    };
+    };    
 
     return (
         <ChakraProvider theme={theme}>
