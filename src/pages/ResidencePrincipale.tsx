@@ -31,16 +31,7 @@ const theme = extendTheme({
     },
 });
 
-const incomeOptions = [
-    { value: 'lessThan30000', label: 'Moins de 30 000€' },
-    { value: '30000to45000', label: '30 000€ à 45 000€' },
-    { value: '45000to60000', label: '45 000€ à 60 000€' },
-    { value: '60000to100000', label: '60 000€ à 100 000€' },
-    { value: '100000to150000', label: '100 000€ à 150 000€' },
-    { value: 'moreThan150000', label: 'Plus de 150 000€' },
-];
-
-const RevenusAnnuels: React.FC = () => {
+const ResidencePrincipale: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
@@ -53,7 +44,7 @@ const RevenusAnnuels: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/next-step'); // Remplacez '/next-step' par la route suivante appropriée
+            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
@@ -61,30 +52,15 @@ const RevenusAnnuels: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={9} totalSubSteps={24} title="Quels sont les revenus annuels bruts de votre foyer ?" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={10} totalSubSteps={24} title="Êtes-vous propriétaire de votre résidence principale ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Quels sont les revenus annuels bruts de votre foyer ?
+                    Êtes-vous propriétaire de votre résidence principale ?
                 </Text>
                 <RadioGroup onChange={handleSelect} value={selectedOption}>
                     <HStack spacing={8} justify="center">
-                        {incomeOptions.map((option) => (
-                            <Button
-                                key={option.value}
-                                variant="outline"
-                                size="xxl"
-                                colorScheme={selectedOption === option.value ? 'green' : 'blue'}
-                                onClick={() => handleSelect(option.value)}
-                                px={6}
-                                py={6}
-                                textAlign="left"
-                                justifyContent="flex-start"
-                                _hover={{ bg: 'gray.200' }}
-                                borderColor={selectedOption === option.value ? 'green.400' : 'gray.200'}
-                            >
-                                {option.label}
-                            </Button>
-                        ))}
+                        <Radio value="oui">Oui</Radio>
+                        <Radio value="non">Non</Radio>
                     </HStack>
                 </RadioGroup>
                 <HStack justifyContent="flex-end" mt="8" spacing="4">
@@ -119,4 +95,4 @@ const RevenusAnnuels: React.FC = () => {
     );
 };
 
-export default RevenusAnnuels;
+export default ResidencePrincipale;
