@@ -75,8 +75,8 @@ const ESGPreference: React.FC = () => {
                     </Button>
                     <Button
                         variant="outline"
-                        colorScheme={esgPreference === 'Non-ESG' ? 'blue' : 'gray'}
-                        borderColor={esgPreference === 'Non-ESG' ? 'blue.400' : 'gray.200'}
+                        colorScheme={esgPreference === 'Non-ESG' ? 'green' : 'gray'}
+                        borderColor={esgPreference === 'Non-ESG' ? 'green.400' : 'gray.200'}
                         onClick={() => setEsgPreference('Non-ESG')}
                         px={10}
                         py={6}
