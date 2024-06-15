@@ -4,14 +4,16 @@ import Home from '../pages/Home';
 import QuelEstVotreProjetDInvestissement from '../pages/QuelEstVotreProjetDInvestissement';
 import QuelMontantSouhaitezVousPlacer from '../pages/QuelMontantSouhaitezVousPlacer';
 import QuelMontantRegulierSouhaitezVousPlacer from '../pages/QuelMontantRegulierSouhaitezVousPlacer';
-import QuelEstVotreHorizonDInvestissement from '../pages/QuelEstVotreHorizonDInvestissement'; // Importez le nouveau composant
+import QuelEstVotreHorizonDInvestissement from '../pages/QuelEstVotreHorizonDInvestissement';
+import QuelEstVotreDateDeNaissance from '../pages/QuelEstVotreDateDeNaissance'; // Importez le nouveau composant
 
 export const routes = [
   { path: '/', name: 'Home', component: <Home />, hidden: true },
   { path: '/quel-est-votre-projet-d-investissement', name: 'QuelEstVotreProjetDInvestissement', component: <QuelEstVotreProjetDInvestissement />, hidden: true },
   { path: '/quel-montant-souhaitez-vous-placer', name: 'QuelMontantSouhaitezVousPlacer', component: <QuelMontantSouhaitezVousPlacer />, hidden: true },
   { path: '/quel-montant-regulier-souhaitez-vous-placer', name: 'QuelMontantRegulierSouhaitezVousPlacer', component: <QuelMontantRegulierSouhaitezVousPlacer />, hidden: true },
-  { path: '/quel-est-votre-horizon-d-investissement', name: 'QuelEstVotreHorizonDInvestissement', component: <QuelEstVotreHorizonDInvestissement />, hidden: true }, // Ajoutez la nouvelle route
+  { path: '/quel-est-votre-horizon-d-investissement', name: 'QuelEstVotreHorizonDInvestissement', component: <QuelEstVotreHorizonDInvestissement />, hidden: true },
+  { path: '/quel-est-votre-date-de-naissance', name: 'QuelEstVotreDateDeNaissance', component: <QuelEstVotreDateDeNaissance />, hidden: true }, // Ajoutez la nouvelle route
 ];
 
 const Routes: React.FC = () => {

@@ -36,8 +36,8 @@ const theme = extendTheme({
     },
 });
 
-const QuelEstVotreHorizonDInvestissement: React.FC = () => {
-    const [selectedHorizon, setSelectedHorizon] = useState<number | null>(null);
+const QuelEstVotreDateDeNaissance: React.FC = () => {
+    const [birthDate, setBirthDate] = useState<string | null>(null);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [isInvalidInput, setIsInvalidInput] = useState(false);
     const onClose = () => {
@@ -48,19 +48,30 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
     const navigate = useNavigate();
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(event.target.value, 10);
-        if (value >= 2 && value <= 30) {
-            setSelectedHorizon(value);
-            setIsInvalidInput(false);
+        const value = event.target.value;
+        const datePattern = /^\d{4}-\d{2}-\d{2}$/; // Date format YYYY-MM-DD
+
+        if (datePattern.test(value)) {
+            const birthYear = parseInt(value.split('-')[0], 10);
+            const currentYear = new Date().getFullYear();
+            const age = currentYear - birthYear;
+
+            if (age >= 18 && age <= 100) {
+                setBirthDate(value);
+                setIsInvalidInput(false);
+            } else {
+                setBirthDate(null);
+                setIsInvalidInput(true);
+            }
         } else {
-            setSelectedHorizon(null);
+            setBirthDate(null);
             setIsInvalidInput(true);
         }
     };
 
     const handleNext = () => {
-        if (selectedHorizon !== null) {
-            navigate('/quel-est-votre-date-de-naissance'); // Remplacez '/quel-est-votre-date-de-naissance' par la route suivante appropriée
+        if (birthDate !== null) {
+            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
@@ -68,43 +79,40 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={4} totalSubSteps={24} title="Parlons de votre projet" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={5} totalSubSteps={24} title="Parlons de votre projet" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Dans combien de temps souhaitez-vous profiter de cet investissement ?
+                    Quelle est votre date de naissance ?
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
-                    Cette information nous permet de vous proposer une simulation en accord avec votre horizon d'investissement. Votre argent pourra être débloqué avant sans difficulté et sans frais.
+                    Nous vous posons cette question pour vous proposer un niveau de risque cohérent avec votre âge.
                 </Text>
                 <Box justifyContent="center" mb={6} maxWidth={400} mx="auto">
                     <InputGroup size="lg" width="auto">
                         <Input
-                            type="number"
-                            min={2}
-                            max={30}
+                            type="date"
                             onChange={handleInputChange}
-                            placeholder="Entrez un nombre entre 2 et 30 ans"
+                            placeholder="YYYY-MM-DD"
                             size="lg"
                             textAlign="center"
                             isInvalid={isInvalidInput}
                         />
-                        <InputRightAddon children="ans" />
                     </InputGroup>
                 </Box>
 
                 {isInvalidInput && (
                     <Alert status="error" mb={4} borderRadius="md">
                         <AlertIcon />
-                        <AlertTitle mr={2}></AlertTitle>
-                        Votre horizon d’investissement doit être compris entre 2 et 30 ans.
+                        <AlertTitle mr={2}>Erreur :</AlertTitle>
+                        Votre date de naissance doit être valide et vous devez avoir entre 18 et 100 ans.
                         <CloseButton position="absolute" right="8px" top="8px" onClick={() => setIsInvalidInput(false)} />
                     </Alert>
                 )}
 
-                {selectedHorizon !== null && (
+                {birthDate !== null && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
                         <Text fontSize="2xl" color="green.500">
-                            {selectedHorizon} ans
+                            {birthDate}
                         </Text>
                     </Box>
                 )}
@@ -126,7 +134,7 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
                             Sélection requise
                         </AlertDialogHeader>
                         <AlertDialogBody>
-                            Veuillez entrer un horizon d'investissement valide (entre 2 et 30 ans) avant de continuer. 😊
+                            Veuillez entrer une date de naissance valide avant de continuer. 😊
                         </AlertDialogBody>
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={onClose}>
@@ -140,4 +148,4 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
     );
 };
 
-export default QuelEstVotreHorizonDInvestissement;
+export default QuelEstVotreDateDeNaissance;
