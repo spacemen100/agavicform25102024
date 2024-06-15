@@ -14,7 +14,6 @@ import {
     AlertDialogOverlay,
     Input,
     InputGroup,
-    InputRightAddon,
     Alert,
     AlertIcon,
     AlertTitle,
