@@ -35,6 +35,18 @@ const theme = extendTheme({
     },
 });
 
+const formatDate = (isoDate: string | null): string => {
+    if (!isoDate) return '';
+
+    const dateObj = new Date(isoDate);
+    const day = dateObj.getDate().toString().padStart(2, '0');
+    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+    const year = dateObj.getFullYear();
+
+    return `${day}/${month}/${year}`;
+};
+
+
 const QuelEstVotreDateDeNaissance: React.FC = () => {
     const [birthDate, setBirthDate] = useState<string | null>(null);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -74,7 +86,7 @@ const QuelEstVotreDateDeNaissance: React.FC = () => {
         } else {
             setIsAlertOpen(true);
         }
-    };    
+    };
 
     return (
         <ChakraProvider theme={theme}>
@@ -111,7 +123,7 @@ const QuelEstVotreDateDeNaissance: React.FC = () => {
                 {birthDate !== null && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
                         <Text fontSize="2xl" color="green.500">
-                            {birthDate}
+                            {formatDate(birthDate)}
                         </Text>
                     </Box>
                 )}
