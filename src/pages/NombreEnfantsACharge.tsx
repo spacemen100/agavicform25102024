@@ -1,5 +1,20 @@
 import React, { useState, useRef } from 'react';
-import { ChakraProvider, extendTheme, Box, Text, Button, HStack, Radio, RadioGroup, Image, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from '@chakra-ui/react';
+import {
+    ChakraProvider,
+    extendTheme,
+    Box,
+    Text,
+    Button,
+    HStack,
+    Radio,
+    RadioGroup,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
+} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
@@ -24,7 +39,7 @@ const childrenOptions = [
 ];
 
 const NombreEnfantsACharge: React.FC = () => {
-    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined); // Change from string | null to string | undefined
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
@@ -35,8 +50,8 @@ const NombreEnfantsACharge: React.FC = () => {
     };
 
     const handleNext = () => {
-        if (selectedOption !== null) {
-            navigate('/revenus-annuels'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+        if (selectedOption !== undefined) {
+            navigate('/revenus-annuels'); // Replace '/revenus-annuels' with the appropriate next route
         } else {
             setIsAlertOpen(true);
         }
