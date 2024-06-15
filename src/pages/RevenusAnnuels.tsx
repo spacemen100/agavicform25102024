@@ -1,5 +1,20 @@
 import React, { useState, useRef } from 'react';
-import { ChakraProvider, extendTheme, Box, Text, Button, HStack, Radio, RadioGroup, Image, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from '@chakra-ui/react';
+import {
+    ChakraProvider,
+    extendTheme,
+    Box,
+    Text,
+    Button,
+    HStack,
+    Radio,
+    RadioGroup,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
+} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
@@ -16,15 +31,17 @@ const theme = extendTheme({
     },
 });
 
-const childrenOptions = [
-    { value: 'none', label: 'Aucun' },
-    { value: 'one', label: '1 enfant' },
-    { value: 'two', label: '2 enfants' },
-    { value: 'threeOrMore', label: '3 ou plus' },
+const incomeOptions = [
+    { value: 'lessThan30000', label: 'Moins de 30 000€' },
+    { value: '30000to45000', label: '30 000€ à 45 000€' },
+    { value: '45000to60000', label: '45 000€ à 60 000€' },
+    { value: '60000to100000', label: '60 000€ à 100 000€' },
+    { value: '100000to150000', label: '100 000€ à 150 000€' },
+    { value: 'moreThan150000', label: 'Plus de 150 000€' },
 ];
 
-const NombreEnfantsACharge: React.FC = () => {
-    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+const RevenusAnnuels: React.FC = () => {
+    const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
@@ -35,38 +52,26 @@ const NombreEnfantsACharge: React.FC = () => {
     };
 
     const handleNext = () => {
-        if (selectedOption !== null) {
-            navigate('/revenus-annuels'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+        if (selectedOption !== undefined) {
+            navigate('/next-step'); // Remplacez '/next-step' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
-    }; 
+    };
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={8} totalSubSteps={24} title="Parlons de votre situation familiale" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={9} totalSubSteps={24} title="Quels sont les revenus annuels bruts de votre foyer ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Combien d'enfants avez-vous à charge ?
+                    Quels sont les revenus annuels bruts de votre foyer ?
                 </Text>
                 <RadioGroup onChange={handleSelect} value={selectedOption}>
                     <HStack spacing={8} justify="center">
-                        {childrenOptions.map((option) => (
-                            <Button
-                                key={option.value}
-                                variant="outline"
-                                size="xxl"
-                                colorScheme={selectedOption === option.value ? 'green' : 'blue'}
-                                onClick={() => handleSelect(option.value)}
-                                px={6}
-                                py={6}
-                                textAlign="left"
-                                justifyContent="flex-start"
-                                _hover={{ bg: 'gray.200' }}
-                                borderColor={selectedOption === option.value ? 'green.400' : 'gray.200'}
-                            >
+                        {incomeOptions.map((option) => (
+                            <Radio key={option.value} value={option.value}>
                                 {option.label}
-                            </Button>
+                            </Radio>
                         ))}
                     </HStack>
                 </RadioGroup>
@@ -102,4 +107,4 @@ const NombreEnfantsACharge: React.FC = () => {
     );
 };
 
-export default NombreEnfantsACharge;
+export default RevenusAnnuels;

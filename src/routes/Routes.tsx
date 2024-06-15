@@ -11,7 +11,8 @@ import QuelEstVotreHorizonDInvestissement from '../pages/QuelEstVotreHorizonDInv
 import ESGPreference from '../pages/ESGPreference';
 import QuelEstVotreDateDeNaissance from '../pages/QuelEstVotreDateDeNaissance';
 import EtesVousResidentFiscalFrancais from '../pages/EtesVousResidentFiscalFrancais';
-import NombreEnfantsACharge from '../pages/NombreEnfantsACharge'; // Ajout de l'import pour NombreEnfantsACharge
+import NombreEnfantsACharge from '../pages/NombreEnfantsACharge';
+import RevenusAnnuels from '../pages/RevenusAnnuels'; // Ajout de l'import pour RevenusAnnuels
 
 // Définition des routes
 export const routes = [
@@ -23,7 +24,8 @@ export const routes = [
   { path: '/esg-preference', name: 'ESGPreference', component: <ESGPreference />, hidden: true },
   { path: '/quel-est-votre-date-de-naissance', name: 'QuelEstVotreDateDeNaissance', component: <QuelEstVotreDateDeNaissance />, hidden: true },
   { path: '/etes-vous-resident-fiscal-francais', name: 'EtesVousResidentFiscalFrancais', component: <EtesVousResidentFiscalFrancais />, hidden: true },
-  { path: '/nombre-enfants-a-charge', name: 'NombreEnfantsACharge', component: <NombreEnfantsACharge />, hidden: true }, // Ajout de la route pour NombreEnfantsACharge
+  { path: '/nombre-enfants-a-charge', name: 'NombreEnfantsACharge', component: <NombreEnfantsACharge />, hidden: true },
+  { path: '/revenus-annuels', name: 'RevenusAnnuels', component: <RevenusAnnuels />, hidden: true }, // Ajout de la route pour RevenusAnnuels
 ];
 
 // Composant des routes
