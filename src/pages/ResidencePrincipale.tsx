@@ -44,7 +44,7 @@ const ResidencePrincipale: React.FC = () => {
 
     const handleNext = () => {
         if (residenceStatus !== undefined) {
-            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/montant-loyer-mensuel'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }

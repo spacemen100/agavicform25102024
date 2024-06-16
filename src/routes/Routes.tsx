@@ -13,7 +13,8 @@ import QuelEstVotreDateDeNaissance from '../pages/QuelEstVotreDateDeNaissance';
 import EtesVousResidentFiscalFrancais from '../pages/EtesVousResidentFiscalFrancais';
 import NombreEnfantsACharge from '../pages/NombreEnfantsACharge';
 import RevenusAnnuels from '../pages/RevenusAnnuels';
-import ResidencePrincipale from '../pages/ResidencePrincipale'; // Ajout de l'import pour ResidencePrincipale
+import ResidencePrincipale from '../pages/ResidencePrincipale';
+import MontantLoyerMensuel from '../pages/MontantLoyerMensuel'; // Ajout de l'import pour MontantLoyerMensuel
 
 // Définition des routes
 export const routes = [
@@ -27,7 +28,8 @@ export const routes = [
   { path: '/etes-vous-resident-fiscal-francais', name: 'EtesVousResidentFiscalFrancais', component: <EtesVousResidentFiscalFrancais />, hidden: true },
   { path: '/nombre-enfants-a-charge', name: 'NombreEnfantsACharge', component: <NombreEnfantsACharge />, hidden: true },
   { path: '/revenus-annuels', name: 'RevenusAnnuels', component: <RevenusAnnuels />, hidden: true },
-  { path: '/residence-principale', name: 'ResidencePrincipale', component: <ResidencePrincipale />, hidden: true }, // Ajout de la route pour ResidencePrincipale
+  { path: '/residence-principale', name: 'ResidencePrincipale', component: <ResidencePrincipale />, hidden: true },
+  { path: '/montant-loyer-mensuel', name: 'MontantLoyerMensuel', component: <MontantLoyerMensuel />, hidden: true }, // Ajout de la route pour MontantLoyerMensuel
 ];
 
 // Composant des routes
