@@ -1,3 +1,4 @@
+// src/pages/CreationCompte.js
 import React, { useState } from 'react';
 import {
     ChakraProvider,
@@ -13,7 +14,7 @@ import {
     Checkbox,
 } from '@chakra-ui/react';
 import { EmailIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import Stepper from '../components/Stepper';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -40,6 +41,7 @@ const CreationCompte: React.FC = () => {
     const [isEmailValid, setIsEmailValid] = useState(true);
     const [isPasswordValid, setIsPasswordValid] = useState(true);
     const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+    const uuid = useUuid();
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -53,9 +55,17 @@ const CreationCompte: React.FC = () => {
 
     const handleShowClick = () => setShowPassword(!showPassword);
 
-    const handleCreateAccount = () => {
+    const handleCreateAccount = async () => {
         if (isEmailValid && email !== '' && isPasswordValid && password !== '' && isTermsAccepted) {
-            // Logic to handle account creation
+            // Logic to create account and link with UUID
+            await fetch('/api/create-account', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ uuid, email, password }),
+            });
+            // Redirect to a confirmation page or dashboard
         } else {
             if (!isEmailValid || email === '') {
                 setIsEmailValid(false);
@@ -68,7 +78,6 @@ const CreationCompte: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <Stepper currentStep={1} />
             <Box p={5} maxW="400px" mx="auto" textAlign="center">
                 <Text fontSize="xl" fontWeight="bold" mb={5}>
                     Créez votre compte
