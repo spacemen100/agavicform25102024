@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+// src/pages/ValeurPatrimoineImmobilierNet.tsx
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -23,6 +24,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -52,6 +54,23 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
     };
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
+
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(12);
+            if (response !== null) {
+                const value = parseInt(response, 10);
+                if (!isNaN(value)) {
+                    setValue(value);
+                }
+            }
+        };
+
+        fetchResponse();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(event.target.value, 10);
@@ -64,9 +83,10 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
         }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (value !== null) {
-            navigate('/montant-patrimoine-financier'); 
+            await updateResponse(12, value.toString());
+            navigate('/montant-patrimoine-financier');
         } else {
             setIsAlertOpen(true);
         }
