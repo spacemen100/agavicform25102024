@@ -66,7 +66,7 @@ const MontantPatrimoineFinancier: React.FC = () => {
 
     const handleNext = () => {
         if (value !== null) {
-            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/montant-epargne-mensuel'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }

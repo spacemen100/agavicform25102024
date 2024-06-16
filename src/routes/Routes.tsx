@@ -17,7 +17,9 @@ import ResidencePrincipale from '../pages/ResidencePrincipale';
 import MontantLoyerMensuel from '../pages/MontantLoyerMensuel';
 import MontantCreditImmobilierMensuel from '../pages/MontantCreditImmobilierMensuel';
 import ValeurPatrimoineImmobilierNet from '../pages/ValeurPatrimoineImmobilierNet';
-import MontantPatrimoineFinancier from '../pages/MontantPatrimoineFinancier'; // Ajout de l'import pour MontantPatrimoineFinancier
+import MontantPatrimoineFinancier from '../pages/MontantPatrimoineFinancier';
+import MontantEpargneMensuel from '../pages/MontantEpargneMensuel';
+import BesoinEpargne from '../pages/BesoinEpargne'; // Ajout de l'import pour BesoinEpargne
 
 // Définition des routes
 export const routes = [
@@ -35,7 +37,9 @@ export const routes = [
   { path: '/montant-loyer-mensuel', name: 'MontantLoyerMensuel', component: <MontantLoyerMensuel />, hidden: true },
   { path: '/montant-credit-immobilier-mensuel', name: 'MontantCreditImmobilierMensuel', component: <MontantCreditImmobilierMensuel />, hidden: true },
   { path: '/valeur-patrimoine-immobilier-net', name: 'ValeurPatrimoineImmobilierNet', component: <ValeurPatrimoineImmobilierNet />, hidden: true },
-  { path: '/montant-patrimoine-financier', name: 'MontantPatrimoineFinancier', component: <MontantPatrimoineFinancier />, hidden: true }, // Ajout de la route pour MontantPatrimoineFinancier
+  { path: '/montant-patrimoine-financier', name: 'MontantPatrimoineFinancier', component: <MontantPatrimoineFinancier />, hidden: true },
+  { path: '/montant-epargne-mensuel', name: 'MontantEpargneMensuel', component: <MontantEpargneMensuel />, hidden: true },
+  { path: '/besoin-epargne', name: 'BesoinEpargne', component: <BesoinEpargne />, hidden: true }, // Ajout de la route pour BesoinEpargne
 ];
 
 // Composant des routes
