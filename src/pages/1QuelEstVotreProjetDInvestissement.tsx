@@ -1,21 +1,23 @@
+// src/pages/QuelEstVotreProjetDInvestissement.tsx
 import React, { useState } from 'react';
 import { Box, Button, SimpleGrid, Icon, Text, ChakraProvider } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom'; // Importer useNavigate depuis react-router-dom
+import { useNavigate } from 'react-router-dom';
 import {
     FcApproval, FcDisapprove, FcProcess, FcBusinessContact, FcReadingEbook, FcManager, FcParallelTasks
 } from 'react-icons/fc';
-import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter'; // Vérifiez le chemin d'importation
+import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const QuelEstVotreProjetDInvestissement: React.FC = () => {
     const [selected, setSelected] = useState<string | null>(null);
-    const navigate = useNavigate(); // Initialiser useNavigate
+    const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse } = useUuid();
 
-    const handleSelect = (option: string) => {
+    const handleSelect = async (option: string) => {
         setSelected(option);
-        // Rediriger vers la nouvelle route si l'option sélectionnée n'est pas "Organiser ma trésorerie pro"
-        if (option !== 'tresorerie') {
-            navigate('/quel-montant-souhaitez-vous-placer');
-        }
+        await updateResponse(1, option);
+        navigate('/quel-montant-souhaitez-vous-placer');
     };
 
     const buttons = [
@@ -29,7 +31,7 @@ const QuelEstVotreProjetDInvestissement: React.FC = () => {
     ];
 
     return (
-        <ChakraProvider> {/* Enveloppez votre composant principal avec ChakraProvider */}
+        <ChakraProvider>
             <StepperWithSubStepCounter currentStep={1} currentSubStep={1} totalSubSteps={24} title="Parlons de votre projet" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">Quel est votre projet d’investissement ?</Text>
@@ -42,10 +44,10 @@ const QuelEstVotreProjetDInvestissement: React.FC = () => {
                             colorScheme={selected === button.key ? 'green' : 'blue'}
                             onClick={() => handleSelect(button.key)}
                             justifyContent="flex-start"
-                            px={6} // Augmenter le padding horizontal
-                            py={6} // Augmenter le padding vertical
-                            size="xxl" // Ajuster la taille du bouton
-                            textAlign="left" // Aligner le texte à gauche
+                            px={6}
+                            py={6}
+                            size="xxl"
+                            textAlign="left"
                         >
                             <Box flex="1" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
                                 {button.label}
@@ -54,7 +56,7 @@ const QuelEstVotreProjetDInvestissement: React.FC = () => {
                     ))}
                 </SimpleGrid>
                 <Box textAlign="right">
-                    <Button colorScheme="green" size="xxl" mt={5} px={6} py={6}>Suivant</Button> {/* Ajouter du padding au bouton Suivant */}
+                    <Button colorScheme="green" size="xxl" mt={5} px={6} py={6}>Suivant</Button>
                 </Box>
             </Box>
         </ChakraProvider>

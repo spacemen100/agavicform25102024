@@ -11,6 +11,7 @@ interface UuidContextProps {
 const UuidContext = createContext<UuidContextProps | undefined>(undefined);
 
 export const UuidProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    // eslint-disable-next-line
     const [uuid, setUuid] = useState<string>(() => {
         const existingUuid = localStorage.getItem('uuid');
         if (existingUuid) {
@@ -23,10 +24,14 @@ export const UuidProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     useEffect(() => {
         const createInitialRecord = async () => {
-            const { error } = await supabase
-                .from('form_responses')
-                .insert([{ id: uuid }]);
-            if (error) console.error('Error creating initial record:', error);
+            try {
+                const { error } = await supabase
+                    .from('form_responses')
+                    .insert([{ id: uuid }]);
+                if (error) throw error;
+            } catch (error) {
+                console.error('Error creating initial record:', error);
+            }
         };
 
         createInitialRecord();
@@ -34,11 +39,13 @@ export const UuidProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const updateResponse = async (step: number, response: string) => {
         const column = `step${step}`;
-        const { error } = await supabase
-            .from('form_responses')
-            .update({ [column]: response })
-            .eq('id', uuid);
-        if (error) {
+        try {
+            const { error } = await supabase
+                .from('form_responses')
+                .update({ [column]: response })
+                .eq('id', uuid);
+            if (error) throw error;
+        } catch (error) {
             console.error('Error updating response:', error);
         }
     };
