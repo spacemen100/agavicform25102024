@@ -42,7 +42,7 @@ const theme = extendTheme({
     },
 });
 
-const ValeurPatrimoineImmobilierNet: React.FC = () => {
+const MontantPatrimoineFinancier: React.FC = () => {
     const [value, setValue] = useState<number | null>(null);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [isInvalidInput, setIsInvalidInput] = useState(false);
@@ -66,7 +66,7 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
 
     const handleNext = () => {
         if (value !== null) {
-            navigate('/montant-patrimoine-financier'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
@@ -74,13 +74,13 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={12} totalSubSteps={24} title="Quelle est la valeur de votre patrimoine immobilier NET ?" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={13} totalSubSteps={24} title="Quel est le montant estimé de votre patrimoine financier ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Quelle est la valeur de votre patrimoine immobilier NET ?
+                    Quel est le montant estimé de votre patrimoine financier ?
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
-                    Additionnez la valeur de vos biens (appartement, maison) puis déduisez le montant qu'il vous reste à rembourser. Une estimation nous convient.
+                    Additionnez vos avoirs financiers : compte courant, livrets d'épargne, PEL, assurances-vie, PEA, comptes-titres, PEE, etc, sauf votre patrimoine immobilier. Une estimation suffit.
                 </Text>
                 <Box justifyContent="center" mb={6} maxWidth={400} mx="auto">
                     <InputGroup size="lg" width="auto">
@@ -97,22 +97,12 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
                         <InputRightAddon children="€" />
                     </InputGroup>
                 </Box>
-                <Box display="flex" justifyContent="center" mb={6}>
-                    <Alert status="info" borderRadius="md">
-                        <AlertIcon />
-                        <Box flex="1">
-                            <AlertTitle>
-                                Par exemple, si vous êtes propriétaire d'un bien immobilier de 300 000 € et qu'il vous reste 200 000 € à rembourser sur votre crédit, il vous faut renseigner la différence entre les deux, soit 100 000 €.
-                            </AlertTitle>
-                        </Box>
-                    </Alert>
-                </Box>
 
                 {isInvalidInput && (
                     <Alert status="error" mb={4} borderRadius="md">
                         <AlertIcon />
                         <AlertTitle mr={2}></AlertTitle>
-                        Veuillez entrer une valeur valide pour le patrimoine immobilier net.
+                        Veuillez entrer une valeur valide pour le patrimoine financier.
                         <CloseButton position="absolute" right="8px" top="8px" onClick={() => setIsInvalidInput(false)} />
                     </Alert>
                 )}
@@ -143,7 +133,7 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
                             Sélection requise
                         </AlertDialogHeader>
                         <AlertDialogBody>
-                            Veuillez entrer une valeur de patrimoine immobilier net avant de continuer. 😊
+                            Veuillez entrer une valeur de patrimoine financier avant de continuer. 😊
                         </AlertDialogBody>
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={onClose}>
@@ -157,4 +147,4 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
     );
 };
 
-export default ValeurPatrimoineImmobilierNet;
+export default MontantPatrimoineFinancier;

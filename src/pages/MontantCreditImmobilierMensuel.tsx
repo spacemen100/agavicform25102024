@@ -68,13 +68,13 @@ const MontantCreditImmobilierMensuel: React.FC = () => {
         setCredit(0);
         setIsInvalidInput(false);
         setTimeout(() => {
-            navigate('/valeur-patrimoine-immobilier-net'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/valeur-patrimoine-immobilier-net'); 
         }, 2000);
     };
 
     const handleNext = () => {
         if (credit !== null) {
-            navigate('/valeur-patrimoine-immobilier-net'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/valeur-patrimoine-immobilier-net'); 
         } else {
             setIsAlertOpen(true);
         }

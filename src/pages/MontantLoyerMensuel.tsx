@@ -68,13 +68,13 @@ const MontantLoyerMensuel: React.FC = () => {
         setLoyer(0);
         setIsInvalidInput(false);
         setTimeout(() => {
-            navigate('/valeur-patrimoine-immobilier-net'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/valeur-patrimoine-immobilier-net'); 
         }, 2000);
     };
 
     const handleNext = () => {
         if (loyer !== null) {
-            navigate('/valeur-patrimoine-immobilier-net'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/valeur-patrimoine-immobilier-net'); 
         } else {
             setIsAlertOpen(true);
         }
