@@ -52,7 +52,7 @@ const RevenusAnnuels: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/next-step'); // Remplacez '/next-step' par la route suivante appropriée
+            navigate('/residence-principale'); // Remplacez '/next-step' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
