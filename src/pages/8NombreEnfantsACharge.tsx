@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+// src/pages/NombreEnfantsACharge.tsx
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -6,7 +7,6 @@ import {
     Text,
     Button,
     HStack,
-    RadioGroup,
     AlertDialog,
     AlertDialogBody,
     AlertDialogFooter,
@@ -17,6 +17,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -38,23 +39,38 @@ const childrenOptions = [
 ];
 
 const NombreEnfantsACharge: React.FC = () => {
-    const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined); // Change from string | null to string | undefined
+    const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
+
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(8);
+            if (response !== null) {
+                setSelectedOption(response);
+            }
+        };
+
+        fetchResponse();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleSelect = (value: string) => {
         setSelectedOption(value);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (selectedOption !== undefined) {
+            await updateResponse(8, selectedOption);
             navigate('/revenus-annuels'); // Replace '/revenus-annuels' with the appropriate next route
         } else {
             setIsAlertOpen(true);
         }
-    }; 
+    };
 
     return (
         <ChakraProvider theme={theme}>
@@ -63,27 +79,25 @@ const NombreEnfantsACharge: React.FC = () => {
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
                     Combien d'enfants avez-vous à charge ?
                 </Text>
-                <RadioGroup onChange={handleSelect} value={selectedOption}>
-                    <HStack spacing={8} justify="center">
-                        {childrenOptions.map((option) => (
-                            <Button
-                                key={option.value}
-                                variant="outline"
-                                size="xxl"
-                                colorScheme={selectedOption === option.value ? 'green' : 'blue'}
-                                onClick={() => handleSelect(option.value)}
-                                px={6}
-                                py={6}
-                                textAlign="left"
-                                justifyContent="flex-start"
-                                _hover={{ bg: 'gray.200' }}
-                                borderColor={selectedOption === option.value ? 'green.400' : 'gray.200'}
-                            >
-                                {option.label}
-                            </Button>
-                        ))}
-                    </HStack>
-                </RadioGroup>
+                <HStack justifyContent="center" spacing="4">
+                    {childrenOptions.map((option) => (
+                        <Button
+                            key={option.value}
+                            variant="outline"
+                            size="xxl"
+                            colorScheme={selectedOption === option.value ? 'green' : 'blue'}
+                            onClick={() => handleSelect(option.value)}
+                            px={6}
+                            py={6}
+                            textAlign="left"
+                            justifyContent="flex-start"
+                            _hover={{ bg: 'gray.200' }}
+                            borderColor={selectedOption === option.value ? 'green.400' : 'gray.200'}
+                        >
+                            {option.label}
+                        </Button>
+                    ))}
+                </HStack>
                 <HStack justifyContent="flex-end" mt="8" spacing="4">
                     <Button colorScheme="gray" variant="outline" onClick={() => navigate(-1)} px={6} py={6} size="lg">
                         Retour
