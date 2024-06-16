@@ -66,7 +66,7 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
 
     const handleNext = () => {
         if (value !== null) {
-            navigate('/montant-patrimoine-financier'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/montant-patrimoine-financier'); 
         } else {
             setIsAlertOpen(true);
         }

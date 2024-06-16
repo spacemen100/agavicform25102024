@@ -5,7 +5,7 @@ import {
     Box,
     Text,
     Button,
-    SimpleGrid,
+    VStack,
     AlertDialog,
     AlertDialogBody,
     AlertDialogFooter,
@@ -35,15 +35,14 @@ const theme = extendTheme({
     },
 });
 
-const savingsOptions = [
-    { value: 'moinsDe250', label: 'Moins de 250 €' },
-    { value: '250a500', label: '250 € à 500 €' },
-    { value: '500a1000', label: '500 € à 1 000 €' },
-    { value: '1000a2500', label: '1 000 € à 2 500 €' },
-    { value: 'plusDe2500', label: 'Plus de 2 500 €' },
+const besoinOptions = [
+    { value: 'certainementPas', label: 'Certainement pas' },
+    { value: 'probablementPas', label: 'Probablement pas' },
+    { value: 'probablement', label: 'Probablement' },
+    { value: 'tresProbablement', label: 'Très probablement' },
 ];
 
-const MontantEpargneMensuel: React.FC = () => {
+const BesoinInvestissement: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
@@ -56,7 +55,7 @@ const MontantEpargneMensuel: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/besoin-epargne'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
@@ -64,16 +63,13 @@ const MontantEpargneMensuel: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={14} totalSubSteps={24} title="Combien arrivez-vous à mettre de côté en fin de mois ?" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={16} totalSubSteps={24} title="Pourriez-vous avoir besoin de la moitié de votre investissement avant 25 ans ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Combien arrivez-vous à mettre de côté en fin de mois ?
+                    Pourriez-vous avoir besoin de la moitié de votre investissement avant 25 ans ?
                 </Text>
-                <Text fontSize="md" textAlign="center" mb={6}>
-                    Prenez votre revenu mensuel et soustrayez vos charges et vos dépenses courantes.
-                </Text>
-                <SimpleGrid columns={[1, 2, 3]} spacing={4}>
-                    {savingsOptions.map((option) => (
+                <VStack spacing={4} align="stretch">
+                    {besoinOptions.map((option) => (
                         <Button
                             key={option.value}
                             variant="outline"
@@ -89,7 +85,7 @@ const MontantEpargneMensuel: React.FC = () => {
                             {option.label}
                         </Button>
                     ))}
-                </SimpleGrid>
+                </VStack>
 
                 <Box mt={8} display="flex" justifyContent="space-between">
                     <Button
@@ -136,4 +132,4 @@ const MontantEpargneMensuel: React.FC = () => {
     );
 };
 
-export default MontantEpargneMensuel;
+export default BesoinInvestissement;
