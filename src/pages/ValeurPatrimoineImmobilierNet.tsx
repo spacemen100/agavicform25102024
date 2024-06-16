@@ -42,8 +42,8 @@ const theme = extendTheme({
     },
 });
 
-const MontantLoyerMensuel: React.FC = () => {
-    const [loyer, setLoyer] = useState<number | null>(null);
+const ValeurPatrimoineImmobilierNet: React.FC = () => {
+    const [value, setValue] = useState<number | null>(null);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [isInvalidInput, setIsInvalidInput] = useState(false);
     const onClose = () => {
@@ -56,25 +56,17 @@ const MontantLoyerMensuel: React.FC = () => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(event.target.value, 10);
         if (!isNaN(value) && value >= 0) {
-            setLoyer(value);
+            setValue(value);
             setIsInvalidInput(false);
         } else {
-            setLoyer(null);
+            setValue(null);
             setIsInvalidInput(true);
         }
     };
 
-    const handleNoLoyer = () => {
-        setLoyer(0);
-        setIsInvalidInput(false);
-        setTimeout(() => {
-            navigate('/valeur-patrimoine-immobilier-net'); // Remplacez '/prochaine-etape' par la route suivante appropriée
-        }, 2000);
-    };
-
     const handleNext = () => {
-        if (loyer !== null) {
-            navigate('/valeur-patrimoine-immobilier-net'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+        if (value !== null) {
+            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
@@ -82,52 +74,53 @@ const MontantLoyerMensuel: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={11} totalSubSteps={24} title="Quel est le montant de votre loyer mensuel ?" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={12} totalSubSteps={24} title="Quelle est la valeur de votre patrimoine immobilier NET ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Quel est le montant de votre loyer mensuel ?
+                    Quelle est la valeur de votre patrimoine immobilier NET ?
+                </Text>
+                <Text fontSize="md" textAlign="center" mb={6}>
+                    Additionnez la valeur de vos biens (appartement, maison) puis déduisez le montant qu'il vous reste à rembourser. Une estimation nous convient.
                 </Text>
                 <Box justifyContent="center" mb={6} maxWidth={400} mx="auto">
                     <InputGroup size="lg" width="auto">
                         <Input
                             type="number"
                             min={0}
-                            value={loyer !== null ? loyer : ''}
+                            value={value !== null ? value : ''}
                             onChange={handleInputChange}
                             placeholder="Entrez une valeur"
                             size="lg"
                             textAlign="center"
                             isInvalid={isInvalidInput}
                         />
-                        <InputRightAddon children="€ / mois" />
+                        <InputRightAddon children="€" />
                     </InputGroup>
                 </Box>
                 <Box display="flex" justifyContent="center" mb={6}>
-                    <Button
-                        variant="outline"
-                        colorScheme="green"
-                        onClick={handleNoLoyer}
-                        px={10}
-                        py={6}
-                        size="lg"
-                    >
-                        Aucun loyer
-                    </Button>
+                    <Alert status="info" borderRadius="md">
+                        <AlertIcon />
+                        <Box flex="1">
+                            <AlertTitle>
+                                Par exemple, si vous êtes propriétaire d'un bien immobilier de 300 000 € et qu'il vous reste 200 000 € à rembourser sur votre crédit, il vous faut renseigner la différence entre les deux, soit 100 000 €.
+                            </AlertTitle>
+                        </Box>
+                    </Alert>
                 </Box>
 
                 {isInvalidInput && (
                     <Alert status="error" mb={4} borderRadius="md">
                         <AlertIcon />
                         <AlertTitle mr={2}></AlertTitle>
-                        Veuillez entrer une valeur valide pour le loyer.
+                        Veuillez entrer une valeur valide pour le patrimoine immobilier net.
                         <CloseButton position="absolute" right="8px" top="8px" onClick={() => setIsInvalidInput(false)} />
                     </Alert>
                 )}
 
-                {loyer !== null && (
+                {value !== null && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
                         <Text fontSize="2xl" color="green.500">
-                            {loyer} € / mois
+                            {value} €
                         </Text>
                     </Box>
                 )}
@@ -150,7 +143,7 @@ const MontantLoyerMensuel: React.FC = () => {
                             Sélection requise
                         </AlertDialogHeader>
                         <AlertDialogBody>
-                            Veuillez entrer un montant de loyer ou sélectionner "Aucun loyer" avant de continuer. 😊
+                            Veuillez entrer une valeur de patrimoine immobilier net avant de continuer. 😊
                         </AlertDialogBody>
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={onClose}>
@@ -164,4 +157,4 @@ const MontantLoyerMensuel: React.FC = () => {
     );
 };
 
-export default MontantLoyerMensuel;
+export default ValeurPatrimoineImmobilierNet;
