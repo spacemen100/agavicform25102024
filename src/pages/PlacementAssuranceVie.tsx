@@ -56,7 +56,7 @@ const PlacementAssuranceVie: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/perception-gain-risque'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/perception-gain-risque'); 
         } else {
             setIsAlertOpen(true);
         }

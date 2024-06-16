@@ -45,7 +45,7 @@ const perceptionOptions = [
     { value: 'jeNeSaisPas', label: 'Je ne sais pas' },
 ];
 
-const PerceptionGainRisque: React.FC = () => {
+const EtfCapitalGaranti: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
@@ -58,7 +58,7 @@ const PerceptionGainRisque: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/etf-capital-garanti'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
@@ -66,10 +66,10 @@ const PerceptionGainRisque: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={18} totalSubSteps={24} title='"Une perspective de gain élevé implique un risque de perte en capital fort"' />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={19} totalSubSteps={24} title='"Un ETF est un fonds à capital garanti"' />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    "Une perspective de gain élevé implique un risque de perte en capital fort"
+                    "Un ETF est un fonds à capital garanti"
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
                     L'affirmation ci-dessus vous semble-t-elle vraie ?
@@ -93,14 +93,28 @@ const PerceptionGainRisque: React.FC = () => {
                     ))}
                 </VStack>
 
-                {(selectedOption === 'faux' || selectedOption === 'jeNeSaisPas') && (
+                {selectedOption === 'faux' && (
+                    <Box mt={8}>
+                        <Alert status="success" borderRadius="md">
+                            <AlertIcon />
+                            <Box flex="1">
+                                <AlertTitle>Bonne réponse :</AlertTitle>
+                                <AlertDescription>
+                                    Un ETF est un fonds qui réplique un indice boursier. Il peut donc varier à la hausse comme à la baisse. Il ne s'agit donc pas d'un fonds à capital garanti.
+                                </AlertDescription>
+                            </Box>
+                        </Alert>
+                    </Box>
+                )}
+
+                {selectedOption === 'jeNeSaisPas' && (
                     <Box mt={8}>
                         <Alert status="info" borderRadius="md">
                             <AlertIcon />
                             <Box flex="1">
                                 <AlertTitle>Réponse :</AlertTitle>
                                 <AlertDescription>
-                                    En fait, les placements financiers, c'est comme le football, plus vous jouez l'attaque et plus vous vous exposez. Plus vous visez haut, plus vous risquez gros.
+                                    Un ETF est un fonds qui réplique un indice boursier. Il peut donc varier à la hausse comme à la baisse. Il ne s'agit donc pas d'un fonds à capital garanti.
                                 </AlertDescription>
                             </Box>
                         </Alert>
@@ -109,12 +123,12 @@ const PerceptionGainRisque: React.FC = () => {
 
                 {selectedOption === 'vrai' && (
                     <Box mt={8}>
-                        <Alert status="success" borderRadius="md">
+                        <Alert status="error" borderRadius="md">
                             <AlertIcon />
                             <Box flex="1">
-                                <AlertTitle>Félicitations :</AlertTitle>
+                                <AlertTitle>Erreur :</AlertTitle>
                                 <AlertDescription>
-                                    Vous avez bien compris le principe du risque et du gain dans les investissements financiers.
+                                    Un ETF n'est pas un fonds à capital garanti. C'est un fonds qui réplique un indice boursier et peut varier à la hausse comme à la baisse.
                                 </AlertDescription>
                             </Box>
                         </Alert>
@@ -166,4 +180,4 @@ const PerceptionGainRisque: React.FC = () => {
     );
 };
 
-export default PerceptionGainRisque;
+export default EtfCapitalGaranti;
