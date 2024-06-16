@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+// src/pages/EtesVousResidentFiscalFrancais.tsx
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -11,11 +12,12 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogContent,
-    AlertDialogOverlay,
+    AlertDialogOverlay
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -26,12 +28,6 @@ const theme = extendTheme({
         },
         white: '#FFFFFF',
         orange: '#FF8C00',
-        green: {
-            400: '#38A169',
-        },
-        blue: {
-            400: '#3182CE',
-        },
     },
 });
 
@@ -41,10 +37,28 @@ const EtesVousResidentFiscalFrancais: React.FC = () => {
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
 
-    const handleNext = () => {
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(6);
+            if (response !== null) {
+                setResidentFiscal(response);
+            }
+        };
+
+        fetchResponse();
+    }, [getResponse]);
+
+    const handleSelect = (value: string) => {
+        setResidentFiscal(value);
+    };
+
+    const handleNext = async () => {
         if (residentFiscal !== undefined) {
-            navigate('/esg-preference'); // Correction de la route suivante
+            await updateResponse(6, residentFiscal);
+            navigate('/esg-preference');
         } else {
             setIsAlertOpen(true);
         }
@@ -65,7 +79,7 @@ const EtesVousResidentFiscalFrancais: React.FC = () => {
                         variant="outline"
                         colorScheme={residentFiscal === 'oui' ? 'green' : 'gray'}
                         borderColor={residentFiscal === 'oui' ? 'green.400' : 'gray.200'}
-                        onClick={() => setResidentFiscal('oui')}
+                        onClick={() => handleSelect('oui')}
                         px={10}
                         py={6}
                         size="lg"
@@ -77,7 +91,7 @@ const EtesVousResidentFiscalFrancais: React.FC = () => {
                         variant="outline"
                         colorScheme={residentFiscal === 'non' ? 'green' : 'gray'}
                         borderColor={residentFiscal === 'non' ? 'green.400' : 'gray.200'}
-                        onClick={() => setResidentFiscal('non')}
+                        onClick={() => handleSelect('non')}
                         px={10}
                         py={6}
                         size="lg"
