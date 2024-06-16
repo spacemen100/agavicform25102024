@@ -6,6 +6,7 @@ import { supabase } from '../supabaseClient';
 interface UuidContextProps {
     uuid: string;
     updateResponse: (step: number, response: string) => Promise<void>;
+    getResponse: (step: number) => Promise<string | null>;
 }
 
 const UuidContext = createContext<UuidContextProps | undefined>(undefined);
@@ -24,13 +25,24 @@ export const UuidProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     useEffect(() => {
         const createInitialRecord = async () => {
-            try {
-                const { error } = await supabase
+            const { data, error } = await supabase
+                .from('form_responses')
+                .select('id')
+                .eq('id', uuid);
+
+            if (error) {
+                console.error('Error checking for existing record:', error);
+                return;
+            }
+
+            if (data.length === 0) {
+                const { error: insertError } = await supabase
                     .from('form_responses')
                     .insert([{ id: uuid }]);
-                if (error) throw error;
-            } catch (error) {
-                console.error('Error creating initial record:', error);
+
+                if (insertError) {
+                    console.error('Error creating initial record:', insertError);
+                }
             }
         };
 
@@ -39,19 +51,38 @@ export const UuidProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const updateResponse = async (step: number, response: string) => {
         const column = `step${step}`;
-        try {
-            const { error } = await supabase
-                .from('form_responses')
-                .update({ [column]: response })
-                .eq('id', uuid);
-            if (error) throw error;
-        } catch (error) {
+        const { error } = await supabase
+            .from('form_responses')
+            .update({ [column]: response })
+            .eq('id', uuid);
+        if (error) {
             console.error('Error updating response:', error);
         }
     };
 
+    const getResponse = async (step: number): Promise<string | null> => {
+        const column = `step${step}`;
+        const { data, error } = await supabase
+            .from('form_responses')
+            .select(column)
+            .eq('id', uuid)
+            .single();
+
+        if (error) {
+            console.error('Error fetching response:', error);
+            return null;
+        }
+
+        // Ensure that data is not null or undefined
+        if (data && typeof data === 'object' && column in data) {
+            return data[column] as string;
+        }
+
+        return null;
+    };
+
     return (
-        <UuidContext.Provider value={{ uuid, updateResponse }}>
+        <UuidContext.Provider value={{ uuid, updateResponse, getResponse }}>
             {children}
         </UuidContext.Provider>
     );

@@ -1,8 +1,23 @@
-import React, { useState, useRef } from 'react';
-import { ChakraProvider, extendTheme, Box, Text, Button, HStack, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from '@chakra-ui/react';
+// src/pages/QuelMontantRegulierSouhaitezVousPlacer.tsx
+import React, { useState, useEffect, useRef } from 'react';
+import {
+    ChakraProvider,
+    extendTheme,
+    Box,
+    Text,
+    Button,
+    HStack,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay
+} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -24,13 +39,30 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
+
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(3);
+            if (response !== null) {
+                const amount = parseInt(response, 10);
+                if (monthlyInvestmentOptions.includes(amount)) {
+                    setSelectedAmount(amount);
+                }
+            }
+        };
+
+        fetchResponse();
+    }, [getResponse]);
 
     const handleSelect = (amount: number) => {
         setSelectedAmount(amount);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (selectedAmount !== null) {
+            await updateResponse(3, selectedAmount.toString());
             navigate('/quel-est-votre-horizon-d-investissement');
         } else {
             setIsAlertOpen(true);
