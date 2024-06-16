@@ -6,7 +6,6 @@ import {
     Text,
     Button,
     HStack,
-    Radio,
     RadioGroup,
     AlertDialog,
     AlertDialogBody,
@@ -67,7 +66,7 @@ const RevenusAnnuels: React.FC = () => {
                     Quels sont les revenus annuels bruts de votre foyer ?
                 </Text>
                 <RadioGroup onChange={handleSelect} value={selectedOption}>
-                    <HStack spacing={8} justify="center">
+                    <HStack spacing={8} justify="center" flexWrap="wrap">
                         {incomeOptions.map((option) => (
                             <Button
                                 key={option.value}
@@ -87,6 +86,13 @@ const RevenusAnnuels: React.FC = () => {
                         ))}
                     </HStack>
                 </RadioGroup>
+                {selectedOption !== undefined && (
+                    <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
+                        <Text fontSize="2xl" color="green.500">
+                            {incomeOptions.find(option => option.value === selectedOption)?.label}
+                        </Text>
+                    </Box>
+                )}
                 <HStack justifyContent="flex-end" mt="8" spacing="4">
                     <Button colorScheme="gray" variant="outline" onClick={() => navigate(-1)} px={6} py={6} size="lg">
                         Retour
