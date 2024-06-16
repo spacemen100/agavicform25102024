@@ -12,6 +12,9 @@ import {
     AlertDialogHeader,
     AlertDialogContent,
     AlertDialogOverlay,
+    Alert,
+    AlertIcon,
+    AlertTitle,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
@@ -35,14 +38,12 @@ const theme = extendTheme({
     },
 });
 
-const besoinOptions = [
-    { value: 'certainementPas', label: 'Certainement pas' },
-    { value: 'probablementPas', label: 'Probablement pas' },
-    { value: 'probablement', label: 'Probablement' },
-    { value: 'tresProbablement', label: 'Très probablement' },
+const investmentOptions = [
+    { value: 'oui', label: 'Oui' },
+    { value: 'non', label: 'Non' },
 ];
 
-const BesoinInvestissement: React.FC = () => {
+const PlacementAssuranceVie: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
@@ -55,7 +56,7 @@ const BesoinInvestissement: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/placement-assurance-vie'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
@@ -63,13 +64,16 @@ const BesoinInvestissement: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={16} totalSubSteps={24} title="Pourriez-vous avoir besoin de la moitié de votre investissement avant 25 ans ?" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={17} totalSubSteps={24} title="Avez-vous déjà placé de l'argent sur un contrat d'assurance-vie, un compte-titres ou un plan d'épargne en actions (PEA) ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Pourriez-vous avoir besoin de la moitié de votre investissement avant 25 ans ?
+                    Avez-vous déjà placé de l'argent sur un contrat d'assurance-vie, un compte-titres ou un plan d'épargne en actions (PEA) ?
+                </Text>
+                <Text fontSize="md" textAlign="center" mb={6}>
+                    Cette question nous permet d'en savoir plus sur vos expériences précédentes en matière d'investissement.
                 </Text>
                 <VStack spacing={4} align="stretch">
-                    {besoinOptions.map((option) => (
+                    {investmentOptions.map((option) => (
                         <Button
                             key={option.value}
                             variant="outline"
@@ -86,6 +90,17 @@ const BesoinInvestissement: React.FC = () => {
                         </Button>
                     ))}
                 </VStack>
+
+                <Box mt={8}>
+                    <Alert status="info" borderRadius="md">
+                        <AlertIcon />
+                        <Box flex="1">
+                            <AlertTitle>
+                                Nous vous rappelons qu'il n'est pas autorisé de détenir plus d'un PEA. Si vous avez déjà un PEA, vous pouvez choisir l'option transfert de PEA lors de l'étape 2 Recommandation.
+                            </AlertTitle>
+                        </Box>
+                    </Alert>
+                </Box>
 
                 <Box mt={8} display="flex" justifyContent="space-between">
                     <Button
@@ -132,4 +147,4 @@ const BesoinInvestissement: React.FC = () => {
     );
 };
 
-export default BesoinInvestissement;
+export default PlacementAssuranceVie;

@@ -20,7 +20,8 @@ import ValeurPatrimoineImmobilierNet from '../pages/ValeurPatrimoineImmobilierNe
 import MontantPatrimoineFinancier from '../pages/MontantPatrimoineFinancier';
 import MontantEpargneMensuel from '../pages/MontantEpargneMensuel';
 import BesoinEpargne from '../pages/BesoinEpargne';
-import BesoinInvestissement from '../pages/BesoinInvestissement'; // Ajout de l'import pour BesoinInvestissement
+import BesoinInvestissement from '../pages/BesoinInvestissement';
+import PlacementAssuranceVie from '../pages/PlacementAssuranceVie'; // Ajout de l'import pour PlacementAssuranceVie
 
 // Définition des routes
 export const routes = [
@@ -41,7 +42,8 @@ export const routes = [
   { path: '/montant-patrimoine-financier', name: 'MontantPatrimoineFinancier', component: <MontantPatrimoineFinancier />, hidden: true },
   { path: '/montant-epargne-mensuel', name: 'MontantEpargneMensuel', component: <MontantEpargneMensuel />, hidden: true },
   { path: '/besoin-epargne', name: 'BesoinEpargne', component: <BesoinEpargne />, hidden: true },
-  { path: '/besoin-investissement', name: 'BesoinInvestissement', component: <BesoinInvestissement />, hidden: true }, // Ajout de la route pour BesoinInvestissement
+  { path: '/besoin-investissement', name: 'BesoinInvestissement', component: <BesoinInvestissement />, hidden: true },
+  { path: '/placement-assurance-vie', name: 'PlacementAssuranceVie', component: <PlacementAssuranceVie />, hidden: true }, // Ajout de la route pour PlacementAssuranceVie
 ];
 
 // Composant des routes
