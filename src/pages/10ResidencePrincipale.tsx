@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+// src/pages/ResidencePrincipale.tsx
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -16,6 +17,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -41,9 +43,24 @@ const ResidencePrincipale: React.FC = () => {
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
 
-    const handleNext = () => {
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(10);
+            if (response !== null) {
+                setResidenceStatus(response);
+            }
+        };
+
+        fetchResponse();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleNext = async () => {
         if (residenceStatus !== undefined) {
+            await updateResponse(10, residenceStatus);
             if (residenceStatus === 'oui') {
                 navigate('/montant-credit-immobilier-mensuel');
             } else {

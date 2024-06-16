@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+// src/pages/RevenusAnnuels.tsx
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -6,7 +7,6 @@ import {
     Text,
     Button,
     HStack,
-    RadioGroup,
     AlertDialog,
     AlertDialogBody,
     AlertDialogFooter,
@@ -17,6 +17,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -45,14 +46,29 @@ const RevenusAnnuels: React.FC = () => {
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
+
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(9);
+            if (response !== null) {
+                setSelectedOption(response);
+            }
+        };
+
+        fetchResponse();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleSelect = (value: string) => {
         setSelectedOption(value);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (selectedOption !== undefined) {
-            navigate('/residence-principale'); // Remplacez '/next-step' par la route suivante appropriée
+            await updateResponse(9, selectedOption);
+            navigate('/residence-principale');
         } else {
             setIsAlertOpen(true);
         }
@@ -65,27 +81,25 @@ const RevenusAnnuels: React.FC = () => {
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
                     Quels sont les revenus annuels bruts de votre foyer ?
                 </Text>
-                <RadioGroup onChange={handleSelect} value={selectedOption}>
-                    <HStack spacing={8} justify="center" flexWrap="wrap">
-                        {incomeOptions.map((option) => (
-                            <Button
-                                key={option.value}
-                                variant="outline"
-                                size="xxl"
-                                colorScheme={selectedOption === option.value ? 'green' : 'blue'}
-                                onClick={() => handleSelect(option.value)}
-                                px={6}
-                                py={6}
-                                textAlign="left"
-                                justifyContent="flex-start"
-                                _hover={{ bg: 'gray.200' }}
-                                borderColor={selectedOption === option.value ? 'green.400' : 'gray.200'}
-                            >
-                                {option.label}
-                            </Button>
-                        ))}
-                    </HStack>
-                </RadioGroup>
+                <HStack justifyContent="center" spacing="4" flexWrap="wrap">
+                    {incomeOptions.map((option) => (
+                        <Button
+                            key={option.value}
+                            variant="outline"
+                            size="xxl"
+                            colorScheme={selectedOption === option.value ? 'green' : 'blue'}
+                            onClick={() => handleSelect(option.value)}
+                            px={6}
+                            py={6}
+                            textAlign="left"
+                            justifyContent="flex-start"
+                            _hover={{ bg: 'gray.200' }}
+                            borderColor={selectedOption === option.value ? 'green.400' : 'gray.200'}
+                        >
+                            {option.label}
+                        </Button>
+                    ))}
+                </HStack>
                 {selectedOption !== undefined && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
                         <Text fontSize="2xl" color="green.500">

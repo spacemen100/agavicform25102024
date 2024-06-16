@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+// src/pages/MontantCreditImmobilierMensuel.tsx
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -23,6 +24,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -52,6 +54,23 @@ const MontantCreditImmobilierMensuel: React.FC = () => {
     };
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
+
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(11);
+            if (response !== null) {
+                const value = parseInt(response, 10);
+                if (!isNaN(value)) {
+                    setCredit(value);
+                }
+            }
+        };
+
+        fetchResponse();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(event.target.value, 10);
@@ -64,17 +83,19 @@ const MontantCreditImmobilierMensuel: React.FC = () => {
         }
     };
 
-    const handleNoCredit = () => {
+    const handleNoCredit = async () => {
         setCredit(0);
         setIsInvalidInput(false);
+        await updateResponse(11, '0');
         setTimeout(() => {
-            navigate('/valeur-patrimoine-immobilier-net'); 
+            navigate('/valeur-patrimoine-immobilier-net');
         }, 2000);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (credit !== null) {
-            navigate('/valeur-patrimoine-immobilier-net'); 
+            await updateResponse(11, credit.toString());
+            navigate('/valeur-patrimoine-immobilier-net');
         } else {
             setIsAlertOpen(true);
         }
