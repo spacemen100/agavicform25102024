@@ -21,7 +21,8 @@ import MontantPatrimoineFinancier from '../pages/MontantPatrimoineFinancier';
 import MontantEpargneMensuel from '../pages/MontantEpargneMensuel';
 import BesoinEpargne from '../pages/BesoinEpargne';
 import BesoinInvestissement from '../pages/BesoinInvestissement';
-import PlacementAssuranceVie from '../pages/PlacementAssuranceVie'; // Ajout de l'import pour PlacementAssuranceVie
+import PlacementAssuranceVie from '../pages/PlacementAssuranceVie';
+import PerceptionGainRisque from '../pages/PerceptionGainRisque'; // Ajout de l'import pour PerceptionGainRisque
 
 // Définition des routes
 export const routes = [
@@ -43,7 +44,8 @@ export const routes = [
   { path: '/montant-epargne-mensuel', name: 'MontantEpargneMensuel', component: <MontantEpargneMensuel />, hidden: true },
   { path: '/besoin-epargne', name: 'BesoinEpargne', component: <BesoinEpargne />, hidden: true },
   { path: '/besoin-investissement', name: 'BesoinInvestissement', component: <BesoinInvestissement />, hidden: true },
-  { path: '/placement-assurance-vie', name: 'PlacementAssuranceVie', component: <PlacementAssuranceVie />, hidden: true }, // Ajout de la route pour PlacementAssuranceVie
+  { path: '/placement-assurance-vie', name: 'PlacementAssuranceVie', component: <PlacementAssuranceVie />, hidden: true },
+  { path: '/perception-gain-risque', name: 'PerceptionGainRisque', component: <PerceptionGainRisque />, hidden: true }, // Ajout de la route pour PerceptionGainRisque
 ];
 
 // Composant des routes
