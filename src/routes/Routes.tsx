@@ -26,6 +26,7 @@ import PerceptionGainRisque from '../pages/PerceptionGainRisque';
 import EtfCapitalGaranti from '../pages/EtfCapitalGaranti';
 import GestionPortefeuille from '../pages/GestionPortefeuille'; 
 import PertePlacements from '../pages/PertePlacements';
+import RapportGainsPertes from '../pages/RapportGainsPertes';
 
 // Définition des routes
 export const routes = [
@@ -51,7 +52,8 @@ export const routes = [
   { path: '/perception-gain-risque', name: 'PerceptionGainRisque', component: <PerceptionGainRisque />, hidden: true },
   { path: '/etf-capital-garanti', name: 'EtfCapitalGaranti', component: <EtfCapitalGaranti />, hidden: true },
   { path: '/gestion-portefeuille', name: 'GestionPortefeuille', component: <GestionPortefeuille />, hidden: true },
-  { path: '/perte-placements', name: 'PertePlacements', component: <PertePlacements />, hidden: true }, // Ajout de la route pour PertePlacements
+  { path: '/perte-placements', name: 'PertePlacements', component: <PertePlacements />, hidden: true },
+  { path: '/rapport-gains-pertes', name: 'RapportGainsPertes', component: <RapportGainsPertes />, hidden: true }, // Ajout de la route pour RapportGainsPertes
 ];
 
 // Composant des routes

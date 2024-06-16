@@ -35,14 +35,14 @@ const theme = extendTheme({
     },
 });
 
-const lossOptions = [
-    { value: 'noLoss', label: "Non, je n'ai jamais subi de perte sur mes placements financiers" },
-    { value: 'max10', label: 'Oui, de 10% maximum' },
-    { value: 'max20', label: 'Oui, de 20% maximum' },
-    { value: 'moreThan20', label: 'Oui, de plus de 20%' },
+const gainLossOptions = [
+    { value: 'gain20loss5', label: 'Espérance de gain final de 20%, mais avec un risque de perte de 5%' },
+    { value: 'gain30loss10', label: 'Espérance de gain final de 30%, mais avec un risque de perte de 10%' },
+    { value: 'gain50loss15', label: 'Espérance de gain final de 50%, mais avec un risque de perte de 15%' },
+    { value: 'gain70lossMore15', label: 'Espérance de gain final de 70%, mais avec un risque de perte supérieur à 15%' },
 ];
 
-const PertePlacements: React.FC = () => {
+const RapportGainsPertes10Ans: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
@@ -55,7 +55,7 @@ const PertePlacements: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/rapport-gains-pertes'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
@@ -63,13 +63,16 @@ const PertePlacements: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={21} totalSubSteps={24} title="Avez-vous déjà subi des pertes sur vos placements financiers ?" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={22} totalSubSteps={24} title="Quel rapport gains / pertes êtes-vous prêt à accepter en investissant sur 10 ans ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Avez-vous déjà subi des pertes sur vos placements financiers ?
+                    Quel rapport gains / pertes êtes-vous prêt à accepter en investissant sur 10 ans ?
+                </Text>
+                <Text fontSize="md" textAlign="center" mb={6}>
+                    Là encore, nous cherchons à comprendre votre attitude face au risque.
                 </Text>
                 <VStack spacing={4} align="stretch">
-                    {lossOptions.map((option) => (
+                    {gainLossOptions.map((option) => (
                         <Button
                             key={option.value}
                             variant="outline"
@@ -132,4 +135,4 @@ const PertePlacements: React.FC = () => {
     );
 };
 
-export default PertePlacements;
+export default RapportGainsPertes10Ans;
