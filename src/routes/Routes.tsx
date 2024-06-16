@@ -23,7 +23,8 @@ import BesoinEpargne from '../pages/BesoinEpargne';
 import BesoinInvestissement from '../pages/BesoinInvestissement';
 import PlacementAssuranceVie from '../pages/PlacementAssuranceVie';
 import PerceptionGainRisque from '../pages/PerceptionGainRisque';
-import EtfCapitalGaranti from '../pages/EtfCapitalGaranti'; // Ajout de l'import pour EtfCapitalGaranti
+import EtfCapitalGaranti from '../pages/EtfCapitalGaranti';
+import GestionPortefeuille from '../pages/GestionPortefeuille'; // Ajout de l'import pour GestionPortefeuille
 
 // Définition des routes
 export const routes = [
@@ -47,7 +48,8 @@ export const routes = [
   { path: '/besoin-investissement', name: 'BesoinInvestissement', component: <BesoinInvestissement />, hidden: true },
   { path: '/placement-assurance-vie', name: 'PlacementAssuranceVie', component: <PlacementAssuranceVie />, hidden: true },
   { path: '/perception-gain-risque', name: 'PerceptionGainRisque', component: <PerceptionGainRisque />, hidden: true },
-  { path: '/etf-capital-garanti', name: 'EtfCapitalGaranti', component: <EtfCapitalGaranti />, hidden: true }, // Ajout de la route pour EtfCapitalGaranti
+  { path: '/etf-capital-garanti', name: 'EtfCapitalGaranti', component: <EtfCapitalGaranti />, hidden: true },
+  { path: '/gestion-portefeuille', name: 'GestionPortefeuille', component: <GestionPortefeuille />, hidden: true }, // Ajout de la route pour GestionPortefeuille
 ];
 
 // Composant des routes
