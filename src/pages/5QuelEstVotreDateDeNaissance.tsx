@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+// src/pages/QuelEstVotreDateDeNaissance.tsx
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -22,6 +23,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -46,9 +48,9 @@ const formatDate = (isoDate: string | null): string => {
     return `${day}/${month}/${year}`;
 };
 
-
 const QuelEstVotreDateDeNaissance: React.FC = () => {
     const [birthDate, setBirthDate] = useState<string | null>(null);
+    const [inputValue, setInputValue] = useState<string>('');
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [isInvalidInput, setIsInvalidInput] = useState(false);
     const onClose = () => {
@@ -57,11 +59,27 @@ const QuelEstVotreDateDeNaissance: React.FC = () => {
     };
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
+
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(5);
+            if (response !== null) {
+                setBirthDate(response);
+                setInputValue(response);
+            }
+        };
+
+        fetchResponse();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        const datePattern = /^\d{4}-\d{2}-\d{2}$/; // Date format YYYY-MM-DD
+        setInputValue(value);
 
+        const datePattern = /^\d{4}-\d{2}-\d{2}$/; // Date format YYYY-MM-DD
         if (datePattern.test(value)) {
             const birthYear = parseInt(value.split('-')[0], 10);
             const currentYear = new Date().getFullYear();
@@ -80,9 +98,10 @@ const QuelEstVotreDateDeNaissance: React.FC = () => {
         }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (birthDate !== null) {
-            navigate('/etes-vous-resident-fiscal-francais'); 
+            await updateResponse(5, birthDate);
+            navigate('/etes-vous-resident-fiscal-francais');
         } else {
             setIsAlertOpen(true);
         }
@@ -106,6 +125,7 @@ const QuelEstVotreDateDeNaissance: React.FC = () => {
                             placeholder="YYYY-MM-DD"
                             size="lg"
                             textAlign="center"
+                            value={inputValue}
                             isInvalid={isInvalidInput}
                         />
                     </InputGroup>
