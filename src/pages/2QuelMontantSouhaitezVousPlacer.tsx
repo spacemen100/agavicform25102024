@@ -1,5 +1,4 @@
-// src/pages/QuelMontantSouhaitezVousPlacer.tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -40,8 +39,20 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
-    // eslint-disable-next-line 
-    const { uuid, updateResponse } = useUuid();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
+
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(2);
+            if (response !== null) {
+                setSelectedAmount(parseInt(response, 10));
+            }
+        };
+
+        fetchResponse();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleSelect = (amount: number) => {
         setSelectedAmount(amount);
