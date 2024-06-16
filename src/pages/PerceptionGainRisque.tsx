@@ -12,6 +12,10 @@ import {
     AlertDialogHeader,
     AlertDialogContent,
     AlertDialogOverlay,
+    Alert,
+    AlertIcon,
+    AlertTitle,
+    AlertDescription,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
@@ -88,6 +92,34 @@ const PerceptionGainRisque: React.FC = () => {
                         </Button>
                     ))}
                 </VStack>
+
+                {(selectedOption === 'faux' || selectedOption === 'jeNeSaisPas') && (
+                    <Box mt={8}>
+                        <Alert status="info" borderRadius="md">
+                            <AlertIcon />
+                            <Box flex="1">
+                                <AlertTitle>Réponse :</AlertTitle>
+                                <AlertDescription>
+                                    En fait, les placements financiers, c'est comme le football, plus vous jouez l'attaque et plus vous vous exposez. Plus vous visez haut, plus vous risquez gros.
+                                </AlertDescription>
+                            </Box>
+                        </Alert>
+                    </Box>
+                )}
+
+                {selectedOption === 'vrai' && (
+                    <Box mt={8}>
+                        <Alert status="success" borderRadius="md">
+                            <AlertIcon />
+                            <Box flex="1">
+                                <AlertTitle>Félicitations :</AlertTitle>
+                                <AlertDescription>
+                                    Vous avez bien compris le principe du risque et du gain dans les investissements financiers.
+                                </AlertDescription>
+                            </Box>
+                        </Alert>
+                    </Box>
+                )}
 
                 <Box mt={8} display="flex" justifyContent="space-between">
                     <Button
