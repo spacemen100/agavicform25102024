@@ -58,7 +58,7 @@ const GestionPortefeuille: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/perte-placements'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/perte-placements'); 
         } else {
             setIsAlertOpen(true);
         }

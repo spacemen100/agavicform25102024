@@ -55,7 +55,7 @@ const PertePlacements: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/rapport-gains-pertes'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/rapport-gains-pertes'); 
         } else {
             setIsAlertOpen(true);
         }

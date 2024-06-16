@@ -58,7 +58,7 @@ const EtfCapitalGaranti: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/gestion-portefeuille'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/gestion-portefeuille'); 
         } else {
             setIsAlertOpen(true);
         }

@@ -56,7 +56,7 @@ const MontantEpargneMensuel: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/besoin-epargne'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/besoin-epargne'); 
         } else {
             setIsAlertOpen(true);
         }

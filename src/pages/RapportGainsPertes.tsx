@@ -55,7 +55,7 @@ const RapportGainsPertes: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/rapport-gains-pertes-10-ans'); 
         } else {
             setIsAlertOpen(true);
         }

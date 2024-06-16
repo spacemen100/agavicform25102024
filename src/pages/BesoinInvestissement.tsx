@@ -55,7 +55,7 @@ const BesoinInvestissement: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/placement-assurance-vie'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/placement-assurance-vie'); 
         } else {
             setIsAlertOpen(true);
         }

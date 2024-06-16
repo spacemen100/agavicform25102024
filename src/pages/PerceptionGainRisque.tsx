@@ -58,7 +58,7 @@ const PerceptionGainRisque: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/etf-capital-garanti'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/etf-capital-garanti'); 
         } else {
             setIsAlertOpen(true);
         }

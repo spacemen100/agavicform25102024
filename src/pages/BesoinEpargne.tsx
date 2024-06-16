@@ -55,7 +55,7 @@ const BesoinEpargne: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/besoin-investissement'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/besoin-investissement'); 
         } else {
             setIsAlertOpen(true);
         }
