@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+// src/pages/ESGPreference.tsx
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -16,6 +17,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -41,10 +43,28 @@ const ESGPreference: React.FC = () => {
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
 
-    const handleNext = () => {
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(7);
+            if (response !== null) {
+                setEsgPreference(response);
+            }
+        };
+
+        fetchResponse();
+    }, [getResponse]);
+
+    const handleSelect = (value: string) => {
+        setEsgPreference(value);
+    };
+
+    const handleNext = async () => {
         if (esgPreference !== undefined) {
-            navigate('/nombre-enfants-a-charge'); 
+            await updateResponse(7, esgPreference);
+            navigate('/nombre-enfants-a-charge');
         } else {
             setIsAlertOpen(true);
         }
@@ -65,7 +85,7 @@ const ESGPreference: React.FC = () => {
                         variant="outline"
                         colorScheme={esgPreference === 'ESG' ? 'green' : 'gray'}
                         borderColor={esgPreference === 'ESG' ? 'green.400' : 'gray.200'}
-                        onClick={() => setEsgPreference('ESG')}
+                        onClick={() => handleSelect('ESG')}
                         px={10}
                         py={6}
                         size="lg"
@@ -77,7 +97,7 @@ const ESGPreference: React.FC = () => {
                         variant="outline"
                         colorScheme={esgPreference === 'Non-ESG' ? 'green' : 'gray'}
                         borderColor={esgPreference === 'Non-ESG' ? 'green.400' : 'gray.200'}
-                        onClick={() => setEsgPreference('Non-ESG')}
+                        onClick={() => handleSelect('Non-ESG')}
                         px={10}
                         py={6}
                         size="lg"
