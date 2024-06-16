@@ -1,8 +1,24 @@
+// src/pages/QuelMontantSouhaitezVousPlacer.tsx
 import React, { useState, useRef } from 'react';
-import { ChakraProvider, extendTheme, Box, Text, Button, HStack, Image, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from '@chakra-ui/react';
+import {
+    ChakraProvider,
+    extendTheme,
+    Box,
+    Text,
+    Button,
+    HStack,
+    Image,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay
+} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -24,13 +40,16 @@ const QuelMontantSouhaitezVousPlacer: React.FC = () => {
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line 
+    const { uuid, updateResponse } = useUuid();
 
     const handleSelect = (amount: number) => {
         setSelectedAmount(amount);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (selectedAmount !== null) {
+            await updateResponse(2, selectedAmount.toString());
             navigate('/quel-montant-regulier-souhaitez-vous-placer');
         } else {
             setIsAlertOpen(true);
