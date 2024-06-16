@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+// src/pages/QuelEstVotreHorizonDInvestissement.tsx
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -23,6 +24,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -46,6 +48,22 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
     };
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
+
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(4);
+            if (response !== null) {
+                const value = parseInt(response, 10);
+                if (value >= 2 && value <= 30) {
+                    setSelectedHorizon(value);
+                }
+            }
+        };
+
+        fetchResponse();
+    }, [getResponse]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(event.target.value, 10);
@@ -58,8 +76,9 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
         }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (selectedHorizon !== null) {
+            await updateResponse(4, selectedHorizon.toString());
             navigate('/quel-est-votre-date-de-naissance'); // Remplacez '/quel-est-votre-date-de-naissance' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
@@ -82,6 +101,7 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
                             type="number"
                             min={2}
                             max={30}
+                            value={selectedHorizon !== null ? selectedHorizon : ''}
                             onChange={handleInputChange}
                             placeholder="Entrez un nombre entre 2 et 30 ans"
                             size="lg"
