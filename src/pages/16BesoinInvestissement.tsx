@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -16,6 +16,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -48,14 +49,29 @@ const BesoinInvestissement: React.FC = () => {
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
+
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(16);
+            if (response !== null) {
+                setSelectedOption(response);
+            }
+        };
+
+        fetchResponse();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleSelect = (value: string) => {
         setSelectedOption(value);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (selectedOption !== undefined) {
-            navigate('/placement-assurance-vie'); 
+            await updateResponse(16, selectedOption);
+            navigate('/placement-assurance-vie');
         } else {
             setIsAlertOpen(true);
         }

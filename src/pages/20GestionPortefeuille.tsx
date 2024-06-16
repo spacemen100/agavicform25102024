@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -20,6 +20,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -51,14 +52,29 @@ const GestionPortefeuille: React.FC = () => {
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
+
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(20);
+            if (response !== null) {
+                setSelectedOption(response);
+            }
+        };
+
+        fetchResponse();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleSelect = (value: string) => {
         setSelectedOption(value);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (selectedOption !== undefined) {
-            navigate('/perte-placements'); 
+            await updateResponse(20, selectedOption);
+            navigate('/perte-placements');
         } else {
             setIsAlertOpen(true);
         }
@@ -66,10 +82,10 @@ const GestionPortefeuille: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={20} totalSubSteps={24} title='"En déléguant la gestion de mon portefeuille à une société de gestion, je renonce à prendre moi-même les décisions d investissement sur celui-ci"' />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={20} totalSubSteps={24} title='"En déléguant la gestion de mon portefeuille à une société de gestion, je renonce à prendre moi-même les décisions d’investissement sur celui-ci"' />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    "En déléguant la gestion de mon portefeuille à une société de gestion, je renonce à prendre moi-même les décisions d'investissement sur celui-ci"
+                    "En déléguant la gestion de mon portefeuille à une société de gestion, je renonce à prendre moi-même les décisions d’investissement sur celui-ci"
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
                     L'affirmation ci-dessus vous semble-t-elle vraie ?

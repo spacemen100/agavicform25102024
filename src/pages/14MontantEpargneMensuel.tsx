@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+// src/pages/MontantEpargneMensuel.tsx
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -16,6 +17,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
+import { useUuid } from '../context/UuidContext';
 
 const theme = extendTheme({
     colors: {
@@ -49,14 +51,29 @@ const MontantEpargneMensuel: React.FC = () => {
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
+
+    useEffect(() => {
+        const fetchResponse = async () => {
+            const response = await getResponse(14);
+            if (response !== null) {
+                setSelectedOption(response);
+            }
+        };
+
+        fetchResponse();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleSelect = (value: string) => {
         setSelectedOption(value);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (selectedOption !== undefined) {
-            navigate('/besoin-epargne'); 
+            await updateResponse(14, selectedOption);
+            navigate('/besoin-epargne');
         } else {
             setIsAlertOpen(true);
         }
