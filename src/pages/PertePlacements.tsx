@@ -12,10 +12,6 @@ import {
     AlertDialogHeader,
     AlertDialogContent,
     AlertDialogOverlay,
-    Alert,
-    AlertIcon,
-    AlertTitle,
-    AlertDescription,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
@@ -39,13 +35,14 @@ const theme = extendTheme({
     },
 });
 
-const perceptionOptions = [
-    { value: 'vrai', label: 'Vrai' },
-    { value: 'faux', label: 'Faux' },
-    { value: 'jeNeSaisPas', label: 'Je ne sais pas' },
+const lossOptions = [
+    { value: 'noLoss', label: "Non, je n'ai jamais subi de perte sur mes placements financiers" },
+    { value: 'max10', label: 'Oui, de 10% maximum' },
+    { value: 'max20', label: 'Oui, de 20% maximum' },
+    { value: 'moreThan20', label: 'Oui, de plus de 20%' },
 ];
 
-const GestionPortefeuille: React.FC = () => {
+const PertePlacements: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
@@ -58,7 +55,7 @@ const GestionPortefeuille: React.FC = () => {
 
     const handleNext = () => {
         if (selectedOption !== undefined) {
-            navigate('/perte-placements'); // Remplacez '/prochaine-etape' par la route suivante appropriée
+            navigate('/prochaine-etape'); // Remplacez '/prochaine-etape' par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
@@ -66,16 +63,13 @@ const GestionPortefeuille: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={20} totalSubSteps={24} title='"En déléguant la gestion de mon portefeuille à une société de gestion, je renonce à prendre moi-même les décisions d investissement sur celui-ci"' />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={21} totalSubSteps={24} title="Avez-vous déjà subi des pertes sur vos placements financiers ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    "En déléguant la gestion de mon portefeuille à une société de gestion, je renonce à prendre moi-même les décisions d'investissement sur celui-ci"
-                </Text>
-                <Text fontSize="md" textAlign="center" mb={6}>
-                    L'affirmation ci-dessus vous semble-t-elle vraie ?
+                    Avez-vous déjà subi des pertes sur vos placements financiers ?
                 </Text>
                 <VStack spacing={4} align="stretch">
-                    {perceptionOptions.map((option) => (
+                    {lossOptions.map((option) => (
                         <Button
                             key={option.value}
                             variant="outline"
@@ -92,34 +86,6 @@ const GestionPortefeuille: React.FC = () => {
                         </Button>
                     ))}
                 </VStack>
-
-                {(selectedOption === 'faux' || selectedOption === 'jeNeSaisPas') && (
-                    <Box mt={8}>
-                        <Alert status="info" borderRadius="md">
-                            <AlertIcon />
-                            <Box flex="1">
-                                <AlertTitle>Réponse :</AlertTitle>
-                                <AlertDescription>
-                                    Confier votre portefeuille à Yomoni revient à laisser les manettes à nos gérants. C'est à eux que revient la charge de concevoir vos allocations, de les investir et de réaliser les arbitrages dans votre portefeuille. Les dépôts et retraits restent à votre main.
-                                </AlertDescription>
-                            </Box>
-                        </Alert>
-                    </Box>
-                )}
-
-                {selectedOption === 'vrai' && (
-                    <Box mt={8}>
-                        <Alert status="success" borderRadius="md">
-                            <AlertIcon />
-                            <Box flex="1">
-                                <AlertTitle>Bonne réponse :</AlertTitle>
-                                <AlertDescription>
-                                    Confier votre portefeuille à Yomoni revient à laisser les manettes à nos gérants. C'est à eux que revient la charge de concevoir vos allocations, de les investir et de réaliser les arbitrages dans votre portefeuille. Les dépôts et retraits restent à votre main.
-                                </AlertDescription>
-                            </Box>
-                        </Alert>
-                    </Box>
-                )}
 
                 <Box mt={8} display="flex" justifyContent="space-between">
                     <Button
@@ -166,4 +132,4 @@ const GestionPortefeuille: React.FC = () => {
     );
 };
 
-export default GestionPortefeuille;
+export default PertePlacements;
