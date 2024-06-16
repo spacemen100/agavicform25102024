@@ -27,6 +27,7 @@ import EtfCapitalGaranti from '../pages/EtfCapitalGaranti';
 import GestionPortefeuille from '../pages/GestionPortefeuille'; 
 import PertePlacements from '../pages/PertePlacements';
 import RapportGainsPertes from '../pages/RapportGainsPertes';
+import RapportGainsPertes10Ans from '../pages/RapportGainsPertes10Ans'; // Ajout de l'import pour RapportGainsPertes10Ans
 
 // Définition des routes
 export const routes = [
@@ -53,7 +54,8 @@ export const routes = [
   { path: '/etf-capital-garanti', name: 'EtfCapitalGaranti', component: <EtfCapitalGaranti />, hidden: true },
   { path: '/gestion-portefeuille', name: 'GestionPortefeuille', component: <GestionPortefeuille />, hidden: true },
   { path: '/perte-placements', name: 'PertePlacements', component: <PertePlacements />, hidden: true },
-  { path: '/rapport-gains-pertes', name: 'RapportGainsPertes', component: <RapportGainsPertes />, hidden: true }, // Ajout de la route pour RapportGainsPertes
+  { path: '/rapport-gains-pertes', name: 'RapportGainsPertes', component: <RapportGainsPertes />, hidden: true },
+  { path: '/rapport-gains-pertes-10-ans', name: 'RapportGainsPertes10Ans', component: <RapportGainsPertes10Ans />, hidden: true }, // Ajout de la route pour RapportGainsPertes10Ans
 ];
 
 // Composant des routes
