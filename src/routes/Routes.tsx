@@ -27,7 +27,8 @@ import EtfCapitalGaranti from '../pages/EtfCapitalGaranti';
 import GestionPortefeuille from '../pages/GestionPortefeuille'; 
 import PertePlacements from '../pages/PertePlacements';
 import RapportGainsPertes from '../pages/RapportGainsPertes';
-import RapportGainsPertes10Ans from '../pages/RapportGainsPertes10Ans'; // Ajout de l'import pour RapportGainsPertes10Ans
+import RapportGainsPertes10Ans from '../pages/RapportGainsPertes10Ans'; 
+import PerteValeurInvestissement from '../pages/PerteValeurInvestissement'; 
 
 // Définition des routes
 export const routes = [
@@ -55,7 +56,8 @@ export const routes = [
   { path: '/gestion-portefeuille', name: 'GestionPortefeuille', component: <GestionPortefeuille />, hidden: true },
   { path: '/perte-placements', name: 'PertePlacements', component: <PertePlacements />, hidden: true },
   { path: '/rapport-gains-pertes', name: 'RapportGainsPertes', component: <RapportGainsPertes />, hidden: true },
-  { path: '/rapport-gains-pertes-10-ans', name: 'RapportGainsPertes10Ans', component: <RapportGainsPertes10Ans />, hidden: true }, // Ajout de la route pour RapportGainsPertes10Ans
+  { path: '/rapport-gains-pertes-10-ans', name: 'RapportGainsPertes10Ans', component: <RapportGainsPertes10Ans />, hidden: true },
+  { path: '/perte-valeur-investissement', name: 'PerteValeurInvestissement', component: <PerteValeurInvestissement />, hidden: true }, // Ajout de la route pour PerteValeurInvestissement
 ];
 
 // Composant des routes
