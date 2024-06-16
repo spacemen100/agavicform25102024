@@ -13,6 +13,7 @@ import {
     Checkbox,
 } from '@chakra-ui/react';
 import { EmailIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import Stepper from '../components/Stepper';
 
 const theme = extendTheme({
     colors: {
@@ -67,6 +68,7 @@ const CreationCompte: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
+            <Stepper currentStep={1} />
             <Box p={5} maxW="400px" mx="auto" textAlign="center">
                 <Text fontSize="xl" fontWeight="bold" mb={5}>
                     Créez votre compte
