@@ -28,7 +28,9 @@ import GestionPortefeuille from '../pages/GestionPortefeuille';
 import PertePlacements from '../pages/PertePlacements';
 import RapportGainsPertes from '../pages/RapportGainsPertes';
 import RapportGainsPertes10Ans from '../pages/RapportGainsPertes10Ans'; 
-import PerteValeurInvestissement from '../pages/PerteValeurInvestissement'; 
+import PerteValeurInvestissement from '../pages/PerteValeurInvestissement';
+import SimulationReady from '../pages/CreationCompte'; 
+import CreationCompte from '../pages/CreationCompte'; // Ajout de l'import pour CreationCompte
 
 // Définition des routes
 export const routes = [
@@ -57,7 +59,9 @@ export const routes = [
   { path: '/perte-placements', name: 'PertePlacements', component: <PertePlacements />, hidden: true },
   { path: '/rapport-gains-pertes', name: 'RapportGainsPertes', component: <RapportGainsPertes />, hidden: true },
   { path: '/rapport-gains-pertes-10-ans', name: 'RapportGainsPertes10Ans', component: <RapportGainsPertes10Ans />, hidden: true },
-  { path: '/perte-valeur-investissement', name: 'PerteValeurInvestissement', component: <PerteValeurInvestissement />, hidden: true }, // Ajout de la route pour PerteValeurInvestissement
+  { path: '/perte-valeur-investissement', name: 'PerteValeurInvestissement', component: <PerteValeurInvestissement />, hidden: true },
+  { path: '/simulation-ready', name: 'SimulationReady', component: <SimulationReady />, hidden: true },
+  { path: '/creation-compte', name: 'CreationCompte', component: <CreationCompte />, hidden: true }, // Ajout de la route pour CreationCompte
 ];
 
 // Composant des routes
