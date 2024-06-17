@@ -1,4 +1,3 @@
-// src/pages/NombreEnfantsACharge.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
@@ -6,7 +5,7 @@ import {
     Box,
     Text,
     Button,
-    HStack,
+    Stack,
     AlertDialog,
     AlertDialogBody,
     AlertDialogFooter,
@@ -79,33 +78,32 @@ const NombreEnfantsACharge: React.FC = () => {
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
                     Combien d'enfants avez-vous à charge ?
                 </Text>
-                <HStack justifyContent="center" spacing="4">
+                <Stack justifyContent="center" spacing="4" direction={{ base: 'column', md: 'row' }}>
                     {childrenOptions.map((option) => (
                         <Button
                             key={option.value}
                             variant="outline"
-                            size="xxl"
+                            size="lg"
                             colorScheme={selectedOption === option.value ? 'green' : 'blue'}
                             onClick={() => handleSelect(option.value)}
                             px={6}
                             py={6}
-                            textAlign="left"
-                            justifyContent="flex-start"
+                            textAlign="center"
                             _hover={{ bg: 'gray.200' }}
                             borderColor={selectedOption === option.value ? 'green.400' : 'gray.200'}
                         >
                             {option.label}
                         </Button>
                     ))}
-                </HStack>
-                <HStack justifyContent="flex-end" mt="8" spacing="4">
+                </Stack>
+                <Stack justifyContent="flex-end" mt="8" spacing="4" direction={{ base: 'column', md: 'row' }}>
                     <Button colorScheme="gray" variant="outline" onClick={() => navigate(-1)} px={6} py={6} size="lg">
                         Retour
                     </Button>
                     <Button colorScheme="green" onClick={handleNext} px={6} py={6} size="lg">
                         Suivant
                     </Button>
-                </HStack>
+                </Stack>
             </Box>
 
             <AlertDialog isOpen={isAlertOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
