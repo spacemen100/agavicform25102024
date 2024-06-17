@@ -97,10 +97,13 @@ const PerteValeurInvestissement: React.FC = () => {
                             colorScheme={selectedOption === option.value ? 'green' : 'gray'}
                             onClick={() => handleSelect(option.value)}
                             px={10}
-                            py={6}
+                            py={{ base: 8, md: 6 }} // Adjust padding based on screen size
                             textAlign="center"
                             _hover={{ bg: 'gray.200' }}
                             borderColor={selectedOption === option.value ? 'green.400' : 'gray.200'}
+                            whiteSpace={{ base: 'normal', md: 'nowrap' }}
+                            overflowWrap="break-word"
+                            lineHeight={{ base: '1.5', md: 'normal' }} // Adjust line-height for small screens
                         >
                             {option.label}
                         </Button>
