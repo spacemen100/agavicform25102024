@@ -1,4 +1,3 @@
-// src/pages/ESGPreference.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
@@ -7,6 +6,7 @@ import {
     Text,
     Button,
     HStack,
+    Stack,
     AlertDialog,
     AlertDialogBody,
     AlertDialogFooter,
@@ -80,7 +80,7 @@ const ESGPreference: React.FC = () => {
                 <Text fontSize="md" textAlign="center" mb={6}>
                     L’ESG est un ensemble de critères utilisés pour évaluer les pratiques durables et socialement responsables des entreprises. Cela inclut des facteurs tels que l'impact environnemental, les relations avec les employés et la qualité de la gouvernance.
                 </Text>
-                <HStack justifyContent="center" spacing="4">
+                <Stack justifyContent="center" spacing="4" direction={{ base: 'column', md: 'row' }}>
                     <Button
                         variant="outline"
                         colorScheme={esgPreference === 'ESG' ? 'green' : 'gray'}
@@ -105,7 +105,7 @@ const ESGPreference: React.FC = () => {
                     >
                         Pas de préférence ESG
                     </Button>
-                </HStack>
+                </Stack>
 
                 <HStack justifyContent="flex-end" mt="8" spacing="4">
                     <Button
