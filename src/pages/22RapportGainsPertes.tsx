@@ -100,6 +100,9 @@ const RapportGainsPertes: React.FC = () => {
                             textAlign="center"
                             _hover={{ bg: 'gray.200' }}
                             borderColor={selectedOption === option.value ? 'green.400' : 'gray.200'}
+                            whiteSpace={{ base: 'normal', md: 'nowrap' }}
+                            overflowWrap="break-word"
+                            lineHeight={{ base: '1.5', md: 'normal' }} // Adjust line-height for small screens
                         >
                             {option.label}
                         </Button>
