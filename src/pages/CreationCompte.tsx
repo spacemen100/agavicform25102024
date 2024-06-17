@@ -1,4 +1,3 @@
-// src/pages/CreationCompte.js
 import React, { useState } from 'react';
 import {
     ChakraProvider,
@@ -15,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { EmailIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useUuid } from '../context/UuidContext';
+import { supabase } from '../supabaseClient';
 
 const theme = extendTheme({
     colors: {
@@ -41,7 +41,7 @@ const CreationCompte: React.FC = () => {
     const [isEmailValid, setIsEmailValid] = useState(true);
     const [isPasswordValid, setIsPasswordValid] = useState(true);
     const [isTermsAccepted, setIsTermsAccepted] = useState(false);
-    const uuid = useUuid();
+    const { uuid } = useUuid();
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -57,15 +57,32 @@ const CreationCompte: React.FC = () => {
 
     const handleCreateAccount = async () => {
         if (isEmailValid && email !== '' && isPasswordValid && password !== '' && isTermsAccepted) {
-            // Logic to create account and link with UUID
-            await fetch('/api/create-account', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ uuid, email, password }),
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
             });
-            // Redirect to a confirmation page or dashboard
+
+            if (error) {
+                console.error('Error creating account:', error);
+                return;
+            }
+
+            const user = data?.user;
+
+            if (user) {
+                // Link the user's UUID with their Supabase user ID
+                const { error: insertError } = await supabase
+                    .from('responses')
+                    .update({ user_id: user.id })
+                    .eq('uuid', uuid);
+
+                if (insertError) {
+                    console.error('Error linking UUID with user:', insertError);
+                } else {
+                    // Redirect to a confirmation page or dashboard
+                    window.location.href = '/dashboard'; // Adjust the redirection as needed
+                }
+            }
         } else {
             if (!isEmailValid || email === '') {
                 setIsEmailValid(false);
