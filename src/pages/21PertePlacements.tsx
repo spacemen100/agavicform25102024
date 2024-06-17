@@ -97,6 +97,8 @@ const PertePlacements: React.FC = () => {
                             textAlign="center"
                             _hover={{ bg: 'gray.200' }}
                             borderColor={selectedOption === option.value ? 'green.400' : 'gray.200'}
+                            whiteSpace="normal"
+                            overflowWrap="break-word"
                         >
                             {option.label}
                         </Button>
