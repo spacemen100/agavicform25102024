@@ -11,6 +11,11 @@ import {
     VStack,
     Link,
     Checkbox,
+    Alert,
+    AlertIcon,
+    AlertTitle,
+    AlertDescription,
+    CloseButton,
 } from '@chakra-ui/react';
 import { EmailIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useUuid } from '../context/UuidContext';
@@ -41,6 +46,8 @@ const CreationCompte: React.FC = () => {
     const [isEmailValid, setIsEmailValid] = useState(true);
     const [isPasswordValid, setIsPasswordValid] = useState(true);
     const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const { uuid } = useUuid();
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,6 +71,7 @@ const CreationCompte: React.FC = () => {
 
             if (error) {
                 console.error('Error creating account:', error);
+                setErrorMessage('Erreur lors de la création du compte. Veuillez réessayer.');
                 return;
             }
 
@@ -71,16 +79,20 @@ const CreationCompte: React.FC = () => {
 
             if (user) {
                 // Link the user's UUID with their Supabase user ID
-                const { error: insertError } = await supabase
-                    .from('responses')
+                const { error: updateError } = await supabase
+                    .from('form_responses')
                     .update({ user_id: user.id })
                     .eq('uuid', uuid);
 
-                if (insertError) {
-                    console.error('Error linking UUID with user:', insertError);
+                if (updateError) {
+                    console.error('Error linking UUID with user:', updateError);
+                    setErrorMessage('Erreur lors de la liaison de l\'UUID avec l\'utilisateur.');
                 } else {
-                    // Redirect to a confirmation page or dashboard
-                    window.location.href = '/dashboard'; // Adjust the redirection as needed
+                    // Display success message and redirect
+                    setSuccessMessage('Compte créé avec succès ! Veuillez vérifier votre email pour confirmer votre adresse.');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard'; // Adjust the redirection as needed
+                    }, 3000);
                 }
             }
         } else {
@@ -90,6 +102,7 @@ const CreationCompte: React.FC = () => {
             if (!isPasswordValid || password === '') {
                 setIsPasswordValid(false);
             }
+            setErrorMessage('Veuillez remplir tous les champs correctement et accepter les conditions d\'utilisation.');
         }
     };
 
@@ -146,6 +159,26 @@ const CreationCompte: React.FC = () => {
                         Créer un compte
                     </Button>
                 </VStack>
+                {errorMessage && (
+                    <Alert status="error" mt={4} borderRadius="md">
+                        <AlertIcon />
+                        <Box flex="1">
+                            <AlertTitle>Erreur</AlertTitle>
+                            <AlertDescription>{errorMessage}</AlertDescription>
+                        </Box>
+                        <CloseButton position="absolute" right="8px" top="8px" onClick={() => setErrorMessage(null)} />
+                    </Alert>
+                )}
+                {successMessage && (
+                    <Alert status="success" mt={4} borderRadius="md">
+                        <AlertIcon />
+                        <Box flex="1">
+                            <AlertTitle>Succès</AlertTitle>
+                            <AlertDescription>{successMessage}</AlertDescription>
+                        </Box>
+                        <CloseButton position="absolute" right="8px" top="8px" onClick={() => setSuccessMessage(null)} />
+                    </Alert>
+                )}
             </Box>
         </ChakraProvider>
     );
