@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
 import { useUuid } from '../context/UuidContext';
 import { supabase } from '../supabaseClient';
+import Stepper from '../components/Stepper';
 
 const theme = extendTheme({
     colors: {
@@ -71,7 +72,7 @@ const NotificationPreferences = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={1} totalSubSteps={24} title="Préférences de notification" />
+        <Stepper currentStep={1}  />
             <Box p={5} maxW="1000px" mx="auto" textAlign="center">
                 <Text fontSize="2xl" fontWeight="bold" mb={5}>
                     Bravo, vous allez découvrir la simulation de votre projet d’épargne.

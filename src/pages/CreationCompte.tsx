@@ -21,6 +21,7 @@ import { EmailIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useUuid } from '../context/UuidContext';
 import { supabase } from '../supabaseClient';
+import Stepper from '../components/Stepper';
 
 const theme = extendTheme({
     colors: {
@@ -110,7 +111,8 @@ const CreationCompte: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <Box p={5} maxW="400px" mx="auto" textAlign="center">
+            <Stepper currentStep={1}  />
+            <Box p={5} maxW="500px" mx="auto" textAlign="center">
                 <Text fontSize="xl" fontWeight="bold" mb={5}>
                     Créez votre compte
                 </Text>
