@@ -1,4 +1,3 @@
-// src/context/UuidContext.tsx
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../supabaseClient';
@@ -73,7 +72,6 @@ export const UuidProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             return null;
         }
 
-        // Ensure that data is not null or undefined
         if (data && typeof data === 'object' && column in data) {
             return data[column] as string;
         }

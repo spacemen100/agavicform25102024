@@ -82,7 +82,7 @@ const CreationCompte: React.FC = () => {
                 const { error: updateError } = await supabase
                     .from('form_responses')
                     .update({ user_id: user.id })
-                    .eq('uuid', uuid);
+                    .eq('id', uuid);
 
                 if (updateError) {
                     console.error('Error linking UUID with user:', updateError);
