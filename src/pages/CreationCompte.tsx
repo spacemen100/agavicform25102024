@@ -18,6 +18,7 @@ import {
     CloseButton,
 } from '@chakra-ui/react';
 import { EmailIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
 import { useUuid } from '../context/UuidContext';
 import { supabase } from '../supabaseClient';
 
@@ -49,6 +50,7 @@ const CreationCompte: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const { uuid } = useUuid();
+    const navigate = useNavigate();
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -91,7 +93,7 @@ const CreationCompte: React.FC = () => {
                     // Display success message and redirect
                     setSuccessMessage('Compte créé avec succès ! Veuillez vérifier votre email pour confirmer votre adresse.');
                     setTimeout(() => {
-                        window.location.href = '/dashboard'; // Adjust the redirection as needed
+                        navigate('/notification-preferences'); // Redirect to the notification preferences page
                     }, 3000);
                 }
             }

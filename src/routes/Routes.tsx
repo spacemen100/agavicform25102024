@@ -24,13 +24,14 @@ import BesoinInvestissement from '../pages/16BesoinInvestissement';
 import PlacementAssuranceVie from '../pages/17PlacementAssuranceVie';
 import PerceptionGainRisque from '../pages/18PerceptionGainRisque';
 import EtfCapitalGaranti from '../pages/19EtfCapitalGaranti';
-import GestionPortefeuille from '../pages/20GestionPortefeuille'; 
+import GestionPortefeuille from '../pages/20GestionPortefeuille';
 import PertePlacements from '../pages/21PertePlacements';
 import RapportGainsPertes from '../pages/22RapportGainsPertes';
-import RapportGainsPertes10Ans from '../pages/23RapportGainsPertes10Ans'; 
+import RapportGainsPertes10Ans from '../pages/23RapportGainsPertes10Ans';
 import PerteValeurInvestissement from '../pages/24PerteValeurInvestissement';
-import SimulationReady from '../pages/CreationCompte'; 
-import CreationCompte from '../pages/CreationCompte'; // Ajout de l'import pour CreationCompte
+import SimulationReady from '../pages/CreationCompte';
+import CreationCompte from '../pages/CreationCompte';
+import NotificationPreferences from '../pages/25NotificationPreferences'; // Ajout de l'import pour NotificationPreferences
 
 // Définition des routes
 export const routes = [
@@ -61,7 +62,8 @@ export const routes = [
   { path: '/rapport-gains-pertes-10-ans', name: 'RapportGainsPertes10Ans', component: <RapportGainsPertes10Ans />, hidden: true },
   { path: '/perte-valeur-investissement', name: 'PerteValeurInvestissement', component: <PerteValeurInvestissement />, hidden: true },
   { path: '/simulation-ready', name: 'SimulationReady', component: <SimulationReady />, hidden: true },
-  { path: '/creation-compte', name: 'CreationCompte', component: <CreationCompte />, hidden: true }, // Ajout de la route pour CreationCompte
+  { path: '/creation-compte', name: 'CreationCompte', component: <CreationCompte />, hidden: true },
+  { path: '/notification-preferences', name: 'NotificationPreferences', component: <NotificationPreferences />, hidden: true }, // Ajout de la route pour NotificationPreferences
 ];
 
 // Composant des routes
