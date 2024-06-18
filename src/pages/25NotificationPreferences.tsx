@@ -9,11 +9,6 @@ import {
     VStack,
     Image,
     HStack,
-    Alert,
-    AlertIcon,
-    AlertTitle,
-    AlertDescription,
-    CloseButton,
     AlertDialog,
     AlertDialogBody,
     AlertDialogFooter,
@@ -51,8 +46,12 @@ const theme = extendTheme({
     },
 });
 
+interface FormResponse {
+    step25: string | null;
+}
+
 const NotificationPreferences: React.FC = () => {
-    const [isNewsChecked, setIsNewsChecked] = useState<string | undefined>(undefined);
+    const [isNewsChecked, setIsNewsChecked] = useState<boolean>(false);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
@@ -61,9 +60,10 @@ const NotificationPreferences: React.FC = () => {
 
     useEffect(() => {
         const fetchResponse = async () => {
-            const response = await getResponse(25);
-            if (response !== null) {
-                setIsNewsChecked(response.step25);
+            const response: FormResponse | null = await getResponse(25);
+            console.log("Fetched response:", response);
+            if (response && response.step25 !== null) {
+                setIsNewsChecked(response.step25 === 'oui');
             }
         };
 
@@ -71,14 +71,23 @@ const NotificationPreferences: React.FC = () => {
     }, [getResponse]);
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsNewsChecked(event.target.checked ? 'oui' : 'non');
+        setIsNewsChecked(event.target.checked);
     };
 
     const handleNext = async () => {
-        if (isNewsChecked !== undefined) {
-            await updateResponse(25, isNewsChecked);
-            navigate('/next-step'); // Replace with the appropriate next route
-        } else {
+        try {
+            const response = await supabase
+                .from('form_responses')
+                .update({ step25: isNewsChecked ? 'oui' : 'non' })
+                .eq('uuid', uuid);
+
+            if (response.error) {
+                throw response.error;
+            }
+
+            navigate('/next-step');
+        } catch (error) {
+            console.error("Error updating response:", error);
             setIsAlertOpen(true);
         }
     };
@@ -98,20 +107,20 @@ const NotificationPreferences: React.FC = () => {
                         <Box
                             p={4}
                             border="1px"
-                            borderColor={isNewsChecked === 'oui' ? "green.400" : "gray.200"}
+                            borderColor={isNewsChecked ? "green.400" : "gray.200"}
                             borderRadius="md"
                             boxShadow="sm"
                             w="100%"
-                            bg={isNewsChecked === 'oui' ? "green.50" : "white"}
+                            bg={isNewsChecked ? "green.50" : "white"}
                         >
                             <Checkbox
-                                isChecked={isNewsChecked === 'oui'}
+                                isChecked={isNewsChecked}
                                 onChange={handleCheckboxChange}
                             >
                                 <HStack spacing={3} align="flex-start">
                                     <BiNews size="24px" />
                                     <Box>
-                                        <Text fontWeight="bold" color={isNewsChecked === 'oui' ? "green.500" : "black"}>
+                                        <Text fontWeight="bold" color={isNewsChecked ? "green.500" : "black"}>
                                             Les actualités et nos conseils
                                         </Text>
                                         <Text fontSize="sm">Une newsletter mensuelle de nos experts pour décrypter l'actualité financière et mieux gérer votre épargne.</Text>
