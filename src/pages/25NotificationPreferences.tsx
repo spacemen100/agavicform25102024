@@ -14,7 +14,6 @@ import {
     AlertTitle,
     AlertDescription,
     CloseButton,
-    Stack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useUuid } from '../context/UuidContext';
@@ -78,7 +77,7 @@ const NotificationPreferences: React.FC = () => {
     return (
         <ChakraProvider theme={theme}>
             <Stepper currentStep={1} />
-            <Box p={5} pt={10} maxW="1000px" mx="auto" textAlign="center" borderRadius="md" boxShadow="md" bg="white">
+            <Box mt={5} p={5} pt={10} maxW="1000px" mx="auto" textAlign="center" borderRadius="md" boxShadow="md" bg="white">
                 <Text fontSize="2xl" fontWeight="bold" mb={5}>
                     Bravo, vous allez découvrir la simulation de votre projet d’épargne.
                 </Text>
@@ -137,15 +136,36 @@ const NotificationPreferences: React.FC = () => {
                         </Box>
                     </VStack>
                 </HStack>
+                <Box mt={8} display="flex" justifyContent="space-between">
+                    <Button
+                        colorScheme="gray"
+                        variant="outline"
+                        onClick={() => navigate(-1)}
+                        px={6}
+                        py={6}
+                        size="lg"
+                    >
+                        Retour
+                    </Button>
+                    <Button
+                        colorScheme="green"
+                        onClick={handleNext}
+                        px={6}
+                        py={6}
+                        size="lg"
+                    >
+                        Découvrir
+                    </Button>
+                </Box>
                 <Button
-                    colorScheme="green"
+                    colorScheme="orange"
                     mt={6}
                     onClick={handleNext}
                     size="lg"
                     px={10}
                     py={6}
                     textAlign="center"
-                    _hover={{ bg: 'green.600' }}
+                    _hover={{ bg: 'orange.600' }}
                     borderRadius="md"
                 >
                     Découvrir
