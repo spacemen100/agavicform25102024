@@ -18,7 +18,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useUuid } from '../context/UuidContext';
 import { supabase } from '../supabaseClient';
-import { FaRegNewspaper, FaGift } from 'react-icons/fa'; // Importation des icônes spécifiques
+import { MdDiscount } from "react-icons/md";
+import { BiNews } from "react-icons/bi";
 import Stepper from '../components/Stepper';
 
 const theme = extendTheme({
@@ -82,7 +83,7 @@ const NotificationPreferences: React.FC = () => {
                     Bravo, vous allez découvrir la simulation de votre projet d’épargne.
                 </Text>
                 <HStack justifyContent="space-between" alignItems="flex-start" spacing={10}>
-                    <Image src="/newsletter.png" alt="Illustration" boxSize="300px" />
+                    <Image src="/newsletter.png" alt="Illustration" boxSize="300px" borderRadius="md" />
                     <VStack align="flex-start" spacing={4} maxW="600px">
                         <Text fontSize="lg" fontWeight="bold">Avant cela, dites-nous si vous souhaitez rester en contact.</Text>
                         <Text fontSize="md">Cochez les cases si vous souhaitez recevoir :</Text>
@@ -100,7 +101,7 @@ const NotificationPreferences: React.FC = () => {
                                 onChange={handleCheckboxChange(setIsNewsChecked)}
                             >
                                 <HStack spacing={3} align="flex-start">
-                                    <FaRegNewspaper />
+                                    <BiNews size="24px" />
                                     <Box>
                                         <Text fontWeight="bold" color={isNewsChecked ? "green.500" : "black"}>
                                             Les actualités et nos conseils
@@ -124,7 +125,7 @@ const NotificationPreferences: React.FC = () => {
                                 onChange={handleCheckboxChange(setIsPromoChecked)}
                             >
                                 <HStack spacing={3} align="flex-start">
-                                    <FaGift />
+                                    <MdDiscount size="24px" />
                                     <Box>
                                         <Text fontWeight="bold" color={isPromoChecked ? "green.500" : "black"}>
                                             Nos offres promotionnelles
@@ -154,7 +155,7 @@ const NotificationPreferences: React.FC = () => {
                         py={6}
                         size="lg"
                     >
-                        Découvrir
+                        Suivant
                     </Button>
                 </Box>
                 <Button
