@@ -18,11 +18,9 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
-import { MdDiscount } from "react-icons/md";
 import { BiNews } from "react-icons/bi";
 import Stepper from '../components/Stepper';
 import { useUuid } from '../context/UuidContext';
-import { supabase } from '../supabaseClient';
 
 const theme = extendTheme({
     colors: {
@@ -40,56 +38,40 @@ const theme = extendTheme({
             400: '#3182CE',
         },
     },
-    fonts: {
-        body: 'Arial, sans-serif',
-        heading: 'Arial, sans-serif',
-    },
 });
 
-interface FormResponse {
-    step25: string | null;
-}
-
 const NotificationPreferences: React.FC = () => {
-    const [isNewsChecked, setIsNewsChecked] = useState<boolean>(false);
+    const [isNewsChecked, setIsNewsChecked] = useState<string | undefined>(undefined);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
-    const { uuid, updateResponse, getResponse } = useUuid();
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const { uuid, updateResponse, getResponse } = useUuid();
 
     useEffect(() => {
         const fetchResponse = async () => {
-            const response: FormResponse | null = await getResponse(25);
-            console.log("Fetched response:", response);
-            if (response && response.step25 !== null) {
-                setIsNewsChecked(response.step25 === 'oui');
+            const response = await getResponse(25);
+            if (response !== null) {
+                setIsNewsChecked(response);
             }
         };
 
         fetchResponse();
-    }, [getResponse]);
-
-    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsNewsChecked(event.target.checked);
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleNext = async () => {
-        try {
-            const response = await supabase
-                .from('form_responses')
-                .update({ step25: isNewsChecked ? 'oui' : 'non' })
-                .eq('uuid', uuid);
-
-            if (response.error) {
-                throw response.error;
-            }
-
+        if (isNewsChecked !== undefined) {
+            await updateResponse(25, isNewsChecked);
             navigate('/next-step');
-        } catch (error) {
-            console.error("Error updating response:", error);
+        } else {
             setIsAlertOpen(true);
         }
+    };
+
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsNewsChecked(event.target.checked ? 'oui' : 'non');
     };
 
     return (
@@ -107,20 +89,20 @@ const NotificationPreferences: React.FC = () => {
                         <Box
                             p={4}
                             border="1px"
-                            borderColor={isNewsChecked ? "green.400" : "gray.200"}
+                            borderColor={isNewsChecked === 'oui' ? "green.400" : "gray.200"}
                             borderRadius="md"
                             boxShadow="sm"
                             w="100%"
-                            bg={isNewsChecked ? "green.50" : "white"}
+                            bg={isNewsChecked === 'oui' ? "green.50" : "white"}
                         >
                             <Checkbox
-                                isChecked={isNewsChecked}
+                                isChecked={isNewsChecked === 'oui'}
                                 onChange={handleCheckboxChange}
                             >
                                 <HStack spacing={3} align="flex-start">
                                     <BiNews size="24px" />
                                     <Box>
-                                        <Text fontWeight="bold" color={isNewsChecked ? "green.500" : "black"}>
+                                        <Text fontWeight="bold" color={isNewsChecked === 'oui' ? "green.500" : "black"}>
                                             Les actualités et nos conseils
                                         </Text>
                                         <Text fontSize="sm">Une newsletter mensuelle de nos experts pour décrypter l'actualité financière et mieux gérer votre épargne.</Text>
@@ -151,25 +133,26 @@ const NotificationPreferences: React.FC = () => {
                         Suivant
                     </Button>
                 </HStack>
-                <AlertDialog isOpen={isAlertOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-                    <AlertDialogOverlay>
-                        <AlertDialogContent>
-                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                                <WarningIcon color="orange" mr={2} />
-                                Sélection requise
-                            </AlertDialogHeader>
-                            <AlertDialogBody>
-                                Veuillez sélectionner une option avant de continuer. 😊
-                            </AlertDialogBody>
-                            <AlertDialogFooter>
-                                <Button ref={cancelRef} onClick={onClose}>
-                                    OK
-                                </Button>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialogOverlay>
-                </AlertDialog>
             </Box>
+
+            <AlertDialog isOpen={isAlertOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            <WarningIcon color="orange" mr={2} />
+                            Sélection requise
+                        </AlertDialogHeader>
+                        <AlertDialogBody>
+                            Veuillez sélectionner une option avant de continuer. 😊
+                        </AlertDialogBody>
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onClose}>
+                                OK
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
         </ChakraProvider>
     );
 };
