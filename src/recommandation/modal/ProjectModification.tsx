@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   Box,
   Text,
@@ -12,11 +12,37 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
+import { supabase } from './../../supabaseClient'; // Importez votre client Supabase
+import { useUuid } from './../../context/UuidContext';
 
 const ProjectModification: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, onClose }) => {
-  const [initialPayment, setInitialPayment] = useState('30 000 €');
-  const [monthlyPayment, setMonthlyPayment] = useState('1 000 €');
-  const [investmentHorizon, setInvestmentHorizon] = useState('10 ans');
+  const [initialPayment, setInitialPayment] = useState('');
+  const [monthlyPayment, setMonthlyPayment] = useState('');
+  const [investmentHorizon, setInvestmentHorizon] = useState('');
+  
+  const { uuid } = useUuid();
+
+  useEffect(() => {
+    const fetchProjectData = async () => {
+      const { data, error } = await supabase
+        .from('form_responses')
+        .select('step2, step3, step4')
+        .eq('id', uuid)
+        .single();
+
+      if (error) {
+        console.error('Error fetching project data:', error);
+      } else {
+        setInitialPayment(data?.step2 || '');
+        setMonthlyPayment(data?.step3 || '');
+        setInvestmentHorizon(data?.step4 || '');
+      }
+    };
+
+    if (isOpen) {
+      fetchProjectData();
+    }
+  }, [isOpen, uuid]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
