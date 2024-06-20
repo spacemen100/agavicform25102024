@@ -12,6 +12,7 @@ import InvestmentInfo from './votrerecommandation/InvestmentInfo';
 import ArbitrationMandate from './votrerecommandation/ArbitrationMandate';
 import FeesInfo from './votrerecommandation/FeesInfo';
 import RegulatoryInfo from './votrerecommandation/RegulatoryInfo';
+import ActionButtons from './votrerecommandation/ActionButtons';
 
 const theme = extendTheme({
     colors: {
@@ -50,6 +51,7 @@ const Recommandation: React.FC = () => {
                 <ArbitrationMandate/>
                 <FeesInfo/>
                 <RegulatoryInfo/>
+                <ActionButtons/>
             </Box>
         </ChakraProvider>
     );
