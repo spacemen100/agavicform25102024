@@ -86,7 +86,7 @@ const NotificationPreferences: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <Stepper currentStep={25} />
+            <Stepper currentStep={1} />
             <Box mt={5} p={5} pt={10} maxW="1000px" mx="auto" textAlign="center" borderRadius="md" boxShadow="md" bg="white">
                 <Text fontSize="2xl" fontWeight="bold" mb={5}>
                     Bravo, vous allez découvrir la simulation de votre projet d’épargne.
