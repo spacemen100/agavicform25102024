@@ -120,13 +120,13 @@ const RiskProfile: React.FC = () => {
         </HStack>
       </Box>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal isOpen={isModalOpen} onClose={closeModal} size="xl">
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Choisir un nouveau profil</ModalHeader>
+        <ModalContent maxWidth="90%">
+          <ModalHeader></ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <ProfileSelection/>
+            <ProfileSelection />
           </ModalBody>
         </ModalContent>
       </Modal>
