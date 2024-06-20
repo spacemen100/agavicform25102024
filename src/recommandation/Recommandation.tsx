@@ -9,6 +9,9 @@ import AssetAllocation from './details/AssetAllocation';
 import InvestmentProjection from './votrerecommandation/InvestmentProjection';
 import LeaderInfo from './votrerecommandation/LeaderInfo';
 import InvestmentInfo from './votrerecommandation/InvestmentInfo';
+import ArbitrationMandate from './votrerecommandation/ArbitrationMandate';
+import FeesInfo from './votrerecommandation/FeesInfo';
+import RegulatoryInfo from './votrerecommandation/RegulatoryInfo';
 
 const theme = extendTheme({
     colors: {
@@ -44,6 +47,9 @@ const Recommandation: React.FC = () => {
                 <InvestmentProjection/>
                 <LeaderInfo/>
                 <InvestmentInfo/>
+                <ArbitrationMandate/>
+                <FeesInfo/>
+                <RegulatoryInfo/>
             </Box>
         </ChakraProvider>
     );

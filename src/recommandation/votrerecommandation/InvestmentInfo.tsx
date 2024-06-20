@@ -27,7 +27,7 @@ const theme = extendTheme({
 const InvestmentInfo: React.FC = () => {
   return (
     <ChakraProvider theme={theme}>
-      <Box bg="white" py={8} px={12} textAlign="left" borderRadius="md" boxShadow="lg" maxW="900px" mx="auto">
+      <Box bg="white" py={8} px={12} textAlign="left" borderRadius="md" boxShadow="lg" mx="auto">
         <HStack spacing={5} alignItems="center" mb={6}>
           <Image src="/cochonbleu.jpg" alt="Suravenir" boxSize="80px" borderRadius="full" />
           <VStack align="start">
