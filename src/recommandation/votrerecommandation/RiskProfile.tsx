@@ -44,6 +44,7 @@ const theme = extendTheme({
 });
 
 const RiskProfile: React.FC = () => {
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [isEnvelopeModalOpen, setIsEnvelopeModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -51,7 +52,10 @@ const RiskProfile: React.FC = () => {
   const openProjectModal = () => setIsProjectModalOpen(true);
   const closeProjectModal = () => setIsProjectModalOpen(false);
 
-  const openEnvelopeModal = () => setIsEnvelopeModalOpen(true);
+  const openEnvelopeModal = () => {
+    setSelectedProject('epargner'); // Set the selected project based on your logic
+    setIsEnvelopeModalOpen(true);
+  };
   const closeEnvelopeModal = () => setIsEnvelopeModalOpen(false);
 
   const openProfileModal = () => setIsProfileModalOpen(true);
@@ -134,7 +138,7 @@ const RiskProfile: React.FC = () => {
       </Box>
 
       <ProjectModification isOpen={isProjectModalOpen} onClose={closeProjectModal} />
-      <EnvelopeSelection isOpen={isEnvelopeModalOpen} onClose={closeEnvelopeModal} />
+      <EnvelopeSelection isOpen={isEnvelopeModalOpen} onClose={closeEnvelopeModal} selectedProject={selectedProject} />
       <Modal isOpen={isProfileModalOpen} onClose={closeProfileModal} size="xl">
         <ModalOverlay />
         <ModalContent maxWidth="90%">

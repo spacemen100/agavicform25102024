@@ -14,7 +14,19 @@ import {
   Link,
 } from '@chakra-ui/react';
 
-const EnvelopeSelection: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, onClose }) => {
+const alertMessages: { [key: string]: string } = {
+  epargner: "Vous ne pouvez pas sélectionner un PEA (qui présente un profil de risque 10) car vous avez indiqué à la question 1 vouloir 'Épargner en cas de coup dur', ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1.",
+  achat: "Vous ne pouvez pas sélectionner un PEA (qui présente un profil de risque 10) car vous avez indiqué à la question 1 vouloir 'Préparer un achat important', ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1.",
+  retraite: "Vous ne pouvez pas sélectionner un PEA (qui présente un profil de risque 10) car vous avez indiqué à la question 1 vouloir 'Prévoir ma retraite', ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1.",
+};
+
+interface EnvelopeSelectionProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedProject: string | null;
+}
+
+const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, selectedProject }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
@@ -22,11 +34,13 @@ const EnvelopeSelection: React.FC<{ isOpen: boolean, onClose: () => void }> = ({
         <ModalHeader>Choisir une nouvelle enveloppe</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Box p={4} bg="red.50" borderRadius="md" mb={4}>
-            <Text color="red.500" fontSize="sm">
-              Vous ne pouvez pas sélectionner un PEA (qui présente un profil de risque 10) car vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1.
-            </Text>
-          </Box>
+          {selectedProject && alertMessages[selectedProject] && (
+            <Box p={4} bg="red.50" borderRadius="md" mb={4}>
+              <Text color="red.500" fontSize="sm">
+                {alertMessages[selectedProject]} <Link color="blue.400">revoir votre projet en étape 1</Link>.
+              </Text>
+            </Box>
+          )}
           <HStack spacing={4} alignItems="stretch">
             <VStack
               p={4}
