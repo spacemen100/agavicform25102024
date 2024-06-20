@@ -12,7 +12,6 @@ const TwoColumnLayout: React.FC = () => {
         <SimpleGrid columns={2} spacing={10} p={5}>
             <Box>
                 <AgavicRecommendation />
-                <YourProject />
                 <QuestionsBox />
                 <RiskDisclaimer />
             </Box>
