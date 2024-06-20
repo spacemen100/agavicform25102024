@@ -1,6 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { ChartOptions, CartesianScaleOptions  } from 'chart.js';
+import { ChartOptions, ChartScales, LinearScale } from 'chart.js';
 import { ChakraProvider, extendTheme, Box, Text, HStack, Icon } from '@chakra-ui/react';
 import { FaChartLine } from 'react-icons/fa';
 
@@ -71,7 +71,7 @@ const options: ChartOptions = {
           text: 'Années',
           color: '#718096',
         },
-      } as CartesianScaleOptions,
+      } as LinearScale,
       y: {
         type: 'linear',
         beginAtZero: true,
@@ -80,18 +80,8 @@ const options: ChartOptions = {
           text: 'Valeur (en k€)',
           color: '#718096',
         },
-      } as CartesianScaleOptions,
-    },
-    plugins: {
-      legend: {
-        display: false,
-      },
-      tooltip: {
-        callbacks: {
-          label: (context: any) => `${context.dataset.label}: ${context.parsed.y} k€`,
-        },
-      },
-    },
+      } as LinearScale,
+    } as ChartScales,
   };
 
 const InvestmentProjection: React.FC = () => {
