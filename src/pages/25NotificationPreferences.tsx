@@ -19,6 +19,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import { BiNews } from "react-icons/bi";
+import { MdDiscount } from "react-icons/md";
 import Stepper from '../components/Stepper';
 import { useUuid } from '../context/UuidContext';
 
@@ -38,10 +39,14 @@ const theme = extendTheme({
             400: '#3182CE',
         },
     },
+    fonts: {
+        body: 'Arial, sans-serif',
+        heading: 'Arial, sans-serif',
+    },
 });
 
 const NotificationPreferences: React.FC = () => {
-    const [isNewsChecked, setIsNewsChecked] = useState<string | undefined>(undefined);
+    const [preferences, setPreferences] = useState<{ news: string, promo: string }>({ news: 'non', promo: 'non' });
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
@@ -53,7 +58,12 @@ const NotificationPreferences: React.FC = () => {
         const fetchResponse = async () => {
             const response = await getResponse(25);
             if (response !== null) {
-                setIsNewsChecked(response);
+                try {
+                    const parsedResponse = JSON.parse(response);
+                    setPreferences(parsedResponse);
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                }
             }
         };
 
@@ -62,16 +72,16 @@ const NotificationPreferences: React.FC = () => {
     }, []);
 
     const handleNext = async () => {
-        if (isNewsChecked !== undefined) {
-            await updateResponse(25, isNewsChecked);
+        if (preferences.news !== undefined && preferences.promo !== undefined) {
+            await updateResponse(25, JSON.stringify(preferences));
             navigate('/next-step');
         } else {
             setIsAlertOpen(true);
         }
     };
 
-    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsNewsChecked(event.target.checked ? 'oui' : 'non');
+    const handleCheckboxChange = (type: 'news' | 'promo') => (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPreferences(prev => ({ ...prev, [type]: event.target.checked ? 'oui' : 'non' }));
     };
 
     return (
@@ -89,23 +99,47 @@ const NotificationPreferences: React.FC = () => {
                         <Box
                             p={4}
                             border="1px"
-                            borderColor={isNewsChecked === 'oui' ? "green.400" : "gray.200"}
+                            borderColor={preferences.news === 'oui' ? "green.400" : "gray.200"}
                             borderRadius="md"
                             boxShadow="sm"
                             w="100%"
-                            bg={isNewsChecked === 'oui' ? "green.50" : "white"}
+                            bg={preferences.news === 'oui' ? "green.50" : "white"}
                         >
                             <Checkbox
-                                isChecked={isNewsChecked === 'oui'}
-                                onChange={handleCheckboxChange}
+                                isChecked={preferences.news === 'oui'}
+                                onChange={handleCheckboxChange('news')}
                             >
                                 <HStack spacing={3} align="flex-start">
                                     <BiNews size="24px" />
                                     <Box>
-                                        <Text fontWeight="bold" color={isNewsChecked === 'oui' ? "green.500" : "black"}>
+                                        <Text fontWeight="bold" color={preferences.news === 'oui' ? "green.500" : "black"}>
                                             Les actualités et nos conseils
                                         </Text>
                                         <Text fontSize="sm">Une newsletter mensuelle de nos experts pour décrypter l'actualité financière et mieux gérer votre épargne.</Text>
+                                    </Box>
+                                </HStack>
+                            </Checkbox>
+                        </Box>
+                        <Box
+                            p={4}
+                            border="1px"
+                            borderColor={preferences.promo === 'oui' ? "green.400" : "gray.200"}
+                            borderRadius="md"
+                            boxShadow="sm"
+                            w="100%"
+                            bg={preferences.promo === 'oui' ? "green.50" : "white"}
+                        >
+                            <Checkbox
+                                isChecked={preferences.promo === 'oui'}
+                                onChange={handleCheckboxChange('promo')}
+                            >
+                                <HStack spacing={3} align="flex-start">
+                                    <MdDiscount size="24px" />
+                                    <Box>
+                                        <Text fontWeight="bold" color={preferences.promo === 'oui' ? "green.500" : "black"}>
+                                            Nos offres promotionnelles
+                                        </Text>
+                                        <Text fontSize="sm">Les bons plans Yomoni adaptés à votre projet d’épargne une à deux fois par mois.</Text>
                                     </Box>
                                 </HStack>
                             </Checkbox>
