@@ -64,15 +64,17 @@ const ProjectModification: React.FC<{ isOpen: boolean, onClose: () => void }> = 
       console.error('Error updating project data:', error);
     } else {
       setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+        onClose();
+      }, 2000); // Fermer le modal après 2 secondes
     }
   };
 
   return (
     <>
-
       <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
-
         <ModalContent>
           <ModalHeader>Modification de votre projet</ModalHeader>
           <ModalCloseButton />
@@ -110,7 +112,7 @@ const ProjectModification: React.FC<{ isOpen: boolean, onClose: () => void }> = 
               Valider
             </Button>
             {showAlert && (
-              <Alert status="success">
+              <Alert status="success" mt={4}>
                 <AlertIcon />
                 <Box flex="1">
                   <AlertTitle>Mise à jour réussie!</AlertTitle>
