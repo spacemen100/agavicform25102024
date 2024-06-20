@@ -14,6 +14,7 @@ import {
   Link,
 } from '@chakra-ui/react';
 import { supabase } from './../../supabaseClient'; // Importez votre client Supabase
+import { useUuid } from './../../context/UuidContext'; // Importez votre contexte UUID
 
 const alertMessages: { [key: string]: string } = {
   epargner: "Vous ne pouvez pas sélectionner un PEA (qui présente un profil de risque 10) car vous avez indiqué à la question 1 vouloir 'Épargner en cas de coup dur', ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1.",
@@ -31,12 +32,14 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
   const [selectedEnvelope, setSelectedEnvelope] = useState<string>('AV');
   const [step1Response, setStep1Response] = useState<string | null>(null);
 
+  const { uuid } = useUuid();
+
   useEffect(() => {
     const fetchStep1Response = async () => {
       const { data, error } = await supabase
         .from('form_responses')
         .select('step1')
-        .eq('id', 'some-unique-identifier') // Remplacez par l'ID de l'utilisateur ou autre critère
+        .eq('id', uuid) // Utiliser l'UUID de l'utilisateur
         .single();
 
       if (error) {
@@ -49,7 +52,7 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
     if (isOpen) {
       fetchStep1Response();
     }
-  }, [isOpen]);
+  }, [isOpen, uuid]);
 
   const isPEADisabled = step1Response && alertMessages[step1Response];
 
