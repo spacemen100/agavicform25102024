@@ -4,6 +4,7 @@ import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react';
 import GeographicDiversification from './details/GeographicDiversification';
 import TwoColumnLayout from './TwoColumnLayout';
 import Stepper from '../components/Stepper';
+import DetailsToggle from './votrerecommandation/DetailsToggle';
 
 const theme = extendTheme({
     colors: {
@@ -33,6 +34,7 @@ const Recommandation: React.FC = () => {
             <Stepper currentStep={1} />
             <Box mt={5} p={5} pt={10} maxW="1000px" mx="auto" textAlign="center" borderRadius="md" boxShadow="md" bg="white">
                 <TwoColumnLayout />
+                <DetailsToggle/>
                 <GeographicDiversification />
             </Box>
         </ChakraProvider>

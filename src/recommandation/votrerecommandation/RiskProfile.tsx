@@ -27,11 +27,11 @@ const theme = extendTheme({
       500: '#718096',
     },
     white: '#FFFFFF',
-    blue: '#FF8C00',
+    orange: '#FF8C00',
     green: {
       400: '#38A169',
     },
-    orange: {
+    blue: {
       400: '#3182CE',
     },
   },
@@ -75,53 +75,52 @@ const RiskProfile: React.FC = () => {
         </VStack>
 
         {/* Section 2: Votre enveloppe */}
-        <Box mb={4}>
-          <HStack justifyContent="space-between" mb={2}>
-            <Text fontSize="lg" fontWeight="bold" color="blue.400">
-              Votre enveloppe
-            </Text>
-            <Link color="blue.400" onClick={openModal}>
-              Modifier
-            </Link>
-          </HStack>
+        <HStack justifyContent="space-between" mb={4}>
+          <Text fontSize="lg" fontWeight="bold" color="blue.400">
+            Votre enveloppe
+          </Text>
+          <Link color="blue.400" onClick={openModal}>
+            Modifier
+          </Link>
+        </HStack>
+        <HStack justifyContent="space-between" mb={4}>
           <HStack>
             <Box as={FaAward} color="blue.400" w={6} h={6} />
             <VStack align="start" spacing={0}>
-              <Text>Assurance-vie</Text>
+            <Text>Assurance-vie</Text>
               <Text fontSize="sm" color="gray.500">Mandat d'arbitrage</Text>
             </VStack>
             <HStack spacing={1} ml={2}>
               <Icon as={FaQuestionCircle} color="gray.500" />
             </HStack>
           </HStack>
-        </Box>
+        </HStack>
 
         {/* Section 3: Votre allocation */}
-        <Box mb={4}>
-          <HStack justifyContent="space-between" mb={2}>
-            <Text fontSize="lg" fontWeight="bold" color="blue.400">
-              Votre allocation
-            </Text>
-            <Link color="blue.400" onClick={openModal}>
-              Modifier
-            </Link>
-          </HStack>
-          <HStack alignItems="center" mb={2}>
-            <Box as="span" mr={2} p={2} bg="blue.400" color="white" borderRadius="md">
-              2
-            </Box>
-            <Text>Profil de risque : Prudent</Text>
-          </HStack>
-          <Text mb={2} fontSize="sm" color="gray.500">
-            Un profil de risque 2 chez Yomoni correspond à un profil de risque de 3 sur 7 sur l'échelle du SRI, l’indicateur européen de référence du risque.
+        <HStack justifyContent="space-between" mb={4}>
+          <Text fontSize="lg" fontWeight="bold" color="blue.400">
+            Votre allocation
           </Text>
-          <HStack alignItems="center">
+          <Link color="blue.400" onClick={openModal}>
+            Modifier
+          </Link>
+        </HStack>
+        <Text mb={4}>
+          <Box as="span" mr={2} p={2} bg="blue.400" color="white" borderRadius="md">
+            2
+          </Box>
+          Profil de risque : Prudent
+        </Text>
+        <Text mb={4}>
+          Un profil de risque 2 chez Yomoni correspond à un profil de risque de 3 sur 7 sur l'échelle du SRI, l’indicateur européen de référence du risque.
+        </Text>
+        <HStack justifyContent="space-between" alignItems="center">
+          <HStack>
             <Text>Investissement responsable</Text>
             <FaLeaf color="green" />
-            <Icon as={FaQuestionCircle} color="gray.500" ml={1} />
           </HStack>
-          <Switch colorScheme="blue" ml={4} />
-        </Box>
+          <Switch colorScheme="blue" />
+        </HStack>
       </Box>
 
       <Modal isOpen={isModalOpen} onClose={closeModal} size="xl">
