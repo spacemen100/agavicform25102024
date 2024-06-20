@@ -1,9 +1,8 @@
 // TwoColumnLayout.tsx
 import React from 'react';
-import { Box, SimpleGrid } from '@chakra-ui/react';
+import { Box, SimpleGrid, Spacer } from '@chakra-ui/react';
 import RiskProfile from './votrerecommandation/RiskProfile';
 import AgavicRecommendation from './votrerecommandation/AgavicRecommendation';
-import YourProject from './votrerecommandation/YourProject';
 import QuestionsBox from './votrerecommandation/QuestionsBox';
 import RiskDisclaimer from './votrerecommandation/RiskDisclaimer';
 
@@ -13,6 +12,7 @@ const TwoColumnLayout: React.FC = () => {
             <Box>
                 <AgavicRecommendation />
                 <QuestionsBox />
+                <Spacer p={5} />
                 <RiskDisclaimer />
             </Box>
             <Box>
