@@ -54,10 +54,10 @@ const AccompagnementSurMesure: React.FC = () => {
                         </InputGroup>
                     </HStack>
                     <HStack spacing={4} width="100%" justify="center">
-                        <Button variant="outline" size="lg" colorScheme="blue" flex="1">
+                        <Button variant="outline" size="lg" colorScheme="blue" flex="1" whiteSpace="normal" px={4}>
                             Continuer en autonomie
                         </Button>
-                        <Button size="lg" colorScheme="blue" flex="1">
+                        <Button size="lg" colorScheme="blue" flex="1" whiteSpace="normal" px={4}>
                             Être accompagné par un conseiller privé
                         </Button>
                     </HStack>
