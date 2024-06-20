@@ -1,4 +1,3 @@
-// ProfileSelection.tsx
 import React, { useState } from 'react';
 import {
   Box,
@@ -20,13 +19,13 @@ import { FaInfoCircle } from 'react-icons/fa';
 import { RiLeafLine } from "react-icons/ri";
 
 const profiles = [
-  { id: '1', label: 'Profil 2', recommended: true, color: 'blue.500', description: '' },
+  { id: '1', label: 'Profil 2', recommended: true, color: 'blue.500', description: 'Profil 2 description here.' },
   { id: '2', label: 'Profil 3', recommended: false, color: 'gray.500', description: 'Vous souhaitez prendre peu de risques avec une espérance de gains peu élevée et/ou avez un horizon d\'investissement court terme (3-5 ans). Le Profil 3 est donc parfaitement adapté à votre projet.' },
-  { id: '3', label: 'Profil 4', recommended: false, color: 'gray.500', description: '' },
-  { id: '4', label: 'Profil 5', recommended: false, color: 'teal.400', description: '' },
-  { id: '5', label: 'Profil 6', recommended: false, color: 'yellow.400', description: '' },
-  { id: '6', label: 'Profil 7', recommended: false, color: 'yellow.600', description: '' },
-  { id: '7', label: 'Profil 8', recommended: false, color: 'pink.400', description: '' },
+  { id: '3', label: 'Profil 4', recommended: false, color: 'gray.500', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un minimum de risques avec une espérance de gains limitée et/ou avez un horizon d\'investissement moyen terme (5-8 ans). Le Profil 4 est donc parfaitement adapté à votre projet.' },
+  { id: '4', label: 'Profil 5', recommended: false, color: 'teal.400', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un risque mesuré avec une espérance de gains modérée et/ou avez un horizon d\'investissement moyen terme (5-8 ans). Le Profil 5 est donc parfaitement adapté à votre projet.' },
+  { id: '5', label: 'Profil 6', recommended: false, color: 'yellow.400', description: 'Profil 6 description here.' },
+  { id: '6', label: 'Profil 7', recommended: false, color: 'yellow.600', description: 'Profil 7 description here.' },
+  { id: '7', label: 'Profil 8', recommended: false, color: 'pink.400', description: 'Profil 8 description here.' },
 ];
 
 const ProfileSelection: React.FC = () => {
@@ -125,6 +124,11 @@ const ProfileOption: React.FC<any> = (props) => {
         p={5}
       >
         {props.children}
+        {props.isSelected && props.description && (
+          <Text mt={2} color="gray.600">
+            {props.description}
+          </Text>
+        )}
       </Box>
     </Box>
   );
