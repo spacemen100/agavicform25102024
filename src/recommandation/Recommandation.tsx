@@ -7,6 +7,8 @@ import Stepper from '../components/Stepper';
 import DetailsToggle from './votrerecommandation/DetailsToggle';
 import AssetAllocation from './details/AssetAllocation';
 import InvestmentProjection from './votrerecommandation/InvestmentProjection';
+import LeaderInfo from './votrerecommandation/LeaderInfo';
+import InvestmentInfo from './votrerecommandation/InvestmentInfo';
 
 const theme = extendTheme({
     colors: {
@@ -40,6 +42,8 @@ const Recommandation: React.FC = () => {
                 <GeographicDiversification />
                 <AssetAllocation/>
                 <InvestmentProjection/>
+                <LeaderInfo/>
+                <InvestmentInfo/>
             </Box>
         </ChakraProvider>
     );
