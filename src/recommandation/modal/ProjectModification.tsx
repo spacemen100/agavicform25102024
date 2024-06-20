@@ -11,7 +11,6 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
-  Link,
 } from '@chakra-ui/react';
 
 const ProjectModification: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, onClose }) => {
