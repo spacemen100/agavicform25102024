@@ -13,6 +13,7 @@ import {
   ModalCloseButton,
   Link,
 } from '@chakra-ui/react';
+import { supabase } from './../../supabaseClient'; // Importez votre client Supabase
 
 const alertMessages: { [key: string]: string } = {
   epargner: "Vous ne pouvez pas sélectionner un PEA (qui présente un profil de risque 10) car vous avez indiqué à la question 1 vouloir 'Épargner en cas de coup dur', ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1.",
@@ -28,7 +29,29 @@ interface EnvelopeSelectionProps {
 
 const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, selectedProject }) => {
   const [selectedEnvelope, setSelectedEnvelope] = useState<string>('AV');
-  const isPEADisabled = selectedProject && alertMessages[selectedProject];
+  const [step1Response, setStep1Response] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchStep1Response = async () => {
+      const { data, error } = await supabase
+        .from('form_responses')
+        .select('step1')
+        .eq('id', 'some-unique-identifier') // Remplacez par l'ID de l'utilisateur ou autre critère
+        .single();
+
+      if (error) {
+        console.error('Error fetching step1 response:', error);
+      } else {
+        setStep1Response(data?.step1 || null);
+      }
+    };
+
+    if (isOpen) {
+      fetchStep1Response();
+    }
+  }, [isOpen]);
+
+  const isPEADisabled = step1Response && alertMessages[step1Response];
 
   useEffect(() => {
     if (isPEADisabled) {
@@ -52,7 +75,7 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
           {isPEADisabled && (
             <Box p={4} bg="red.50" borderRadius="md" mb={4}>
               <Text color="red.500" fontSize="sm">
-                {alertMessages[selectedProject!]} <Link color="blue.400">revoir votre projet en étape 1</Link>.
+                {alertMessages[step1Response!]} <Link color="blue.400">revoir votre projet en étape 1</Link>.
               </Text>
             </Box>
           )}
