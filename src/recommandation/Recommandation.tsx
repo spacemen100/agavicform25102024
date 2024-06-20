@@ -5,6 +5,7 @@ import GeographicDiversification from './details/GeographicDiversification';
 import TwoColumnLayout from './TwoColumnLayout';
 import Stepper from '../components/Stepper';
 import DetailsToggle from './votrerecommandation/DetailsToggle';
+import AssetAllocation from './details/AssetAllocation';
 
 const theme = extendTheme({
     colors: {
@@ -36,6 +37,7 @@ const Recommandation: React.FC = () => {
                 <TwoColumnLayout />
                 <DetailsToggle/>
                 <GeographicDiversification />
+                <AssetAllocation/>
             </Box>
         </ChakraProvider>
     );
