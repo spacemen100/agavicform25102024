@@ -58,15 +58,17 @@ const options = {
 };
 
 const AssetAllocation: React.FC = () => {
-  const [isObligationsOpen, setIsObligationsOpen] = React.useState(true);
-  const [isActionsOpen, setIsActionsOpen] = React.useState(true);
+  const [isObligationsOpen, setIsObligationsOpen] = React.useState(false);
+  const [isActionsOpen, setIsActionsOpen] = React.useState(false);
+  const [isOthersOpen, setIsOthersOpen] = React.useState(false);
 
   const toggleObligations = () => setIsObligationsOpen(!isObligationsOpen);
   const toggleActions = () => setIsActionsOpen(!isActionsOpen);
+  const toggleOthers = () => setIsOthersOpen(!isOthersOpen);
 
   return (
     <ChakraProvider theme={theme}>
-      <Box mt={5} p={5} maxW="700px" mx="auto" textAlign="left" borderRadius="md" boxShadow="md" bg="white">
+      <Box mt={5} p={5} mx="auto" textAlign="left" borderRadius="md" boxShadow="md" bg="white">
         <HStack mb={4}>
           <Box as="span" mr={2} p={2} bg="blue.400" color="white" borderRadius="md">
             <Icon as={FaChevronDown} />
@@ -123,10 +125,20 @@ const AssetAllocation: React.FC = () => {
               </Collapse>
             </Box>
             <Box>
-              <Text fontWeight="bold" color="gray.500">70,0% Autres</Text>
-              <VStack align="start" pl={4} spacing={1}>
-                <Text>70,0% Fonds Euro</Text>
-              </VStack>
+              <HStack justifyContent="space-between" mb={2}>
+                <Text fontWeight="bold" color="blue.400">70,0% Autres</Text>
+                <IconButton
+                  icon={isOthersOpen ? <FaChevronUp /> : <FaChevronDown />}
+                  onClick={toggleOthers}
+                  variant="ghost"
+                  aria-label="Toggle Autres"
+                />
+              </HStack>
+              <Collapse in={isOthersOpen} animateOpacity>
+                <VStack align="start" pl={4} spacing={1}>
+                  <Text>70,0% Fonds Euro</Text>
+                </VStack>
+              </Collapse>
             </Box>
           </VStack>
         </HStack>
