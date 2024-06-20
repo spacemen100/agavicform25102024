@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Text,
@@ -27,6 +27,21 @@ interface EnvelopeSelectionProps {
 }
 
 const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, selectedProject }) => {
+  const [selectedEnvelope, setSelectedEnvelope] = useState<string>('AV');
+  const isPEADisabled = selectedProject && alertMessages[selectedProject];
+
+  useEffect(() => {
+    if (isPEADisabled) {
+      setSelectedEnvelope('AV');
+    }
+  }, [isPEADisabled]);
+
+  const handleEnvelopeSelection = (envelope: string) => {
+    if (envelope !== 'PEA' || !isPEADisabled) {
+      setSelectedEnvelope(envelope);
+    }
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
@@ -34,10 +49,10 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
         <ModalHeader>Choisir une nouvelle enveloppe</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {selectedProject && alertMessages[selectedProject] && (
+          {isPEADisabled && (
             <Box p={4} bg="red.50" borderRadius="md" mb={4}>
               <Text color="red.500" fontSize="sm">
-                {alertMessages[selectedProject]} <Link color="blue.400">revoir votre projet en étape 1</Link>.
+                {alertMessages[selectedProject!]} <Link color="blue.400">revoir votre projet en étape 1</Link>.
               </Text>
             </Box>
           )}
@@ -46,12 +61,14 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
               p={4}
               borderRadius="md"
               boxShadow="md"
-              bg="white"
+              bg={selectedEnvelope === 'AV' ? 'orange.100' : 'white'}
               border="1px solid"
-              borderColor="gray.200"
+              borderColor={selectedEnvelope === 'AV' ? 'orange.400' : 'gray.200'}
               flex="1"
               align="start"
               spacing={3}
+              onClick={() => handleEnvelopeSelection('AV')}
+              cursor="pointer"
             >
               <HStack spacing={2}>
                 <Box as="span" bg="orange.400" p={2} borderRadius="md" color="white" fontWeight="bold">AV</Box>
@@ -69,12 +86,15 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
               p={4}
               borderRadius="md"
               boxShadow="md"
-              bg="white"
+              bg={selectedEnvelope === 'PEA' ? 'pink.100' : 'white'}
               border="1px solid"
-              borderColor="gray.200"
+              borderColor={selectedEnvelope === 'PEA' ? 'pink.400' : 'gray.200'}
               flex="1"
               align="start"
               spacing={3}
+              onClick={() => handleEnvelopeSelection('PEA')}
+              cursor={isPEADisabled ? 'not-allowed' : 'pointer'}
+              opacity={isPEADisabled ? 0.5 : 1}
             >
               <HStack spacing={2}>
                 <Box as="span" bg="pink.400" p={2} borderRadius="md" color="white" fontWeight="bold">PEA</Box>
@@ -93,12 +113,14 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
               p={4}
               borderRadius="md"
               boxShadow="md"
-              bg="white"
+              bg={selectedEnvelope === 'CTO' ? 'blue.100' : 'white'}
               border="1px solid"
-              borderColor="gray.200"
+              borderColor={selectedEnvelope === 'CTO' ? 'blue.400' : 'gray.200'}
               flex="1"
               align="start"
               spacing={3}
+              onClick={() => handleEnvelopeSelection('CTO')}
+              cursor="pointer"
             >
               <HStack spacing={2}>
                 <Box as="span" bg="blue.400" p={2} borderRadius="md" color="white" fontWeight="bold">CTO</Box>
