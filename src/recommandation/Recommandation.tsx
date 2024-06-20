@@ -1,6 +1,6 @@
 // src/pages/Recommandation.tsx
-import React, { useState, useEffect } from 'react';
-import { ChakraProvider, extendTheme, Box, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@chakra-ui/react';
+import React, { useEffect } from 'react';
+import { ChakraProvider, extendTheme, Box, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from '@chakra-ui/react';
 import GeographicDiversification from './details/GeographicDiversification';
 import TwoColumnLayout from './TwoColumnLayout';
 import Stepper from '../components/Stepper';
@@ -63,15 +63,13 @@ const Recommandation: React.FC = () => {
             <Modal isOpen={isOpen} onClose={onClose} size="xl">
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Accompagnement sur mesure</ModalHeader>
+                    <ModalHeader>
+                        Accompagnement sur mesure
+                        <ModalCloseButton />
+                    </ModalHeader>
                     <ModalBody>
-                        <AccompagnementSurMesure />
+                        <AccompagnementSurMesure onClose={onClose} />
                     </ModalBody>
-                    <ModalFooter>
-                        <Button colorScheme="blue" mr={3} onClick={onClose}>
-                            Close
-                        </Button>
-                    </ModalFooter>
                 </ModalContent>
             </Modal>
         </ChakraProvider>

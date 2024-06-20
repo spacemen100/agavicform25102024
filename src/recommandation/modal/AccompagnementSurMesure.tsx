@@ -1,6 +1,6 @@
 // src/recommandation/modal/AccompagnementSurMesure.tsx
 import React from 'react';
-import { Box, Text, VStack, HStack, Input, Button, InputGroup, InputLeftElement, ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { Box, Text, VStack, HStack, Input, Button, InputGroup, InputLeftElement, ChakraProvider, extendTheme, CloseButton } from '@chakra-ui/react';
 
 const theme = extendTheme({
     colors: {
@@ -24,7 +24,7 @@ const theme = extendTheme({
     },
 });
 
-const AccompagnementSurMesure: React.FC = () => {
+const AccompagnementSurMesure: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     return (
         <ChakraProvider theme={theme}>
             <Box
@@ -33,7 +33,9 @@ const AccompagnementSurMesure: React.FC = () => {
                 borderRadius="md"
                 boxShadow="md"
                 bg="white"
+                position="relative"
             >
+                <CloseButton position="absolute" top="10px" right="10px" onClick={onClose} />
                 <Text fontSize="2xl" fontWeight="bold" mb={5} color="blue.800">
                     Bénéficiez d’un accompagnement sur mesure !
                 </Text>
