@@ -1,5 +1,6 @@
+// src/recommandation/modal/AccompagnementSurMesure.tsx
 import React from 'react';
-import { ChakraProvider, extendTheme, Box, Text, VStack, HStack, Input, Button, InputGroup, InputLeftElement } from '@chakra-ui/react';
+import { Box, Text, VStack, HStack, Input, Button, InputGroup, InputLeftElement, ChakraProvider, extendTheme } from '@chakra-ui/react';
 
 const theme = extendTheme({
     colors: {
@@ -27,17 +28,11 @@ const AccompagnementSurMesure: React.FC = () => {
     return (
         <ChakraProvider theme={theme}>
             <Box
-                mt={5}
                 p={5}
-                pt={10}
-                maxW="600px"
-                mx="auto"
                 textAlign="center"
                 borderRadius="md"
                 boxShadow="md"
                 bg="white"
-                border="1px"
-                borderColor="gray.200"
             >
                 <Text fontSize="2xl" fontWeight="bold" mb={5} color="blue.800">
                     Bénéficiez d’un accompagnement sur mesure !
@@ -52,7 +47,9 @@ const AccompagnementSurMesure: React.FC = () => {
                     </HStack>
                     <HStack spacing={4} width="100%">
                         <InputGroup size="lg">
-                            <InputLeftElement pointerEvents="none" children={<Box as="span" pl={2} color="gray.500">🇫🇷</Box>} />
+                            <InputLeftElement pointerEvents="none">
+                                <Box as="span" pl={2} color="gray.500">🇫🇷</Box>
+                            </InputLeftElement>
                             <Input placeholder="06 XX XX XX XX" variant="filled" />
                         </InputGroup>
                     </HStack>

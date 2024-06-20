@@ -1,6 +1,6 @@
 // src/pages/Recommandation.tsx
-import React from 'react';
-import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
+import { ChakraProvider, extendTheme, Box, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@chakra-ui/react';
 import GeographicDiversification from './details/GeographicDiversification';
 import TwoColumnLayout from './TwoColumnLayout';
 import Stepper from '../components/Stepper';
@@ -13,6 +13,7 @@ import ArbitrationMandate from './votrerecommandation/ArbitrationMandate';
 import FeesInfo from './votrerecommandation/FeesInfo';
 import RegulatoryInfo from './votrerecommandation/RegulatoryInfo';
 import ActionButtons from './votrerecommandation/ActionButtons';
+import AccompagnementSurMesure from '../recommandation/modal/AccompagnementSurMesure';
 
 const theme = extendTheme({
     colors: {
@@ -37,22 +38,42 @@ const theme = extendTheme({
 });
 
 const Recommandation: React.FC = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    useEffect(() => {
+        onOpen();
+    }, [onOpen]);
+
     return (
         <ChakraProvider theme={theme}>
             <Stepper currentStep={1} />
             <Box mt={5} p={5} pt={10} maxW="1000px" mx="auto" textAlign="center" borderRadius="md" boxShadow="md" bg="white">
                 <TwoColumnLayout />
-                <DetailsToggle/>
+                <DetailsToggle />
                 <GeographicDiversification />
-                <AssetAllocation/>
-                <InvestmentProjection/>
-                <LeaderInfo/>
-                <InvestmentInfo/>
-                <ArbitrationMandate/>
-                <FeesInfo/>
-                <RegulatoryInfo/>
-                <ActionButtons/>
+                <AssetAllocation />
+                <InvestmentProjection />
+                <LeaderInfo />
+                <InvestmentInfo />
+                <ArbitrationMandate />
+                <FeesInfo />
+                <RegulatoryInfo />
+                <ActionButtons />
             </Box>
+            <Modal isOpen={isOpen} onClose={onClose} size="xl">
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Accompagnement sur mesure</ModalHeader>
+                    <ModalBody>
+                        <AccompagnementSurMesure />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" mr={3} onClick={onClose}>
+                            Close
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </ChakraProvider>
     );
 };
