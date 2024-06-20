@@ -13,13 +13,14 @@ import {
   ModalCloseButton,
   Link,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from './../../supabaseClient'; // Importez votre client Supabase
 import { useUuid } from './../../context/UuidContext'; // Importez votre contexte UUID
 
 const alertMessages: { [key: string]: string } = {
   epargner: "Vous ne pouvez pas sélectionner un PEA (qui présente un profil de risque 10) car vous avez indiqué à la question 1 vouloir 'Épargner en cas de coup dur', ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1.",
   achat: "Vous ne pouvez pas sélectionner un PEA (qui présente un profil de risque 10) car vous avez indiqué à la question 1 vouloir 'Préparer un achat important', ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1.",
-  retraite: "Vous ne pouvez pas sélectionner un PEA (qui présente un profil de risque 10) car vous avez indiqué à la question 1 vouloir 'Prévoir ma retraite', ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1.",
+  compte: "Vous ne pouvez pas sélectionner un PEA (qui présente un profil de risque 10) car vous avez indiqué à la question 1 vouloir 'Prévoir ma retraite', ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1.",
 };
 
 interface EnvelopeSelectionProps {
@@ -33,6 +34,7 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
   const [step1Response, setStep1Response] = useState<string | null>(null);
 
   const { uuid } = useUuid();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStep1Response = async () => {
@@ -68,6 +70,10 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
     }
   };
 
+  const handleReviewProjectClick = () => {
+    navigate('/quel-est-votre-projet-d-investissement');
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
@@ -78,7 +84,10 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
           {isPEADisabled && (
             <Box p={4} bg="red.50" borderRadius="md" mb={4}>
               <Text color="red.500" fontSize="sm">
-                {alertMessages[step1Response!]} <Link color="blue.400">revoir votre projet en étape 1</Link>.
+                {alertMessages[step1Response!]}{' '}
+                <Link color="blue.400" onClick={handleReviewProjectClick}>
+                  revoir votre projet en étape 1
+                </Link>.
               </Text>
             </Box>
           )}
