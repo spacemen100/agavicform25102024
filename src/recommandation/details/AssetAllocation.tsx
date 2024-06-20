@@ -50,8 +50,10 @@ const options = {
   responsive: true,
   maintainAspectRatio: false,
   cutoutPercentage: 70,
-  legend: {
-    display: false,
+  plugins: {
+    legend: {
+      display: false,
+    },
   },
 };
 
@@ -64,7 +66,7 @@ const AssetAllocation: React.FC = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      <Box mt={5} p={5}  mx="auto" textAlign="left" borderRadius="md" boxShadow="md" bg="white">
+      <Box mt={5} p={5} maxW="700px" mx="auto" textAlign="left" borderRadius="md" boxShadow="md" bg="white">
         <HStack mb={4}>
           <Box as="span" mr={2} p={2} bg="blue.400" color="white" borderRadius="md">
             <Icon as={FaChevronDown} />
@@ -73,53 +75,59 @@ const AssetAllocation: React.FC = () => {
             Répartition par type d'actifs
           </Text>
         </HStack>
-        <HStack alignItems="start">
+        <HStack alignItems="start" spacing={6}>
           <Box w="40%">
             <Doughnut data={data} options={options} width={150} height={150} />
           </Box>
-          <VStack w="60%" align="stretch">
-            <HStack justifyContent="space-between">
-              <Text fontWeight="bold" color="blue.400">15,0% Obligations</Text>
-              <IconButton
-                icon={isObligationsOpen ? <FaChevronUp /> : <FaChevronDown />}
-                onClick={toggleObligations}
-                variant="ghost"
-                aria-label="Toggle Obligations"
-              />
-            </HStack>
-            <Collapse in={isObligationsOpen}>
-              <VStack align="start" pl={4}>
-                <Text>7,5% Obligations zone Euro diversifiées</Text>
-                <Text>4,9% Bons du Trésor zone Euro</Text>
-                <Text>2,6% Obligations d'entreprises zone Euro</Text>
+          <VStack w="60%" align="stretch" spacing={4}>
+            <Box>
+              <HStack justifyContent="space-between" mb={2}>
+                <Text fontWeight="bold" color="blue.400">15,0% Obligations</Text>
+                <IconButton
+                  icon={isObligationsOpen ? <FaChevronUp /> : <FaChevronDown />}
+                  onClick={toggleObligations}
+                  variant="ghost"
+                  aria-label="Toggle Obligations"
+                />
+              </HStack>
+              <Collapse in={isObligationsOpen} animateOpacity>
+                <VStack align="start" pl={4} spacing={1}>
+                  <Text>7,5% Obligations zone Euro diversifiées</Text>
+                  <Text>4,9% Bons du Trésor zone Euro</Text>
+                  <Text>2,6% Obligations d'entreprises zone Euro</Text>
+                </VStack>
+              </Collapse>
+            </Box>
+            <Box>
+              <HStack justifyContent="space-between" mb={2}>
+                <Text fontWeight="bold" color="blue.400">15,0% Actions</Text>
+                <IconButton
+                  icon={isActionsOpen ? <FaChevronUp /> : <FaChevronDown />}
+                  onClick={toggleActions}
+                  variant="ghost"
+                  aria-label="Toggle Actions"
+                />
+              </HStack>
+              <Collapse in={isActionsOpen} animateOpacity>
+                <VStack align="start" pl={4} spacing={1}>
+                  <Text>3,5% Actions États-Unis</Text>
+                  <Text>3,4% Actions Monde couvertes</Text>
+                  <Text>2,5% Actions États-Unis couvertes</Text>
+                  <Text>2,0% Actions Monde</Text>
+                  <Text>1,9% Actions Pays Émergents</Text>
+                  <Text>0,6% Actions Europe</Text>
+                  <Text>0,6% Actions Europe couvertes</Text>
+                  <Text>0,3% Actions Japon</Text>
+                  <Text>0,2% Actions Japon couvertes</Text>
+                </VStack>
+              </Collapse>
+            </Box>
+            <Box>
+              <Text fontWeight="bold" color="gray.500">70,0% Autres</Text>
+              <VStack align="start" pl={4} spacing={1}>
+                <Text>70,0% Fonds Euro</Text>
               </VStack>
-            </Collapse>
-            <HStack justifyContent="space-between">
-              <Text fontWeight="bold" color="blue.400">15,0% Actions</Text>
-              <IconButton
-                icon={isActionsOpen ? <FaChevronUp /> : <FaChevronDown />}
-                onClick={toggleActions}
-                variant="ghost"
-                aria-label="Toggle Actions"
-              />
-            </HStack>
-            <Collapse in={isActionsOpen}>
-              <VStack align="start" pl={4}>
-                <Text>3,5% Actions États-Unis</Text>
-                <Text>3,4% Actions Monde couvertes</Text>
-                <Text>2,5% Actions États-Unis couvertes</Text>
-                <Text>2,0% Actions Monde</Text>
-                <Text>1,9% Actions Pays Émergents</Text>
-                <Text>0,6% Actions Europe</Text>
-                <Text>0,6% Actions Europe couvertes</Text>
-                <Text>0,3% Actions Japon</Text>
-                <Text>0,2% Actions Japon couvertes</Text>
-              </VStack>
-            </Collapse>
-            <Text fontWeight="bold" color="gray.500">70,0% Autres</Text>
-            <VStack align="start" pl={4}>
-              <Text>70,0% Fonds Euro</Text>
-            </VStack>
+            </Box>
           </VStack>
         </HStack>
       </Box>
