@@ -31,7 +31,7 @@ const GeographicDiversification: React.FC = () => {
                     Diversification géographique (hors Fonds Euro)
                 </Text>
                 <HStack spacing={10} alignItems="flex-start">
-                    <Image src="/path-to-your-map-image.png" alt="Geographical Diversification Map" boxSize="300px" />
+                    <Image src="/worldmap.jpg" alt="Geographical Diversification Map" boxSize="300px" />
                     <VStack align="flex-start" spacing={4} maxW="600px">
                         <Text fontWeight="bold" color="blue.700">
                             <Text as="span" fontSize="xl" color="blue.700">87,8%</Text> Europe
