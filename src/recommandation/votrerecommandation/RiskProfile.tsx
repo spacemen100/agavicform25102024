@@ -31,7 +31,7 @@ const theme = extendTheme({
     green: {
       400: '#38A169',
     },
-    blue: {
+    orange: {
       400: '#3182CE',
     },
   },
