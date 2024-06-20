@@ -31,7 +31,8 @@ import RapportGainsPertes10Ans from '../pages/23RapportGainsPertes10Ans';
 import PerteValeurInvestissement from '../pages/24PerteValeurInvestissement';
 import SimulationReady from '../pages/CreationCompte';
 import CreationCompte from '../pages/CreationCompte';
-import NotificationPreferences from '../pages/25NotificationPreferences'; // Ajout de l'import pour NotificationPreferences
+import NotificationPreferences from '../pages/25NotificationPreferences';
+import Recommandation from '../recommandation/Recommandation'; // Ajout de l'import pour Recommandation
 
 // Définition des routes
 export const routes = [
@@ -63,7 +64,8 @@ export const routes = [
   { path: '/perte-valeur-investissement', name: 'PerteValeurInvestissement', component: <PerteValeurInvestissement />, hidden: true },
   { path: '/simulation-ready', name: 'SimulationReady', component: <SimulationReady />, hidden: true },
   { path: '/creation-compte', name: 'CreationCompte', component: <CreationCompte />, hidden: true },
-  { path: '/notification-preferences', name: 'NotificationPreferences', component: <NotificationPreferences />, hidden: true }, // Ajout de la route pour NotificationPreferences
+  { path: '/notification-preferences', name: 'NotificationPreferences', component: <NotificationPreferences />, hidden: true },
+  { path: '/recommandation', name: 'Recommandation', component: <Recommandation />, hidden: true }, // Ajout de la route pour Recommandation
 ];
 
 // Composant des routes

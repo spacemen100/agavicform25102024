@@ -74,7 +74,7 @@ const NotificationPreferences: React.FC = () => {
     const handleNext = async () => {
         if (preferences.news !== undefined && preferences.promo !== undefined) {
             await updateResponse(25, JSON.stringify(preferences));
-            navigate('/next-step');
+            navigate('/recommandation');
         } else {
             setIsAlertOpen(true);
         }
