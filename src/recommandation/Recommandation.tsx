@@ -6,6 +6,7 @@ import TwoColumnLayout from './TwoColumnLayout';
 import Stepper from '../components/Stepper';
 import DetailsToggle from './votrerecommandation/DetailsToggle';
 import AssetAllocation from './details/AssetAllocation';
+import InvestmentProjection from './votrerecommandation/InvestmentProjection';
 
 const theme = extendTheme({
     colors: {
@@ -38,6 +39,7 @@ const Recommandation: React.FC = () => {
                 <DetailsToggle/>
                 <GeographicDiversification />
                 <AssetAllocation/>
+                <InvestmentProjection/>
             </Box>
         </ChakraProvider>
     );
