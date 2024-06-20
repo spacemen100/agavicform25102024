@@ -18,6 +18,8 @@ import {
 } from '@chakra-ui/react';
 import { FaAward, FaLeaf, FaQuestionCircle } from 'react-icons/fa';
 import ProfileSelection from '../modal/ProfileSelection';
+import ProjectModification from '../modal/ProjectModification';
+import EnvelopeSelection from '../modal/EnvelopeSelection';
 
 const theme = extendTheme({
   colors: {
@@ -42,10 +44,18 @@ const theme = extendTheme({
 });
 
 const RiskProfile: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+  const [isEnvelopeModalOpen, setIsEnvelopeModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const openProjectModal = () => setIsProjectModalOpen(true);
+  const closeProjectModal = () => setIsProjectModalOpen(false);
+
+  const openEnvelopeModal = () => setIsEnvelopeModalOpen(true);
+  const closeEnvelopeModal = () => setIsEnvelopeModalOpen(false);
+
+  const openProfileModal = () => setIsProfileModalOpen(true);
+  const closeProfileModal = () => setIsProfileModalOpen(false);
 
   return (
     <ChakraProvider theme={theme}>
@@ -55,7 +65,7 @@ const RiskProfile: React.FC = () => {
           <Text fontSize="lg" fontWeight="bold" color="blue.400">
             Votre projet
           </Text>
-          <Link color="blue.400" onClick={openModal}>
+          <Link color="blue.400" onClick={openProjectModal}>
             Modifier
           </Link>
         </HStack>
@@ -79,7 +89,7 @@ const RiskProfile: React.FC = () => {
           <Text fontSize="lg" fontWeight="bold" color="blue.400">
             Votre enveloppe
           </Text>
-          <Link color="blue.400" onClick={openModal}>
+          <Link color="blue.400" onClick={openEnvelopeModal}>
             Modifier
           </Link>
         </HStack>
@@ -87,7 +97,7 @@ const RiskProfile: React.FC = () => {
           <HStack>
             <Box as={FaAward} color="blue.400" w={6} h={6} />
             <VStack align="start" spacing={0}>
-            <Text>Assurance-vie</Text>
+              <Text>Assurance-vie</Text>
               <Text fontSize="sm" color="gray.500">Mandat d'arbitrage</Text>
             </VStack>
             <HStack spacing={1} ml={2}>
@@ -101,7 +111,7 @@ const RiskProfile: React.FC = () => {
           <Text fontSize="lg" fontWeight="bold" color="blue.400">
             Votre allocation
           </Text>
-          <Link color="blue.400" onClick={openModal}>
+          <Link color="blue.400" onClick={openProfileModal}>
             Modifier
           </Link>
         </HStack>
@@ -123,7 +133,9 @@ const RiskProfile: React.FC = () => {
         </HStack>
       </Box>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal} size="xl">
+      <ProjectModification isOpen={isProjectModalOpen} onClose={closeProjectModal} />
+      <EnvelopeSelection isOpen={isEnvelopeModalOpen} onClose={closeEnvelopeModal} />
+      <Modal isOpen={isProfileModalOpen} onClose={closeProfileModal} size="xl">
         <ModalOverlay />
         <ModalContent maxWidth="90%">
           <ModalHeader></ModalHeader>
