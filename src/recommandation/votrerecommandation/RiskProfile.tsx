@@ -9,9 +9,7 @@ import {
     Progress,
     Switch,
     Link,
-    IconButton,
 } from '@chakra-ui/react';
-import { EditIcon } from '@chakra-ui/icons';
 import { FaAward, FaLeaf } from 'react-icons/fa';
 
 const theme = extendTheme({

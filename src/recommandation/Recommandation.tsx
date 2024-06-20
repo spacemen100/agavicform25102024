@@ -1,7 +1,9 @@
 // src/pages/Recommandation.tsx
 import React from 'react';
-import { ChakraProvider, extendTheme, Box, Text } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react';
 import GeographicDiversification from './details/GeographicDiversification';
+import TwoColumnLayout from './TwoColumnLayout';
+import Stepper from '../components/Stepper';
 
 const theme = extendTheme({
     colors: {
@@ -28,12 +30,10 @@ const theme = extendTheme({
 const Recommandation: React.FC = () => {
     return (
         <ChakraProvider theme={theme}>
+            <Stepper currentStep={1} />
             <Box mt={5} p={5} pt={10} maxW="1000px" mx="auto" textAlign="center" borderRadius="md" boxShadow="md" bg="white">
-                <Text fontSize="2xl" fontWeight="bold" mb={5}>
-                    Votre Recommandation
-                </Text>
-                <GeographicDiversification/>
-                {/* Add other components or content related to the recommendation page */}
+                <TwoColumnLayout />
+                <GeographicDiversification />
             </Box>
         </ChakraProvider>
     );
