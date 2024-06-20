@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Text,
@@ -44,6 +44,23 @@ const ProjectModification: React.FC<{ isOpen: boolean, onClose: () => void }> = 
     }
   }, [isOpen, uuid]);
 
+  const handleSave = async () => {
+    const { error } = await supabase
+      .from('form_responses')
+      .update({
+        step2: initialPayment,
+        step3: monthlyPayment,
+        step4: investmentHorizon,
+      })
+      .eq('id', uuid);
+
+    if (error) {
+      console.error('Error updating project data:', error);
+    } else {
+      onClose();
+    }
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalOverlay />
@@ -80,7 +97,7 @@ const ProjectModification: React.FC<{ isOpen: boolean, onClose: () => void }> = 
               />
             </Box>
           </VStack>
-          <Button colorScheme="blue" mt={6} w="full" onClick={onClose}>
+          <Button colorScheme="blue" mt={6} w="full" onClick={handleSave}>
             Valider
           </Button>
         </ModalBody>
