@@ -1,7 +1,7 @@
 // src/pages/Recommandation.tsx
 import React from 'react';
 import { ChakraProvider, extendTheme, Box, Text } from '@chakra-ui/react';
-import AssetAllocationCircularProgress from './details/AssetAllocationCircularProgress';
+import GeographicDiversification from './details/GeographicDiversification';
 
 const theme = extendTheme({
     colors: {
@@ -32,7 +32,7 @@ const Recommandation: React.FC = () => {
                 <Text fontSize="2xl" fontWeight="bold" mb={5}>
                     Votre Recommandation
                 </Text>
-                <AssetAllocationCircularProgress/>
+                <GeographicDiversification/>
                 {/* Add other components or content related to the recommendation page */}
             </Box>
         </ChakraProvider>
