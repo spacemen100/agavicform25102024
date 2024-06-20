@@ -33,6 +33,15 @@ const theme = extendTheme({
     body: 'Arial, sans-serif',
     heading: 'Arial, sans-serif',
   },
+  components: {
+    Button: {
+      baseStyle: {
+        _hover: {
+          bg: 'gray.100',
+        },
+      },
+    },
+  },
 });
 
 const data = {
@@ -40,8 +49,8 @@ const data = {
   datasets: [
     {
       data: [15, 15, 70],
-      backgroundColor: ['#3182CE', '#3182CE', '#CBD5E0'],
-      hoverBackgroundColor: ['#63B3ED', '#63B3ED', '#E2E8F0'],
+      backgroundColor: ['#38A169', '#3182CE', '#CBD5E0'],
+      hoverBackgroundColor: ['#48BB78', '#63B3ED', '#E2E8F0'],
     },
   ],
 };
@@ -49,7 +58,7 @@ const data = {
 const options = {
   responsive: true,
   maintainAspectRatio: false,
-  cutoutPercentage: 70,
+  cutout: '70%',
   plugins: {
     legend: {
       display: false,
@@ -65,6 +74,58 @@ const AssetAllocation: React.FC = () => {
   const toggleObligations = () => setIsObligationsOpen(!isObligationsOpen);
   const toggleActions = () => setIsActionsOpen(!isActionsOpen);
   const toggleOthers = () => setIsOthersOpen(!isOthersOpen);
+
+  const allocationSections = [
+    {
+      label: 'Obligations',
+      value: '15,0%',
+      color: '#38A169',
+      subtext: 'Actifs à risques modérés',
+      isOpen: isObligationsOpen,
+      toggle: toggleObligations,
+      details: (
+        <>
+          <Text>7,5% Obligations zone Euro diversifiées</Text>
+          <Text>4,9% Bons du Trésor zone Euro</Text>
+          <Text>2,6% Obligations d'entreprises zone Euro</Text>
+        </>
+      ),
+    },
+    {
+      label: 'Actions',
+      value: '15,0%',
+      color: '#3182CE',
+      subtext: 'Actifs risqués',
+      isOpen: isActionsOpen,
+      toggle: toggleActions,
+      details: (
+        <>
+          <Text>3,5% Actions États-Unis</Text>
+          <Text>3,4% Actions Monde couvertes</Text>
+          <Text>2,5% Actions États-Unis couvertes</Text>
+          <Text>2,0% Actions Monde</Text>
+          <Text>1,9% Actions Pays Émergents</Text>
+          <Text>0,6% Actions Europe</Text>
+          <Text>0,6% Actions Europe couvertes</Text>
+          <Text>0,3% Actions Japon</Text>
+          <Text>0,2% Actions Japon couvertes</Text>
+        </>
+      ),
+    },
+    {
+      label: 'Autres',
+      value: '70,0%',
+      color: '#CBD5E0',
+      subtext: '',
+      isOpen: isOthersOpen,
+      toggle: toggleOthers,
+      details: (
+        <>
+          <Text>70,0% Fonds Euro</Text>
+        </>
+      ),
+    },
+  ];
 
   return (
     <ChakraProvider theme={theme}>
@@ -82,64 +143,38 @@ const AssetAllocation: React.FC = () => {
             <Doughnut data={data} options={options} width={150} height={150} />
           </Box>
           <VStack w="60%" align="stretch" spacing={4}>
-            <Box>
-              <HStack justifyContent="space-between" mb={2}>
-                <Text fontWeight="bold" color="blue.400">15,0% Obligations</Text>
-                <IconButton
-                  icon={isObligationsOpen ? <FaChevronUp /> : <FaChevronDown />}
-                  onClick={toggleObligations}
-                  variant="ghost"
-                  aria-label="Toggle Obligations"
-                />
-              </HStack>
-              <Collapse in={isObligationsOpen} animateOpacity>
-                <VStack align="start" pl={4} spacing={1}>
-                  <Text>7,5% Obligations zone Euro diversifiées</Text>
-                  <Text>4,9% Bons du Trésor zone Euro</Text>
-                  <Text>2,6% Obligations d'entreprises zone Euro</Text>
-                </VStack>
-              </Collapse>
-            </Box>
-            <Box>
-              <HStack justifyContent="space-between" mb={2}>
-                <Text fontWeight="bold" color="blue.400">15,0% Actions</Text>
-                <IconButton
-                  icon={isActionsOpen ? <FaChevronUp /> : <FaChevronDown />}
-                  onClick={toggleActions}
-                  variant="ghost"
-                  aria-label="Toggle Actions"
-                />
-              </HStack>
-              <Collapse in={isActionsOpen} animateOpacity>
-                <VStack align="start" pl={4} spacing={1}>
-                  <Text>3,5% Actions États-Unis</Text>
-                  <Text>3,4% Actions Monde couvertes</Text>
-                  <Text>2,5% Actions États-Unis couvertes</Text>
-                  <Text>2,0% Actions Monde</Text>
-                  <Text>1,9% Actions Pays Émergents</Text>
-                  <Text>0,6% Actions Europe</Text>
-                  <Text>0,6% Actions Europe couvertes</Text>
-                  <Text>0,3% Actions Japon</Text>
-                  <Text>0,2% Actions Japon couvertes</Text>
-                </VStack>
-              </Collapse>
-            </Box>
-            <Box>
-              <HStack justifyContent="space-between" mb={2}>
-                <Text fontWeight="bold" color="blue.400">70,0% Autres</Text>
-                <IconButton
-                  icon={isOthersOpen ? <FaChevronUp /> : <FaChevronDown />}
-                  onClick={toggleOthers}
-                  variant="ghost"
-                  aria-label="Toggle Autres"
-                />
-              </HStack>
-              <Collapse in={isOthersOpen} animateOpacity>
-                <VStack align="start" pl={4} spacing={1}>
-                  <Text>70,0% Fonds Euro</Text>
-                </VStack>
-              </Collapse>
-            </Box>
+            {allocationSections.map((section) => (
+              <Box key={section.label}>
+                <HStack
+                  justifyContent="space-between"
+                  mb={2}
+                  p={2}
+                  borderRadius="md"
+                  _hover={{ bg: 'gray.50' }}
+                  cursor="pointer"
+                  onClick={section.toggle}
+                >
+                  <HStack>
+                    <Box width="12px" height="12px" bg={section.color} borderRadius="md" />
+                    <Text fontWeight="bold" color={section.color}>
+                      {section.value} {section.label}
+                    </Text>
+                    <Text color="gray.500">{section.subtext}</Text>
+                  </HStack>
+                  <IconButton
+                    icon={section.isOpen ? <FaChevronUp /> : <FaChevronDown />}
+                    variant="ghost"
+                    aria-label={`Toggle ${section.label}`}
+                    onClick={section.toggle}
+                  />
+                </HStack>
+                <Collapse in={section.isOpen} animateOpacity>
+                  <VStack align="start" pl={4} spacing={1}>
+                    {section.details}
+                  </VStack>
+                </Collapse>
+              </Box>
+            ))}
           </VStack>
         </HStack>
       </Box>
