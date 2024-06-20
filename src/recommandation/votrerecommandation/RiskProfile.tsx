@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ChakraProvider,
   extendTheme,
@@ -17,6 +17,8 @@ import {
   Icon,
 } from '@chakra-ui/react';
 import { FaAward, FaLeaf, FaQuestionCircle } from 'react-icons/fa';
+import { supabase } from './../../supabaseClient'; // Importez votre client Supabase
+import { useUuid } from './../../context/UuidContext';
 import ProfileSelection from '../modal/ProfileSelection';
 import ProjectModification from '../modal/ProjectModification';
 import EnvelopeSelection from '../modal/EnvelopeSelection';
@@ -44,10 +46,35 @@ const theme = extendTheme({
 });
 
 const RiskProfile: React.FC = () => {
+  const [initialPayment, setInitialPayment] = useState('');
+  const [monthlyPayment, setMonthlyPayment] = useState('');
+  const [investmentHorizon, setInvestmentHorizon] = useState('');
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [isEnvelopeModalOpen, setIsEnvelopeModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  const { uuid } = useUuid();
+
+  useEffect(() => {
+    const fetchProjectData = async () => {
+      const { data, error } = await supabase
+        .from('form_responses')
+        .select('step2, step3, step4')
+        .eq('id', uuid)
+        .single();
+
+      if (error) {
+        console.error('Error fetching project data:', error);
+      } else {
+        setInitialPayment(data?.step2 || '');
+        setMonthlyPayment(data?.step3 || '');
+        setInvestmentHorizon(data?.step4 || '');
+      }
+    };
+
+    fetchProjectData();
+  }, [uuid]);
 
   const openProjectModal = () => setIsProjectModalOpen(true);
   const closeProjectModal = () => setIsProjectModalOpen(false);
@@ -76,15 +103,15 @@ const RiskProfile: React.FC = () => {
         <VStack align="stretch" spacing={2} mb={4}>
           <HStack justifyContent="space-between">
             <Text>Versement initial</Text>
-            <Text>30 000 €</Text>
+            <Text>{initialPayment} €</Text>
           </HStack>
           <HStack justifyContent="space-between">
             <Text>Versement mensuel</Text>
-            <Text>1 000 € / mois</Text>
+            <Text>{monthlyPayment} € / mois</Text>
           </HStack>
           <HStack justifyContent="space-between">
             <Text>Horizon de placement</Text>
-            <Text>10 ans</Text>
+            <Text>{investmentHorizon} ans</Text>
           </HStack>
         </VStack>
 
