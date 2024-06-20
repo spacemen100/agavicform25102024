@@ -49,7 +49,7 @@ const ActionButtons: React.FC = () => {
           </Button>
           <HStack spacing={4}>
             <Icon as={FaPhone} color="navy" />
-            <Text fontSize="lg" color="navy">01 75 85 97 47</Text>
+            <Text fontSize="lg" color="navy">04 78 34 26 23</Text>
           </HStack>
           <Button
             colorScheme="green"
