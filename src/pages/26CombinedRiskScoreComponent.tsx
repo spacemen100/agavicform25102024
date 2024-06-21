@@ -124,11 +124,20 @@ const calculateRiskScore = (response: Response): number => {
   return Math.max(1, Math.min(normalizedScore, 10)); // Ensure score is between 1 and 10
 };
 
+const getColorCode = (score: number): string => {
+  if (score <= 2) return 'green.400';
+  if (score <= 4) return 'yellow.400';
+  if (score <= 6) return 'red.200'; // Replacing orange with red.200
+  if (score <= 8) return 'red.400';
+  return 'red.600';
+};
+
 const CombinedRiskScoreComponent: React.FC = () => {
   const { uuid } = useUuid();
   const navigate = useNavigate();
   const [response, setResponse] = useState<Response | null>(null);
   const [riskScore, setRiskScore] = useState<number | null>(null);
+  const [colorCode, setColorCode] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -177,13 +186,15 @@ const CombinedRiskScoreComponent: React.FC = () => {
   useEffect(() => {
     if (response) {
       const score = calculateRiskScore(response);
+      const color = getColorCode(score);
       setRiskScore(score);
+      setColorCode(color);
 
-      // Update the risk score in the database
-      const updateRiskScore = async (score: number) => {
+      // Update the risk score and color code in the database
+      const updateRiskScore = async (score: number, color: string) => {
         const { error } = await supabase
           .from('form_responses')
-          .update({ risk_score: score })
+          .update({ risk_score: score, color_code: color })
           .eq('id', uuid);
 
         if (error) {
@@ -193,11 +204,11 @@ const CombinedRiskScoreComponent: React.FC = () => {
           // Navigate to /recommandation after 1 second
           setTimeout(() => {
             navigate('/recommandation');
-          }, 10);
+          }, 1000);
         }
       };
 
-      updateRiskScore(score);
+      updateRiskScore(score, color);
     }
   }, [response, uuid, navigate]);
 
@@ -205,17 +216,9 @@ const CombinedRiskScoreComponent: React.FC = () => {
     return <Text>{error}</Text>;
   }
 
-  if (riskScore === null) {
+  if (riskScore === null || colorCode === null) {
     return <Text>Loading...</Text>;
   }
-
-  const getColor = (score: number) => {
-    if (score <= 2) return 'green.400';
-    if (score <= 4) return 'yellow.400';
-    if (score <= 6) return 'orange.400';
-    if (score <= 8) return 'red.400';
-    return 'red.600';
-  };
 
   const theme = extendTheme({
     colors: {
@@ -241,22 +244,22 @@ const CombinedRiskScoreComponent: React.FC = () => {
 
   return (
     <ChakraProvider theme={theme}>
-    <Stepper currentStep={2} />
-    <Box mt={5} p={5} pt={10} maxW="1000px" mx="auto" textAlign="center" borderRadius="md" boxShadow="md" bg="white">
-    <VStack spacing={4}>
-        <Text fontSize="xl" fontWeight="bold">
-          Votre Score de Risque
-        </Text>
-        <Flex align="center" justify="center">
-          <Text fontSize="2xl" fontWeight="bold" color={getColor(riskScore)}>
-            {riskScore}
+      <Stepper currentStep={2} />
+      <Box mt={5} p={5} pt={10} maxW="1000px" mx="auto" textAlign="center" borderRadius="md" boxShadow="md" bg="white">
+        <VStack spacing={4}>
+          <Text fontSize="xl" fontWeight="bold">
+            Votre Score de Risque
           </Text>
-          <Text fontSize="lg" ml={2}>/ 10</Text>
-        </Flex>
-        <Progress colorScheme={getColor(riskScore).split('.')[0]} value={(riskScore / 10) * 100} size="lg" w="100%" />
-      </VStack>
-    </Box>
-    </ChakraProvider >
+          <Flex align="center" justify="center">
+            <Text fontSize="2xl" fontWeight="bold" color={colorCode}>
+              {riskScore}
+            </Text>
+            <Text fontSize="lg" ml={2}>/ 10</Text>
+          </Flex>
+          <Progress colorScheme={colorCode.split('.')[0]} value={(riskScore / 10) * 100} size="lg" w="100%" />
+        </VStack>
+      </Box>
+    </ChakraProvider>
   );
 };
 
