@@ -124,12 +124,17 @@ const calculateRiskScore = (response: Response): number => {
   return Math.max(1, Math.min(normalizedScore, 10)); // Ensure score is between 1 and 10
 };
 
-const getColorCode = (score: number): string => {
-  if (score <= 2) return 'green.400';
-  if (score <= 4) return 'yellow.400';
-  if (score <= 6) return 'red.200'; // Replacing orange with red.200
-  if (score <= 8) return 'red.400';
-  return 'red.600';
+const colorMap: { [key: number]: string } = {
+  1: 'green.400',
+  2: 'green.500',
+  3: 'yellow.300',
+  4: 'yellow.400',
+  5: 'yellow.500',
+  6: 'red.200',
+  7: 'red.300',
+  8: 'red.400',
+  9: 'red.500',
+  10: 'red.600',
 };
 
 const CombinedRiskScoreComponent: React.FC = () => {
@@ -186,7 +191,7 @@ const CombinedRiskScoreComponent: React.FC = () => {
   useEffect(() => {
     if (response) {
       const score = calculateRiskScore(response);
-      const color = getColorCode(score);
+      const color = colorMap[score as keyof typeof colorMap]; // Cast score to string to access colorMap
       setRiskScore(score);
       setColorCode(color);
 
