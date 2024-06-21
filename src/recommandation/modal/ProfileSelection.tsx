@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -17,6 +17,8 @@ import {
 } from '@chakra-ui/react';
 import { FaInfoCircle } from 'react-icons/fa';
 import { RiLeafLine } from "react-icons/ri";
+import { supabase } from './../../supabaseClient'; // Import your Supabase client
+import { useUuid } from './../../context/UuidContext';
 
 const profiles = [
   { id: '1', label: 'Profil 2', recommended: true, color: 'blue.500', description: 'Profil 2 description here.' },
@@ -32,6 +34,41 @@ const profiles = [
 
 const ProfileSelection: React.FC = () => {
   const [selectedProfile, setSelectedProfile] = useState(profiles[0].id);
+  const [esgPreference, setEsgPreference] = useState(false);
+  const { uuid } = useUuid();
+  
+  useEffect(() => {
+    const fetchESGPreference = async () => {
+      const { data, error } = await supabase
+        .from('form_responses')
+        .select('step7')
+        .eq('id', uuid)
+        .single();
+
+      if (error) {
+        console.error('Error fetching ESG preference:', error);
+      } else {
+        setEsgPreference(data?.step7 === 'ESG');
+      }
+    };
+
+    fetchESGPreference();
+  }, [uuid]);
+
+  const handleESGToggle = async () => {
+    const newPreference = !esgPreference;
+    setEsgPreference(newPreference);
+
+    const { error } = await supabase
+      .from('form_responses')
+      .update({ step7: newPreference ? 'ESG' : 'Non-ESG' })
+      .eq('id', uuid);
+
+    if (error) {
+      console.error('Error updating ESG preference:', error);
+    }
+  };
+
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'profiles',
     defaultValue: profiles[0].id,
@@ -54,7 +91,7 @@ const ProfileSelection: React.FC = () => {
       </Center>
       <Flex align="center" justify="center" mb={4}>
         <Text mr={2}>Investissement responsable</Text>
-        <Switch ml={2} />
+        <Switch ml={2} isChecked={esgPreference} onChange={handleESGToggle} />
         <Tooltip label="Choisissez un profil construit autour des critères ESG, pour soutenir des entreprises qui oeuvrent dans une logique Environnementale, Sociale, et à travers une Gouvernance plus juste." fontSize="md">
           <span>
             <Icon as={FaInfoCircle} color="gray.500" ml={2} />
