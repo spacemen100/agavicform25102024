@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Flex, Text, Progress, VStack } from '@chakra-ui/react';
-import { useUuid } from './../context/UuidContext';
-import { supabase } from './../supabaseClient';
+import { useUuid } from '../context/UuidContext';
+import { supabase } from '../supabaseClient';
 
 interface Response {
   step1: string;
@@ -22,124 +22,108 @@ interface Response {
   step24: string;
 }
 
-const weights = {
-  step1: 0.1,
-  step4: 0.1,
-  step9: 0.1,
-  step10: 0.05,
-  step13: 0.1,
-  step14: 0.1,
-  step15: 0.1,
-  step16: 0.1,
-  step17: 0.05,
-  step18: 0.05,
-  step19: 0.05,
-  step20: 0.05,
-  step21: 0.05,
-  step22: 0.05,
-  step23: 0.05,
-  step24: 0.05,
-};
-
 const calculateRiskScore = (response: Response): number => {
   let score = 0;
 
+  // Normalize each step's response to a 0-1 scale
   const step1Scores: { [key: string]: number } = {
-    fructifier: 8,
-    epargner: 2,
-    achat: 5,
-    retraite: 3,
-    patrimoine: 4,
-    compte: 6,
-    tresorerie: 7,
+    fructifier: 1,
+    epargner: 0,
+    achat: 0.625,
+    retraite: 0.375,
+    patrimoine: 0.5,
+    compte: 0.75,
+    tresorerie: 0.875,
   };
-  score += step1Scores[response.step1] * weights.step1;
+  score += step1Scores[response.step1];
 
-  score += response.step4 * weights.step4;
+  score += Math.min(response.step4 / 30, 1); // Normalize step4 to 0-1 based on a maximum of 30 years
 
   const step9Scores: { [key: string]: number } = {
-    lessThan30000: 2,
-    '30000to45000': 3,
-    '45000to60000': 4,
-    '60000to100000': 5,
-    '100000to150000': 6,
-    moreThan150000: 7,
+    lessThan30000: 0,
+    '30000to45000': 0.25,
+    '45000to60000': 0.5,
+    '60000to100000': 0.75,
+    '100000to150000': 0.875,
+    moreThan150000: 1,
   };
-  score += step9Scores[response.step9] * weights.step9;
+  score += step9Scores[response.step9];
 
   const step10Scores: { [key: string]: number } = {
-    oui: 5,
-    non: 3,
+    oui: 1,
+    non: 0.5,
   };
-  score += step10Scores[response.step10] * weights.step10;
+  score += step10Scores[response.step10];
 
-  score += response.step13 * weights.step13;
-
-  score += response.step14 * weights.step14;
+  score += Math.min(response.step13 / 1000000, 1); // Normalize step13 to 0-1 based on a max value of 1,000,000
+  score += Math.min(response.step14 / 10000, 1); // Normalize step14 to 0-1 based on a max value of 10,000
 
   const step15And16Scores: { [key: string]: number } = {
-    certainementPas: 1,
-    probablementPas: 2,
-    probablement: 3,
-    tresProbablement: 4,
+    certainementPas: 0,
+    probablementPas: 0.25,
+    probablement: 0.5,
+    tresProbablement: 1,
   };
-  score += step15And16Scores[response.step15] * weights.step15;
-  score += step15And16Scores[response.step16] * weights.step16;
+  score += step15And16Scores[response.step15];
+  score += step15And16Scores[response.step16];
 
   const step17Scores: { [key: string]: number } = {
-    oui: 4,
-    non: 2,
+    oui: 1,
+    non: 0.5,
   };
-  score += step17Scores[response.step17] * weights.step17;
+  score += step17Scores[response.step17];
 
   const perceptionScores: { [key: string]: number } = {
-    vrai: 4,
-    faux: 2,
-    jeNeSaisPas: 1,
+    vrai: 1,
+    faux: 0,
+    jeNeSaisPas: 0.5,
   };
-  score += perceptionScores[response.step18] * weights.step18;
-  score += perceptionScores[response.step19] * weights.step19;
-  score += perceptionScores[response.step20] * weights.step20;
+  score += perceptionScores[response.step18];
+  score += perceptionScores[response.step19];
+  score += perceptionScores[response.step20];
 
   const step21Scores: { [key: string]: number } = {
-    noLoss: 1,
-    max10: 2,
-    max20: 3,
-    moreThan20: 4,
+    noLoss: 0,
+    max10: 0.33,
+    max20: 0.66,
+    moreThan20: 1,
   };
-  score += step21Scores[response.step21] * weights.step21;
+  score += step21Scores[response.step21];
 
   const gainLossScores: { [key: string]: number } = {
-    gain5000loss2000: 4,
-    gain2000loss1000: 3,
-    gain1000loss400: 2,
-    gain500noloss: 1,
-    gain20loss5: 1,
-    gain30loss10: 2,
-    gain50loss15: 3,
-    gain70lossMore15: 4,
+    gain5000loss2000: 1,
+    gain2000loss1000: 0.75,
+    gain1000loss400: 0.5,
+    gain500noloss: 0.25,
+    gain20loss5: 0.25,
+    gain30loss10: 0.5,
+    gain50loss15: 0.75,
+    gain70lossMore15: 1,
   };
-  score += gainLossScores[response.step22] * weights.step22;
-  score += gainLossScores[response.step23] * weights.step23;
+  score += gainLossScores[response.step22];
+  score += gainLossScores[response.step23];
 
   const investmentActionScores: { [key: string]: number } = {
-    reinvest: 4,
-    wait: 3,
-    sellPart: 2,
-    sellAll: 1,
-    dontKnow: 1,
+    reinvest: 1,
+    wait: 0.75,
+    sellPart: 0.5,
+    sellAll: 0.25,
+    dontKnow: 0.25,
   };
-  score += investmentActionScores[response.step24] * weights.step24;
+  score += investmentActionScores[response.step24];
 
-  const maxScore = 10 * (Object.keys(weights).length);
-  const normalizedScore = (score / maxScore) * 10;
+  // Average the score
+  const numberOfSteps = Object.keys(response).length;
+  const averageScore = score / numberOfSteps;
 
-  return Math.round(normalizedScore);
+  // Normalize to 1-10 scale
+  const normalizedScore = Math.round(averageScore * 10);
+
+  return Math.max(1, Math.min(normalizedScore, 10)); // Ensure score is between 1 and 10
 };
 
 const CombinedRiskScoreComponent: React.FC = () => {
-  // eslint-disable-next-line
-  const { uuid, getResponse } = useUuid();
+  const { uuid } = useUuid();
   const [response, setResponse] = useState<Response | null>(null);
 
   useEffect(() => {
@@ -158,7 +142,26 @@ const CombinedRiskScoreComponent: React.FC = () => {
       }
 
       if (data) {
-        setResponse(data as Response);
+        const parsedData: Response = {
+          step1: data.step1,
+          step4: parseInt(data.step4, 10),
+          step9: data.step9,
+          step10: data.step10,
+          step13: parseInt(data.step13, 10),
+          step14: parseInt(data.step14, 10),
+          step15: data.step15,
+          step16: data.step16,
+          step17: data.step17,
+          step18: data.step18,
+          step19: data.step19,
+          step20: data.step20,
+          step21: data.step21,
+          step22: data.step22,
+          step23: data.step23,
+          step24: data.step24,
+        };
+
+        setResponse(parsedData);
       }
     };
 
@@ -191,7 +194,7 @@ const CombinedRiskScoreComponent: React.FC = () => {
           </Text>
           <Text fontSize="lg" ml={2}>/ 10</Text>
         </Flex>
-        <Progress colorScheme="green" value={(riskScore / 10) * 100} size="lg" w="100%" />
+        <Progress colorScheme={getColor(riskScore).split('.')[0]} value={(riskScore / 10) * 100} size="lg" w="100%" />
       </VStack>
     </Box>
   );
