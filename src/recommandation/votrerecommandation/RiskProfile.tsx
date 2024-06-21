@@ -169,7 +169,7 @@ const RiskProfile: React.FC = () => {
           Profil de risque : Prudent
         </Text>
         <Text mb={4}>
-          Un profil de risque 2 chez Yomoni correspond à un profil de risque de 3 sur 7 sur l'échelle du SRI, l’indicateur européen de référence du risque.
+          Un profil de risque 2 chez Agavic correspond à un profil de risque de 3 sur 7 sur l'échelle du SRI, l’indicateur européen de référence du risque.
         </Text>
         <HStack justifyContent="space-between" alignItems="center">
           <HStack>
