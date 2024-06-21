@@ -33,6 +33,7 @@ import SimulationReady from '../pages/CreationCompte';
 import CreationCompte from '../pages/CreationCompte';
 import NotificationPreferences from '../pages/25NotificationPreferences';
 import Recommandation from '../recommandation/Recommandation'; // Ajout de l'import pour Recommandation
+import CombinedRiskScoreComponent from '../pages/24bisCombinedRiskScoreComponent'; // Ajout de l'import pour 24bisCombinedRiskScoreComponent
 
 // Définition des routes
 export const routes = [
@@ -66,6 +67,7 @@ export const routes = [
   { path: '/creation-compte', name: 'CreationCompte', component: <CreationCompte />, hidden: true },
   { path: '/notification-preferences', name: 'NotificationPreferences', component: <NotificationPreferences />, hidden: true },
   { path: '/recommandation', name: 'Recommandation', component: <Recommandation />, hidden: true }, // Ajout de la route pour Recommandation
+  { path: '/combined-risk-score', name: 'CombinedRiskScoreComponent', component: <CombinedRiskScoreComponent />, hidden: true }, 
 ];
 
 // Composant des routes
