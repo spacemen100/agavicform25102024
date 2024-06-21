@@ -125,6 +125,8 @@ const calculateRiskScore = (response: Response): number => {
 const CombinedRiskScoreComponent: React.FC = () => {
   const { uuid } = useUuid();
   const [response, setResponse] = useState<Response | null>(null);
+  const [riskScore, setRiskScore] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchResponses = async () => {
@@ -137,6 +139,7 @@ const CombinedRiskScoreComponent: React.FC = () => {
         .single();
 
       if (error) {
+        setError('Error fetching responses');
         console.error('Error fetching responses:', error);
         return;
       }
@@ -168,11 +171,35 @@ const CombinedRiskScoreComponent: React.FC = () => {
     fetchResponses();
   }, [uuid]);
 
-  if (!response) {
-    return <Text>Loading...</Text>;
+  useEffect(() => {
+    if (response) {
+      const score = calculateRiskScore(response);
+      setRiskScore(score);
+
+      // Update the risk score in the database
+      const updateRiskScore = async (score: number) => {
+        const { error } = await supabase
+          .from('form_responses')
+          .update({ risk_score: score })
+          .eq('id', uuid);
+
+        if (error) {
+          setError('Error updating risk score');
+          console.error('Error updating risk score:', error);
+        }
+      };
+
+      updateRiskScore(score);
+    }
+  }, [response, uuid]);
+
+  if (error) {
+    return <Text>{error}</Text>;
   }
 
-  const riskScore = calculateRiskScore(response);
+  if (riskScore === null) {
+    return <Text>Loading...</Text>;
+  }
 
   const getColor = (score: number) => {
     if (score <= 2) return 'green.400';
