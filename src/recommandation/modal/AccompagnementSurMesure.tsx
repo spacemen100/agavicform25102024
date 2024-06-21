@@ -31,14 +31,9 @@ const AccompagnementSurMesure: React.FC<{ onClose: () => void }> = ({ onClose })
                 p={5}
                 textAlign="center"
                 borderRadius="md"
-                boxShadow="md"
                 bg="white"
                 position="relative"
             >
-                <CloseButton position="absolute" top="10px" right="10px" onClick={onClose} />
-                <Text fontSize="2xl" fontWeight="bold" mb={5} color="blue.800">
-                    Bénéficiez d’un accompagnement sur mesure !
-                </Text>
                 <Text fontSize="md" mb={5} color="gray.500">
                     Échangez avec un conseiller privé à propos de vos projets et de nos solutions d'investissement.
                 </Text>
