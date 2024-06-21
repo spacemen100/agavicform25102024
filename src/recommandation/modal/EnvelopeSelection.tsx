@@ -23,6 +23,10 @@ const alertMessages: { [key: string]: string } = {
   compte: "Vous ne pouvez pas sélectionner un PEA (qui présente un profil de risque 10) car vous avez indiqué à la question 1 vouloir 'Prévoir ma retraite', ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1.",
 };
 
+const riskScoreAlertMessage = (riskScore: number, color: string) => (
+  `Votre profil de risque est ${riskScore}, ce qui est considéré comme ${color === 'red.400' ? 'très risqué' : 'prudent'}. Vous ne pouvez pas accéder au Plan d'épargne en actions (PEA) avec un profil de risque inférieur à 5.`
+);
+
 interface EnvelopeSelectionProps {
   isOpen: boolean;
   onClose: () => void;
@@ -32,6 +36,8 @@ interface EnvelopeSelectionProps {
 const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, selectedProject }) => {
   const [selectedEnvelope, setSelectedEnvelope] = useState<string>('AV');
   const [step1Response, setStep1Response] = useState<string | null>(null);
+  const [riskScore, setRiskScore] = useState<number | null>(null);
+  const [colorCode, setColorCode] = useState<string>('blue.400');
 
   const { uuid } = useUuid();
   const navigate = useNavigate();
@@ -40,7 +46,7 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
     const fetchStep1Response = async () => {
       const { data, error } = await supabase
         .from('form_responses')
-        .select('step1')
+        .select('step1, risk_score, color_code')
         .eq('id', uuid) // Utiliser l'UUID de l'utilisateur
         .single();
 
@@ -48,6 +54,8 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
         console.error('Error fetching step1 response:', error);
       } else {
         setStep1Response(data?.step1 || null);
+        setRiskScore(data?.risk_score || null);
+        setColorCode(data?.color_code || 'blue.400');
       }
     };
 
@@ -56,7 +64,7 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
     }
   }, [isOpen, uuid]);
 
-  const isPEADisabled = step1Response && alertMessages[step1Response];
+  const isPEADisabled = (step1Response && alertMessages[step1Response]) || (riskScore !== null && riskScore < 5);
 
   useEffect(() => {
     if (isPEADisabled) {
@@ -84,7 +92,9 @@ const EnvelopeSelection: React.FC<EnvelopeSelectionProps> = ({ isOpen, onClose, 
           {isPEADisabled && (
             <Box p={4} bg="red.50" borderRadius="md" mb={4}>
               <Text color="red.500" fontSize="sm">
-                {alertMessages[step1Response!]}{' '}
+                {riskScore !== null && riskScore < 5
+                  ? riskScoreAlertMessage(riskScore, colorCode)
+                  : alertMessages[step1Response!]}{' '}
                 <Link color="blue.400" onClick={handleReviewProjectClick}>
                   revoir votre projet en étape 1
                 </Link>.
