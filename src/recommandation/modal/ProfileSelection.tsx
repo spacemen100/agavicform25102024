@@ -14,6 +14,7 @@ import {
   Tooltip,
   Icon,
   Center,
+  Badge,
 } from '@chakra-ui/react';
 import { FaInfoCircle } from 'react-icons/fa';
 import { RiLeafLine } from "react-icons/ri";
@@ -96,6 +97,8 @@ const ProfileSelection: React.FC = () => {
 
   const group = getRootProps();
 
+  const selectedProfileColor = colorMap[parseInt(selectedProfile)];
+
   return (
     <Box p={5}>
       <Center>
@@ -120,7 +123,7 @@ const ProfileSelection: React.FC = () => {
       </Flex>
       <Box bg="gray.100" p={3} mb={4} borderRadius="md" borderWidth="1px">
         <Text>
-          Profil de risque sélectionné : <Text as="span" fontWeight="bold">Profil {selectedProfile}</Text>
+          Profil de risque sélectionné : <Badge colorScheme={selectedProfileColor.split('.')[0]}>{`Profil ${selectedProfile}`}</Badge>
         </Text>
       </Box>
       <VStack {...group} align="stretch" spacing={3}>
