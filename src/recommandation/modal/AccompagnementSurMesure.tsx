@@ -1,6 +1,6 @@
 // src/recommandation/modal/AccompagnementSurMesure.tsx
 import React from 'react';
-import { Box, Text, VStack, HStack, Input, Button, InputGroup, InputLeftElement, ChakraProvider, extendTheme, CloseButton } from '@chakra-ui/react';
+import { Box, Text, VStack, HStack, Input, Button, InputGroup, InputLeftElement, ChakraProvider, extendTheme} from '@chakra-ui/react';
 
 const theme = extendTheme({
     colors: {
