@@ -48,6 +48,7 @@ const theme = extendTheme({
 const NotificationPreferences: React.FC = () => {
     const [preferences, setPreferences] = useState<{ news: string, promo: string }>({ news: 'non', promo: 'non' });
     const [isAlertOpen, setIsAlertOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
@@ -73,8 +74,12 @@ const NotificationPreferences: React.FC = () => {
 
     const handleNext = async () => {
         if (preferences.news !== undefined && preferences.promo !== undefined) {
+            setIsLoading(true);
             await updateResponse(25, JSON.stringify(preferences));
-            navigate('/combined-risk-score');
+            setTimeout(() => {
+                setIsLoading(false);
+                navigate('/combined-risk-score');
+            }, 2000);
         } else {
             setIsAlertOpen(true);
         }
@@ -163,6 +168,8 @@ const NotificationPreferences: React.FC = () => {
                         px={6}
                         py={6}
                         size="lg"
+                        isLoading={isLoading}
+                        loadingText="Chargement"
                     >
                         Suivant
                     </Button>
