@@ -49,6 +49,7 @@ const RiskProfile: React.FC = () => {
   const [initialPayment, setInitialPayment] = useState('');
   const [monthlyPayment, setMonthlyPayment] = useState('');
   const [investmentHorizon, setInvestmentHorizon] = useState('');
+  const [esgPreference, setEsgPreference] = useState(false);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [isEnvelopeModalOpen, setIsEnvelopeModalOpen] = useState(false);
@@ -60,7 +61,7 @@ const RiskProfile: React.FC = () => {
     const fetchProjectData = async () => {
       const { data, error } = await supabase
         .from('form_responses')
-        .select('step2, step3, step4')
+        .select('step2, step3, step4, step7')
         .eq('id', uuid)
         .single();
 
@@ -70,6 +71,7 @@ const RiskProfile: React.FC = () => {
         setInitialPayment(data?.step2 || '');
         setMonthlyPayment(data?.step3 || '');
         setInvestmentHorizon(data?.step4 || '');
+        setEsgPreference(data?.step7 === 'ESG');
       }
     };
 
@@ -87,6 +89,20 @@ const RiskProfile: React.FC = () => {
 
   const openProfileModal = () => setIsProfileModalOpen(true);
   const closeProfileModal = () => setIsProfileModalOpen(false);
+
+  const handleEsgPreferenceChange = async () => {
+    const newPreference = !esgPreference;
+    setEsgPreference(newPreference);
+
+    const { error } = await supabase
+      .from('form_responses')
+      .update({ step7: newPreference ? 'ESG' : 'Non-ESG' })
+      .eq('id', uuid);
+
+    if (error) {
+      console.error('Error updating ESG preference:', error);
+    }
+  };
 
   return (
     <ChakraProvider theme={theme}>
@@ -160,7 +176,7 @@ const RiskProfile: React.FC = () => {
             <Text>Investissement responsable</Text>
             <FaLeaf color="green" />
           </HStack>
-          <Switch colorScheme="blue" />
+          <Switch colorScheme="blue" isChecked={esgPreference} onChange={handleEsgPreferenceChange} />
         </HStack>
       </Box>
 
