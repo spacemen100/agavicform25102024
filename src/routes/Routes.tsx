@@ -31,7 +31,7 @@ import PerteValeurInvestissement from '../pages/24PerteValeurInvestissement';
 import SimulationReady from '../pages/CreationCompte';
 import CreationCompte from '../pages/CreationCompte';
 import NotificationPreferences from '../pages/25NotificationPreferences';
-import CombinedRiskScoreComponent from '../pages/24bisCombinedRiskScoreComponent';
+import CombinedRiskScoreComponent from '../pages/26CombinedRiskScoreComponent';
 import Recommandation from '../recommandation/Recommandation'; // Ajout de l'import pour Recommandation
 
 export const routes = [

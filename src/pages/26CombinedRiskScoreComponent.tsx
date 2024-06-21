@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Flex, Text, Progress, VStack } from '@chakra-ui/react';
+import { Box, Flex, Text, Progress, VStack, ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useUuid } from '../context/UuidContext';
 import { supabase } from '../supabaseClient';
+import Stepper from '../components/Stepper';
 
 interface Response {
   step1: string;
@@ -192,7 +193,7 @@ const CombinedRiskScoreComponent: React.FC = () => {
           // Navigate to /recommandation after 1 second
           setTimeout(() => {
             navigate('/recommandation');
-          }, 1000);
+          }, 10);
         }
       };
 
@@ -216,9 +217,33 @@ const CombinedRiskScoreComponent: React.FC = () => {
     return 'red.600';
   };
 
+  const theme = extendTheme({
+    colors: {
+        navy: '#0A1128',
+        gray: {
+            200: '#e2e8f0',
+            500: '#718096',
+        },
+        white: '#FFFFFF',
+        orange: '#FF8C00',
+        green: {
+            400: '#38A169',
+        },
+        blue: {
+            400: '#3182CE',
+        },
+    },
+    fonts: {
+        body: 'Arial, sans-serif',
+        heading: 'Arial, sans-serif',
+    },
+});
+
   return (
-    <Box p={5} borderWidth={1} borderRadius="md" boxShadow="md" maxW="400px" mx="auto">
-      <VStack spacing={4}>
+    <ChakraProvider theme={theme}>
+    <Stepper currentStep={2} />
+    <Box mt={5} p={5} pt={10} maxW="1000px" mx="auto" textAlign="center" borderRadius="md" boxShadow="md" bg="white">
+    <VStack spacing={4}>
         <Text fontSize="xl" fontWeight="bold">
           Votre Score de Risque
         </Text>
@@ -231,6 +256,7 @@ const CombinedRiskScoreComponent: React.FC = () => {
         <Progress colorScheme={getColor(riskScore).split('.')[0]} value={(riskScore / 10) * 100} size="lg" w="100%" />
       </VStack>
     </Box>
+    </ChakraProvider >
   );
 };
 
