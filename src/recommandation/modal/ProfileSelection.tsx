@@ -20,17 +20,30 @@ import { RiLeafLine } from "react-icons/ri";
 import { supabase } from './../../supabaseClient'; // Import your Supabase client
 import { useUuid } from './../../context/UuidContext';
 
+const colorMap: { [key: number]: string } = {
+  1: 'green.400',
+  2: 'green.500',
+  3: 'yellow.300',
+  4: 'yellow.400',
+  5: 'yellow.500',
+  6: 'red.200',
+  7: 'red.300',
+  8: 'red.400',
+  9: 'red.500',
+  10: 'red.600',
+};
+
 const profiles = [
-  { id: '1', label: 'Profil 1', color: 'blue.400', description: 'Vous souhaitez éviter les risques au maximum, avec une espérance de gains très limitée et/ou avez un horizon d\'investissement court terme (1-3 ans). Le Profil 1 est donc parfaitement adapté à votre projet.' },
-  { id: '2', label: 'Profil 2', color: 'blue.500', description: 'Vous souhaitez prendre très peu de risques avec une espérance de gains limitée et/ou avez un horizon d\'investissement court terme (3-5 ans). Le Profil 2 est donc parfaitement adapté à votre projet.' },
-  { id: '3', label: 'Profil 3', color: 'gray.500', description: 'Vous souhaitez prendre peu de risques avec une espérance de gains peu élevée et/ou avez un horizon d\'investissement court terme (3-5 ans). Le Profil 3 est donc parfaitement adapté à votre projet.' },
-  { id: '4', label: 'Profil 4', color: 'gray.500', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un minimum de risques avec une espérance de gains limitée et/ou avez un horizon d\'investissement moyen terme (5-8 ans). Le Profil 4 est donc parfaitement adapté à votre projet.' },
-  { id: '5', label: 'Profil 5', color: 'teal.400', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un risque mesuré avec une espérance de gains modérée et/ou avez un horizon d\'investissement moyen terme (5-8 ans). Le Profil 5 est donc parfaitement adapté à votre projet.' },
-  { id: '6', label: 'Profil 6', color: 'yellow.400', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un risque moyen avec une espérance de gains moyenne et/ou avez un horizon d\'investissement moyen terme (5-8 ans). Le Profil 6 est donc parfaitement adapté à votre projet.' },
-  { id: '7', label: 'Profil 7', color: 'yellow.600', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un risque important avec une espérance de gains supérieure et avez un horizon d\'investissement long terme (>8 ans). Le Profil 7 est donc parfaitement adapté à votre projet.' },
-  { id: '8', label: 'Profil 8', color: 'pink.400', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un risque assez important avec une espérance de gains conséquente et vous avez un horizon d\'investissement long terme (>8 ans). Le Profil 8 est donc parfaitement adapté à votre projet.' },
-  { id: '9', label: 'Profil 9', color: 'pink.500', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre beaucoup de risques avec une espérance de gains élevée et vous avez un horizon d\'investissement long terme (>8 ans). Le Profil 9 est donc parfaitement adapté à votre projet.' },
-  { id: '10', label: 'Profil 10', color: 'pink.600', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un maximum de risques avec une espérance de gains très élevée et vous avez un horizon d\'investissement long terme (>8 ans). Le Profil 10 est donc parfaitement adapté à votre projet.' },
+  { id: '1', label: 'Profil 1', description: 'Vous souhaitez éviter les risques au maximum, avec une espérance de gains très limitée et/ou avez un horizon d\'investissement court terme (1-3 ans). Le Profil 1 est donc parfaitement adapté à votre projet.' },
+  { id: '2', label: 'Profil 2', description: 'Vous souhaitez prendre très peu de risques avec une espérance de gains limitée et/ou avez un horizon d\'investissement court terme (3-5 ans). Le Profil 2 est donc parfaitement adapté à votre projet.' },
+  { id: '3', label: 'Profil 3', description: 'Vous souhaitez prendre peu de risques avec une espérance de gains peu élevée et/ou avez un horizon d\'investissement court terme (3-5 ans). Le Profil 3 est donc parfaitement adapté à votre projet.' },
+  { id: '4', label: 'Profil 4', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un minimum de risques avec une espérance de gains limitée et/ou avez un horizon d\'investissement moyen terme (5-8 ans). Le Profil 4 est donc parfaitement adapté à votre projet.' },
+  { id: '5', label: 'Profil 5', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un risque mesuré avec une espérance de gains modérée et/ou avez un horizon d\'investissement moyen terme (5-8 ans). Le Profil 5 est donc parfaitement adapté à votre projet.' },
+  { id: '6', label: 'Profil 6', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un risque moyen avec une espérance de gains moyenne et/ou avez un horizon d\'investissement moyen terme (5-8 ans). Le Profil 6 est donc parfaitement adapté à votre projet.' },
+  { id: '7', label: 'Profil 7', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un risque important avec une espérance de gains supérieure et avez un horizon d\'investissement long terme (>8 ans). Le Profil 7 est donc parfaitement adapté à votre projet.' },
+  { id: '8', label: 'Profil 8', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un risque assez important avec une espérance de gains conséquente et vous avez un horizon d\'investissement long terme (>8 ans). Le Profil 8 est donc parfaitement adapté à votre projet.' },
+  { id: '9', label: 'Profil 9', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre beaucoup de risques avec une espérance de gains élevée et vous avez un horizon d\'investissement long terme (>8 ans). Le Profil 9 est donc parfaitement adapté à votre projet.' },
+  { id: '10', label: 'Profil 10', description: 'Vous avez indiqué à la question 1 vouloir "Épargner en cas de coup dur", ainsi seuls les profils prudents (inférieur à 4) peuvent vous être accessibles. Vous pouvez toujours revoir votre projet en étape 1. Vous souhaitez prendre un maximum de risques avec une espérance de gains très élevée et vous avez un horizon d\'investissement long terme (>8 ans). Le Profil 10 est donc parfaitement adapté à votre projet.' },
 ];
 
 const ProfileSelection: React.FC = () => {
@@ -114,12 +127,13 @@ const ProfileSelection: React.FC = () => {
         {profiles.map((profile, index) => {
           const radio = getRadioProps({ value: profile.id });
           const isRecommended = riskScore !== null && parseInt(profile.id) === riskScore;
+          const profileColor = colorMap[parseInt(profile.id)];
 
           return (
-            <ProfileOption key={profile.id} {...radio} color={profile.color} description={profile.description} isSelected={selectedProfile === profile.id}>
+            <ProfileOption key={profile.id} {...radio} color={profileColor} description={profile.description} isSelected={selectedProfile === profile.id}>
               <HStack justify="space-between">
                 <HStack>
-                  <Circle size="32px" bg={profile.color} color="white" mr={3}>
+                  <Circle size="32px" bg={profileColor} color="white" mr={3}>
                     {index + 1}
                   </Circle>
                   <Text>{profile.label}</Text>
