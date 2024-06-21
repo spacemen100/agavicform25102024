@@ -31,12 +31,19 @@ const theme = extendTheme({
       500: '#718096',
     },
     white: '#FFFFFF',
-    orange: '#FF8C00',
     green: {
       400: '#38A169',
     },
     blue: {
       400: '#3182CE',
+    },
+    red: {
+      200: '#FC8181', // Adjusted from orange
+      400: '#F56565',
+      600: '#E53E3E',
+    },
+    yellow: {
+      400: '#ECC94B',
     },
   },
   fonts: {
@@ -50,6 +57,8 @@ const RiskProfile: React.FC = () => {
   const [monthlyPayment, setMonthlyPayment] = useState('');
   const [investmentHorizon, setInvestmentHorizon] = useState('');
   const [esgPreference, setEsgPreference] = useState(false);
+  const [riskScore, setRiskScore] = useState<number | null>(null);
+  const [colorCode, setColorCode] = useState<string>('blue.400');
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [isEnvelopeModalOpen, setIsEnvelopeModalOpen] = useState(false);
@@ -61,7 +70,7 @@ const RiskProfile: React.FC = () => {
     const fetchProjectData = async () => {
       const { data, error } = await supabase
         .from('form_responses')
-        .select('step2, step3, step4, step7')
+        .select('step2, step3, step4, step7, risk_score, color_code')
         .eq('id', uuid)
         .single();
 
@@ -72,6 +81,8 @@ const RiskProfile: React.FC = () => {
         setMonthlyPayment(data?.step3 || '');
         setInvestmentHorizon(data?.step4 || '');
         setEsgPreference(data?.step7 === 'ESG');
+        setRiskScore(data?.risk_score || null);
+        setColorCode(data?.color_code || 'blue.400');
       }
     };
 
@@ -163,13 +174,13 @@ const RiskProfile: React.FC = () => {
           </Link>
         </HStack>
         <Text mb={4}>
-          <Box as="span" mr={2} p={2} bg="blue.400" color="white" borderRadius="md">
-            2
+          <Box as="span" mr={2} p={2} bg={colorCode || 'blue.400'} color="white" borderRadius="md">
+            {riskScore !== null ? riskScore : 'N/A'}
           </Box>
-          Profil de risque : Prudent
+          Profil de risque
         </Text>
         <Text mb={4}>
-          Un profil de risque 2 chez Agavic correspond à un profil de risque de 3 sur 7 sur l'échelle du SRI, l’indicateur européen de référence du risque.
+          Un profil de risque {riskScore !== null ? riskScore : 'N/A'} chez Agavic correspond à un profil de risque de {riskScore !== null ? Math.ceil((riskScore / 10) * 7) : 'N/A'} sur l'échelle du SRI, l’indicateur européen de référence du risque.
         </Text>
         <HStack justifyContent="space-between" alignItems="center">
           <HStack>
