@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { FaInfoCircle } from 'react-icons/fa';
 import { RiLeafLine } from "react-icons/ri";
-import { supabase } from './../../supabaseClient'; // Import your Supabase client
+import { supabase } from './../../supabaseClient';
 import { useUuid } from './../../context/UuidContext';
 
 const colorMap: { [key: number]: string } = {
@@ -123,7 +123,7 @@ const ProfileSelection: React.FC = () => {
       </Flex>
       <Box bg="gray.100" p={3} mb={4} borderRadius="md" borderWidth="1px">
         <Text>
-          Profil de risque sélectionné : <Badge colorScheme={selectedProfileColor.split('.')[0]}>{`Profil ${selectedProfile}`}</Badge>
+          Profil de risque sélectionné : <Badge fontSize="lg" px={2} py={1} colorScheme={selectedProfileColor.split('.')[0]}>{`Profil ${selectedProfile}`}</Badge>
         </Text>
       </Box>
       <VStack {...group} align="stretch" spacing={3}>
@@ -139,7 +139,7 @@ const ProfileSelection: React.FC = () => {
                   <Circle size="32px" bg={profileColor} color="white" mr={3}>
                     {index + 1}
                   </Circle>
-                  <Text>{profile.label}</Text>
+                  <Text fontWeight="bold">{profile.label}</Text>
                 </HStack>
                 {isRecommended && (
                   <Text color="green.500" fontWeight="bold">
@@ -147,15 +147,17 @@ const ProfileSelection: React.FC = () => {
                   </Text>
                 )}
               </HStack>
-              {selectedProfile === profile.id && profile.description && (
-                <Text mt={2} color="gray.600">
-                  {profile.description}
-                </Text>
-              )}
             </ProfileOption>
           );
         })}
       </VStack>
+      {profiles.map((profile) => (
+        selectedProfile === profile.id && profile.description && (
+          <Text mt={2} color="gray.600" key={profile.id}>
+            {profile.description}
+          </Text>
+        )
+      ))}
       <Button mt={4} colorScheme="green" w="100%">
         Valider
       </Button>
@@ -178,9 +180,9 @@ const ProfileOption: React.FC<any> = (props) => {
         borderRadius="md"
         boxShadow="md"
         _checked={{
-          bg: 'teal.600',
+          bg: props.color,
           color: 'white',
-          borderColor: 'teal.600',
+          borderColor: props.color,
         }}
         _focus={{
           boxShadow: 'outline',
@@ -188,11 +190,6 @@ const ProfileOption: React.FC<any> = (props) => {
         p={5}
       >
         {props.children}
-        {props.isSelected && props.description && (
-          <Text mt={2} color="gray.600">
-            {props.description}
-          </Text>
-        )}
       </Box>
     </Box>
   );
