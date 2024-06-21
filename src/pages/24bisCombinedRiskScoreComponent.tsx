@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Flex, Text, Progress, VStack } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { useUuid } from '../context/UuidContext';
 import { supabase } from '../supabaseClient';
 
@@ -124,6 +125,7 @@ const calculateRiskScore = (response: Response): number => {
 
 const CombinedRiskScoreComponent: React.FC = () => {
   const { uuid } = useUuid();
+  const navigate = useNavigate();
   const [response, setResponse] = useState<Response | null>(null);
   const [riskScore, setRiskScore] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -186,12 +188,17 @@ const CombinedRiskScoreComponent: React.FC = () => {
         if (error) {
           setError('Error updating risk score');
           console.error('Error updating risk score:', error);
+        } else {
+          // Navigate to /recommandation after 1 second
+          setTimeout(() => {
+            navigate('/recommandation');
+          }, 1000);
         }
       };
 
       updateRiskScore(score);
     }
-  }, [response, uuid]);
+  }, [response, uuid, navigate]);
 
   if (error) {
     return <Text>{error}</Text>;

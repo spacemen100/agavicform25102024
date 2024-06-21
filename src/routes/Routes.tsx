@@ -1,4 +1,3 @@
-// Import des dépendances nécessaires
 import React from 'react';
 import { Route, Routes as Switch } from 'react-router-dom';
 
@@ -32,10 +31,9 @@ import PerteValeurInvestissement from '../pages/24PerteValeurInvestissement';
 import SimulationReady from '../pages/CreationCompte';
 import CreationCompte from '../pages/CreationCompte';
 import NotificationPreferences from '../pages/25NotificationPreferences';
+import CombinedRiskScoreComponent from '../pages/24bisCombinedRiskScoreComponent';
 import Recommandation from '../recommandation/Recommandation'; // Ajout de l'import pour Recommandation
-import CombinedRiskScoreComponent from '../pages/24bisCombinedRiskScoreComponent'; // Ajout de l'import pour 24bisCombinedRiskScoreComponent
 
-// Définition des routes
 export const routes = [
   { path: '/', name: 'Home', component: <Home />, hidden: true },
   { path: '/quel-est-votre-projet-d-investissement', name: 'QuelEstVotreProjetDInvestissement', component: <QuelEstVotreProjetDInvestissement />, hidden: true },
@@ -66,11 +64,10 @@ export const routes = [
   { path: '/simulation-ready', name: 'SimulationReady', component: <SimulationReady />, hidden: true },
   { path: '/creation-compte', name: 'CreationCompte', component: <CreationCompte />, hidden: true },
   { path: '/notification-preferences', name: 'NotificationPreferences', component: <NotificationPreferences />, hidden: true },
+  { path: '/combined-risk-score', name: 'CombinedRiskScoreComponent', component: <CombinedRiskScoreComponent />, hidden: true }, // Ajout de la route pour CombinedRiskScoreComponent
   { path: '/recommandation', name: 'Recommandation', component: <Recommandation />, hidden: true }, // Ajout de la route pour Recommandation
-  { path: '/combined-risk-score', name: 'CombinedRiskScoreComponent', component: <CombinedRiskScoreComponent />, hidden: true }, 
 ];
 
-// Composant des routes
 const Routes: React.FC = () => {
   return (
     <Switch>
