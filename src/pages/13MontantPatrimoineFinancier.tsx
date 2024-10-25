@@ -90,7 +90,7 @@ const MontantPatrimoineFinancier: React.FC = () => {
     const handleNext = async () => {
         if (value !== null) {
             await updateResponse(13, value.toString());
-            navigate('/montant-epargne-mensuel');
+            navigate('/quel-est-votre-horizon-d-investissement');
         } else {
             setIsAlertOpen(true);
         }
