@@ -31,13 +31,14 @@ const theme = extendTheme({
     },
 });
 
+// Options de revenus avec libellés adaptés
 const incomeOptions = [
-    { value: 'lessThan30000', label: 'Moins de 30 000€' },
-    { value: '30000to45000', label: '30 000€ à 45 000€' },
-    { value: '45000to60000', label: '45 000€ à 60 000€' },
-    { value: '60000to100000', label: '60 000€ à 100 000€' },
-    { value: '100000to150000', label: '100 000€ à 150 000€' },
-    { value: 'moreThan150000', label: 'Plus de 150 000€' },
+    { value: 'lessThan30000', label: 'Moins de 30 000 €' },
+    { value: '30000to45000', label: '30 000 € à 45 000 €' },
+    { value: '45001to60000', label: '45 001 € à 60 000 €' },
+    { value: '60001to100000', label: '60 001 € à 100 000 €' },
+    { value: '100001to150000', label: '100 001 € à 150 000 €' },
+    { value: 'moreThan150000', label: 'Plus de 150 000 €' },
 ];
 
 const RevenusAnnuels: React.FC = () => {
@@ -49,17 +50,17 @@ const RevenusAnnuels: React.FC = () => {
     // eslint-disable-next-line
     const { uuid, updateResponse, getResponse } = useUuid();
 
+    // Récupération de la sélection initiale de la base de données
     useEffect(() => {
         const fetchResponse = async () => {
-            const response = await getResponse(9);
+            const response = await getResponse(5);
             if (response !== null) {
                 setSelectedOption(response);
             }
         };
 
         fetchResponse();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [getResponse]);
 
     const handleSelect = (value: string) => {
         setSelectedOption(value);
@@ -67,7 +68,7 @@ const RevenusAnnuels: React.FC = () => {
 
     const handleNext = async () => {
         if (selectedOption !== undefined) {
-            await updateResponse(9, selectedOption);
+            await updateResponse(5, selectedOption);
             navigate('/residence-principale');
         } else {
             setIsAlertOpen(true);
@@ -76,7 +77,7 @@ const RevenusAnnuels: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={9} totalSubSteps={24} title="Quels sont les revenus annuels bruts de votre foyer ?" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={5} totalSubSteps={24} title="Quels sont les revenus annuels bruts de votre foyer ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
                     Quels sont les revenus annuels bruts de votre foyer ?
