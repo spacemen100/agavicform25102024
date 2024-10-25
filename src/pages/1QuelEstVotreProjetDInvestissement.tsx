@@ -13,11 +13,12 @@ import {
     AlertDialogHeader,
     AlertDialogContent,
     AlertDialogOverlay,
+    Input,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
 import {
-    FcApproval, FcDisapprove, FcProcess, FcBusinessContact, FcReadingEbook, FcManager, FcParallelTasks
+    FcMoneyTransfer, FcPlanner, FcHome, FcBullish, FcReading
 } from 'react-icons/fc';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
 import { useUuid } from '../context/UuidContext';
@@ -36,6 +37,7 @@ const theme = extendTheme({
 
 const QuelEstVotreProjetDInvestissement: React.FC = () => {
     const [selected, setSelected] = useState<string | null>(null);
+    const [otherOption, setOtherOption] = useState<string>('');
     const navigate = useNavigate();
     // eslint-disable-next-line
     const { uuid, updateResponse, getResponse } = useUuid();
@@ -49,8 +51,7 @@ const QuelEstVotreProjetDInvestissement: React.FC = () => {
         };
 
         fetchResponse();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [getResponse]);
 
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
@@ -58,11 +59,12 @@ const QuelEstVotreProjetDInvestissement: React.FC = () => {
 
     const handleSelect = (option: string) => {
         setSelected(option);
+        if (option !== 'autre') setOtherOption('');
     };
 
     const handleNext = async () => {
         if (selected) {
-            await updateResponse(1, selected);
+            await updateResponse(1, selected === 'autre' ? otherOption : selected);
             navigate('/quel-montant-souhaitez-vous-placer');
         } else {
             setIsAlertOpen(true);
@@ -70,13 +72,11 @@ const QuelEstVotreProjetDInvestissement: React.FC = () => {
     };
 
     const buttons = [
-        { label: 'Faire fructifier mon épargne', icon: FcApproval, key: 'fructifier' },
-        { label: 'Épargner en cas de coup dur', icon: FcDisapprove, key: 'epargner' },
-        { label: 'Préparer un achat important', icon: FcProcess, key: 'achat' },
-        { label: 'Prévoir ma retraite', icon: FcBusinessContact, key: 'retraite' },
-        { label: 'Transmettre mon patrimoine', icon: FcReadingEbook, key: 'patrimoine' },
-        { label: 'Ouvrir un compte enfant', icon: FcManager, key: 'compte' },
-        { label: 'Organiser ma trésorerie pro', icon: FcParallelTasks, key: 'tresorerie' },
+        { label: 'Constituer un capital', icon: FcMoneyTransfer, key: 'capital' },
+        { label: 'Préparer la retraite', icon: FcPlanner, key: 'retraite' },
+        { label: 'Acheter un bien immobilier', icon: FcHome, key: 'immobilier' },
+        { label: 'Optimiser la fiscalité', icon: FcBullish, key: 'fiscalite' },
+        { label: 'Autre (préciser)', icon: FcReading, key: 'autre' },
     ];
 
     return (
@@ -104,6 +104,16 @@ const QuelEstVotreProjetDInvestissement: React.FC = () => {
                         </Button>
                     ))}
                 </SimpleGrid>
+                {selected === 'autre' && (
+                    <Box mt={5}>
+                        <Input
+                            placeholder="Précisez votre projet"
+                            value={otherOption}
+                            onChange={(e) => setOtherOption(e.target.value)}
+                            size="md"
+                        />
+                    </Box>
+                )}
                 <Box textAlign="right">
                     <Button colorScheme="green" size="xxl" mt={5} px={6} py={6} onClick={handleNext}>Suivant</Button>
                 </Box>
