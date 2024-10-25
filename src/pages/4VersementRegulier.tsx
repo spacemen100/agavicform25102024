@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -30,17 +30,18 @@ const theme = extendTheme({
     },
 });
 
-// Les nouvelles options de sélection selon les instructions fournies
-const monthlyInvestmentOptions = [
-    "Moins de 250 €",
-    "250 € à 500 €",
-    "500 € à 1 000 €",
-    "1 000 € à 2 500 €",
-    "Plus de 2 500 €"
+// Options pour les versements réguliers
+const regularPaymentOptions = [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    "Non, je préfère ajuster plus tard."
 ];
 
-const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
-    const [selectedAmount, setSelectedAmount] = useState<string | null>(null);
+const VersementRegulier: React.FC = () => {
+    const [selectedAmount, setSelectedAmount] = useState<string | number | null>(null);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
@@ -48,25 +49,14 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
     // eslint-disable-next-line
     const { uuid, updateResponse, getResponse } = useUuid();
 
-    useEffect(() => {
-        const fetchResponse = async () => {
-            const response = await getResponse(3);
-            if (response && monthlyInvestmentOptions.includes(response)) {
-                setSelectedAmount(response);
-            }
-        };
-
-        fetchResponse();
-    }, [getResponse]);
-
-    const handleSelect = (amount: string) => {
+    const handleSelect = (amount: string | number) => {
         setSelectedAmount(amount);
     };
 
     const handleNext = async () => {
-        if (selectedAmount) {
-            await updateResponse(3, selectedAmount);
-            navigate('/versement-regulier');
+        if (selectedAmount !== null) {
+            await updateResponse(4, selectedAmount.toString());
+            navigate('/suivant');
         } else {
             setIsAlertOpen(true);
         }
@@ -74,16 +64,16 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={3} totalSubSteps={24} title="Parlons de votre projet" />
+            <StepperWithSubStepCounter currentStep={2} currentSubStep={1} totalSubSteps={5} title="Configuration du versement" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Combien pouvez-vous épargner chaque mois ?
+                    Souhaitez-vous mettre en place un versement régulier ?
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
-                    Placer de l'argent régulièrement peut faire une grande différence dans le temps.
+                    Vous pouvez choisir de verser un montant chaque mois, ou de revenir à cette option plus tard.
                 </Text>
                 <HStack justifyContent="center" spacing="4" flexWrap="wrap">
-                    {monthlyInvestmentOptions.map((amount) => (
+                    {regularPaymentOptions.map((amount) => (
                         <Button
                             key={amount}
                             variant="outline"
@@ -97,18 +87,17 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
                             _hover={{ bg: 'gray.200' }}
                             borderColor={selectedAmount === amount ? 'green.400' : 'gray.200'}
                         >
-                            {amount}
+                            {typeof amount === "number" ? `${amount.toLocaleString('fr-FR')} €` : amount}
                         </Button>
                     ))}
                 </HStack>
-                {selectedAmount && (
+                {selectedAmount !== null && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
-                        <Text fontSize="2xl" color="green.500">{selectedAmount}</Text>
+                        <Text fontSize="2xl" color="green.500">
+                            {typeof selectedAmount === "number" ? `${selectedAmount.toLocaleString('fr-FR')} €` : selectedAmount}
+                        </Text>
                     </Box>
                 )}
-                <Text textAlign="center" mt="8">
-                    Les versements sont modulables : placez le montant que vous souhaitez, à la fréquence que vous souhaitez. Ils sont modifiables à tout moment, et toujours sans frais !
-                </Text>
                 <HStack justifyContent="flex-end" mt="8" spacing="4">
                     <Button
                         colorScheme="gray"
@@ -142,7 +131,7 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
                             Sélection requise
                         </AlertDialogHeader>
                         <AlertDialogBody>
-                            Veuillez sélectionner un montant avant de continuer. 😊
+                            Veuillez sélectionner un montant ou l'option de revenir plus tard avant de continuer. 😊
                         </AlertDialogBody>
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={onClose}>
@@ -156,4 +145,4 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
     );
 };
 
-export default QuelMontantRegulierSouhaitezVousPlacer;
+export default VersementRegulier;

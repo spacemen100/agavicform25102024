@@ -7,6 +7,7 @@ import QuelEstVotreProjetDInvestissement from '../pages/1QuelEstVotreProjetDInve
 import QuelMontantSouhaitezVousPlacer from '../pages/2QuelMontantSouhaitezVousPlacer';
 import QuelMontantRegulierSouhaitezVousPlacer from '../pages/3QuelMontantRegulierSouhaitezVousPlacer';
 import QuelEstVotreHorizonDInvestissement from '../pages/4QuelEstVotreHorizonDInvestissement';
+import VersementRegulier from '../pages/4VersementRegulier'; // Ajout de l'import pour 4VersementRegulier
 import ESGPreference from '../pages/7ESGPreference';
 import QuelEstVotreDateDeNaissance from '../pages/5QuelEstVotreDateDeNaissance';
 import EtesVousResidentFiscalFrancais from '../pages/6EtesVousResidentFiscalFrancais';
@@ -40,6 +41,7 @@ export const routes = [
   { path: '/quel-montant-souhaitez-vous-placer', name: 'QuelMontantSouhaitezVousPlacer', component: <QuelMontantSouhaitezVousPlacer />, hidden: true },
   { path: '/quel-montant-regulier-souhaitez-vous-placer', name: 'QuelMontantRegulierSouhaitezVousPlacer', component: <QuelMontantRegulierSouhaitezVousPlacer />, hidden: true },
   { path: '/quel-est-votre-horizon-d-investissement', name: 'QuelEstVotreHorizonDInvestissement', component: <QuelEstVotreHorizonDInvestissement />, hidden: true },
+  { path: '/versement-regulier', name: 'VersementRegulier', component: <VersementRegulier />, hidden: true }, // Ajout de la route pour 4VersementRegulier
   { path: '/esg-preference', name: 'ESGPreference', component: <ESGPreference />, hidden: true },
   { path: '/quel-est-votre-date-de-naissance', name: 'QuelEstVotreDateDeNaissance', component: <QuelEstVotreDateDeNaissance />, hidden: true },
   { path: '/etes-vous-resident-fiscal-francais', name: 'EtesVousResidentFiscalFrancais', component: <EtesVousResidentFiscalFrancais />, hidden: true },
