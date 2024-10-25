@@ -1,4 +1,3 @@
-// src/pages/QuelMontantRegulierSouhaitezVousPlacer.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
@@ -31,10 +30,17 @@ const theme = extendTheme({
     },
 });
 
-const monthlyInvestmentOptions = [50, 100, 200, 500, 1000];
+// Les nouvelles options de sélection selon les instructions fournies
+const monthlyInvestmentOptions = [
+    "Moins de 250 €",
+    "250 € à 500 €",
+    "500 € à 1 000 €",
+    "1 000 € à 2 500 €",
+    "Plus de 2 500 €"
+];
 
 const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
-    const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+    const [selectedAmount, setSelectedAmount] = useState<string | null>(null);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
@@ -45,24 +51,21 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
     useEffect(() => {
         const fetchResponse = async () => {
             const response = await getResponse(3);
-            if (response !== null) {
-                const amount = parseInt(response, 10);
-                if (monthlyInvestmentOptions.includes(amount)) {
-                    setSelectedAmount(amount);
-                }
+            if (response && monthlyInvestmentOptions.includes(response)) {
+                setSelectedAmount(response);
             }
         };
 
         fetchResponse();
     }, [getResponse]);
 
-    const handleSelect = (amount: number) => {
+    const handleSelect = (amount: string) => {
         setSelectedAmount(amount);
     };
 
     const handleNext = async () => {
-        if (selectedAmount !== null) {
-            await updateResponse(3, selectedAmount.toString());
+        if (selectedAmount) {
+            await updateResponse(3, selectedAmount);
             navigate('/quel-est-votre-horizon-d-investissement');
         } else {
             setIsAlertOpen(true);
@@ -73,11 +76,12 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
         <ChakraProvider theme={theme}>
             <StepperWithSubStepCounter currentStep={1} currentSubStep={3} totalSubSteps={24} title="Parlons de votre projet" />
             <Box p={5} maxW="1000px" mx="auto">
-                <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">Quel montant régulier souhaitez-vous placer chaque mois ?</Text>
-                <Text fontSize="md" textAlign="center" mb={6}>
-                    Placer de l'argent tous les mois pourrait faire une grande différence dans quelques années. 55 % de nos clients ont fait ce choix et placent en moyenne 200 € par mois.
+                <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
+                    Combien pouvez-vous épargner chaque mois ?
                 </Text>
-                <Text fontSize="md" textAlign="center" mb={6}>Sélectionnez parmi les choix suivants :</Text>
+                <Text fontSize="md" textAlign="center" mb={6}>
+                    Placer de l'argent régulièrement peut faire une grande différence dans le temps.
+                </Text>
                 <HStack justifyContent="center" spacing="4" flexWrap="wrap">
                     {monthlyInvestmentOptions.map((amount) => (
                         <Button
@@ -93,15 +97,13 @@ const QuelMontantRegulierSouhaitezVousPlacer: React.FC = () => {
                             _hover={{ bg: 'gray.200' }}
                             borderColor={selectedAmount === amount ? 'green.400' : 'gray.200'}
                         >
-                            {amount.toLocaleString('fr-FR')} € / mois
+                            {amount}
                         </Button>
                     ))}
                 </HStack>
-                {selectedAmount !== null && (
+                {selectedAmount && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
-                        <Text fontSize="2xl" color="green.500">
-                            {selectedAmount.toLocaleString('fr-FR')} € / mois
-                        </Text>
+                        <Text fontSize="2xl" color="green.500">{selectedAmount}</Text>
                     </Box>
                 )}
                 <Text textAlign="center" mt="8">
