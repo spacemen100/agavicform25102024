@@ -69,18 +69,21 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
         };
 
         fetchResponse();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [getResponse]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(event.target.value, 10);
-        if (!isNaN(value) && value >= 0) {
-            setValue(value);
+        const inputValue = parseInt(event.target.value.replace(/\s/g, ''), 10); // Retire les espaces avant de convertir
+        if (!isNaN(inputValue) && inputValue >= 0) {
+            setValue(inputValue);
             setIsInvalidInput(false);
         } else {
             setValue(null);
             setIsInvalidInput(true);
         }
+    };
+
+    const formatNumber = (num: number) => {
+        return new Intl.NumberFormat('fr-FR').format(num);
     };
 
     const handleNext = async () => {
@@ -105,9 +108,8 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
                 <Box justifyContent="center" mb={6} maxWidth={400} mx="auto">
                     <InputGroup size="lg" width="auto">
                         <Input
-                            type="number"
-                            min={0}
-                            value={value !== null ? value : ''}
+                            type="text"
+                            value={value !== null ? formatNumber(value) : ''}
                             onChange={handleInputChange}
                             placeholder="Entrez une valeur"
                             size="lg"
@@ -140,7 +142,7 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
                 {value !== null && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
                         <Text fontSize="2xl" color="green.500">
-                            {value} €
+                            {formatNumber(value)} €
                         </Text>
                     </Box>
                 )}

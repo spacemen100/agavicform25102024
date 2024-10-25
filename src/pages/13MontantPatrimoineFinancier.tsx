@@ -57,6 +57,7 @@ const MontantPatrimoineFinancier: React.FC = () => {
     // eslint-disable-next-line
     const { uuid, updateResponse, getResponse } = useUuid();
 
+    // Récupération de la valeur initiale
     useEffect(() => {
         const fetchResponse = async () => {
             const response = await getResponse(13);
@@ -69,18 +70,21 @@ const MontantPatrimoineFinancier: React.FC = () => {
         };
 
         fetchResponse();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [getResponse]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(event.target.value, 10);
-        if (!isNaN(value) && value >= 0) {
-            setValue(value);
+        const inputValue = parseInt(event.target.value.replace(/\s/g, ''), 10); // Retire les espaces pour convertir
+        if (!isNaN(inputValue) && inputValue >= 0) {
+            setValue(inputValue);
             setIsInvalidInput(false);
         } else {
             setValue(null);
             setIsInvalidInput(true);
         }
+    };
+
+    const formatNumber = (num: number) => {
+        return new Intl.NumberFormat('fr-FR').format(num);
     };
 
     const handleNext = async () => {
@@ -100,14 +104,13 @@ const MontantPatrimoineFinancier: React.FC = () => {
                     Quel est le montant estimé de votre patrimoine financier ?
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
-                    Additionnez vos avoirs financiers : compte courant, livrets d'épargne, PEL, assurances-vie, PEA, comptes-titres, PEE, etc, sauf votre patrimoine immobilier. Une estimation suffit.
+                    Additionnez vos avoirs financiers : compte courant, livrets d'épargne, PEL, assurances-vie, PEA, comptes-titres, PEE, etc., sauf votre patrimoine immobilier. Une estimation suffit.
                 </Text>
                 <Box justifyContent="center" mb={6} maxWidth={400} mx="auto">
                     <InputGroup size="lg" width="auto">
                         <Input
-                            type="number"
-                            min={0}
-                            value={value !== null ? value : ''}
+                            type="text"
+                            value={value !== null ? formatNumber(value) : ''}
                             onChange={handleInputChange}
                             placeholder="Entrez une valeur"
                             size="lg"
@@ -130,7 +133,7 @@ const MontantPatrimoineFinancier: React.FC = () => {
                 {value !== null && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
                         <Text fontSize="2xl" color="green.500">
-                            {value} €
+                            {formatNumber(value)} €
                         </Text>
                     </Box>
                 )}
