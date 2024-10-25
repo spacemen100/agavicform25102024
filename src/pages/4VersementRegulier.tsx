@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
     extendTheme,
@@ -30,7 +30,7 @@ const theme = extendTheme({
     },
 });
 
-// Les nouvelles options de sélection selon les instructions fournies
+// Options pour les versements réguliers
 const monthlyInvestmentOptions = [
     "50 €",
     "100 €",
@@ -49,7 +49,17 @@ const VersementRegulier: React.FC = () => {
     // eslint-disable-next-line
     const { uuid, updateResponse, getResponse } = useUuid();
 
+    // Récupération de la valeur initiale lors du chargement
+    useEffect(() => {
+        const fetchInitialAmount = async () => {
+            const response = await getResponse(4);
+            if (response && monthlyInvestmentOptions.includes(response)) {
+                setSelectedAmount(response); // Définit la sélection initiale à partir de la base de données
+            }
+        };
 
+        fetchInitialAmount();
+    }, [getResponse]);
 
     const handleSelect = (amount: string) => {
         setSelectedAmount(amount);
