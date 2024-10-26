@@ -62,7 +62,7 @@ const InformationsDeContactPhone: React.FC = () => {
     const handleNext = async () => {
         if (phone && validatePhone(phone)) {
             await updateResponse(26, phone); // Save to step 26
-            navigate('/contact-information-phone'); // Replace with the next route
+            navigate('/contact-permission'); // Replace with the next route
         } else {
             setIsPhoneValid(false);
             setIsAlertOpen(true);
