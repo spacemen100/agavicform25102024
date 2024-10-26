@@ -48,7 +48,7 @@ const ResidencePrincipale: React.FC = () => {
 
     useEffect(() => {
         const fetchResponse = async () => {
-            const response = await getResponse(6);
+            const response = await getResponse(20);
             if (response !== null) {
                 setResidenceStatus(response);
             }
@@ -60,7 +60,7 @@ const ResidencePrincipale: React.FC = () => {
 
     const handleNext = async () => {
         if (residenceStatus !== undefined) {
-            await updateResponse(6, residenceStatus);
+            await updateResponse(20, residenceStatus);
             if (residenceStatus === 'oui') {
                 navigate('/montant-credit-immobilier-mensuel');
             } else {
@@ -73,7 +73,7 @@ const ResidencePrincipale: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={6} totalSubSteps={24} title="Êtes-vous propriétaire de votre résidence principale ?" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={20} totalSubSteps={24} title="Êtes-vous propriétaire de votre résidence principale ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
                     Êtes-vous propriétaire de votre résidence principale ?
