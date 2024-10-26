@@ -65,7 +65,7 @@ const QuelEstVotreHorizonDInvestissement: React.FC = () => {
     const handleNext = async () => {
         if (selectedHorizon) {
             await updateResponse(16, selectedHorizon);
-            navigate('/quel-est-votre-date-de-naissance'); // Remplacez par la route suivante appropriée
+            navigate('/rapport-gains-pertes'); // Remplacez par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }

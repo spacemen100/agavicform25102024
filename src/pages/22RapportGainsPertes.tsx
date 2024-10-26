@@ -1,3 +1,4 @@
+// src/pages/RapportGainsPertes.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
@@ -36,11 +37,12 @@ const theme = extendTheme({
     },
 });
 
+// Options pour le rapport gains / pertes
 const gainLossOptions = [
-    { value: 'gain5000loss2000', label: 'Gain potentiel 5 000 € / Perte potentielle 2 000 €' },
-    { value: 'gain2000loss1000', label: 'Gain potentiel 2 000 € / Perte potentielle 1 000 €' },
-    { value: 'gain1000loss400', label: 'Gain potentiel 1 000 € / Perte potentielle 400 €' },
-    { value: 'gain500noloss', label: 'Gain potentiel 500 € / Perte potentielle 0 €' },
+    { value: 'gain20_loss5', label: 'Gains potentiels de 20 % / Pertes de 5 %' },
+    { value: 'gain50_loss20', label: 'Gains potentiels de 50 % / Pertes de 20 %' },
+    { value: 'gain100_loss50', label: 'Gains potentiels de 100 % / Pertes de 50 %' },
+    { value: 'no_loss', label: 'Aucun risque de perte' },
 ];
 
 const RapportGainsPertes: React.FC = () => {
@@ -49,9 +51,9 @@ const RapportGainsPertes: React.FC = () => {
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
-    // eslint-disable-next-line
-    const { uuid, updateResponse, getResponse } = useUuid();
+    const { updateResponse, getResponse } = useUuid();
 
+    // Récupération de la valeur initiale
     useEffect(() => {
         const fetchResponse = async () => {
             const response = await getResponse(22);
@@ -59,10 +61,8 @@ const RapportGainsPertes: React.FC = () => {
                 setSelectedOption(response);
             }
         };
-
         fetchResponse();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [getResponse]);
 
     const handleSelect = (value: string) => {
         setSelectedOption(value);
@@ -85,8 +85,9 @@ const RapportGainsPertes: React.FC = () => {
                     Quel rapport gains / pertes êtes-vous prêt à accepter en investissant 10 000 € sur 5 ans ?
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
-                    Il n'y a pas de bonne ou de mauvaise réponse. Les montants proposés nous permettent de mieux comprendre votre attitude face au risque. Ils ne sont pas nécessairement représentatifs de la réalité.
+                    Il n'y a pas de bonne ou de mauvaise réponse. Les montants proposés nous permettent de mieux comprendre votre attitude face au risque.
                 </Text>
+                
                 <VStack spacing={4} align="stretch">
                     {gainLossOptions.map((option) => (
                         <Button
