@@ -34,7 +34,7 @@ import CreationCompte from '../pages/CreationCompte';
 import NotificationPreferences from '../pages/25NotificationPreferences';
 import CombinedRiskScoreComponent from '../pages/26CombinedRiskScoreComponent';
 import Recommandation from '../recommandation/Recommandation';
-import ContactInformation from '../pages/ContactInformation'; // Import du composant ContactInformation
+import ContactInformation from '../pages/InformationsDeContact'; // Import du composant ContactInformation
 
 export const routes = [
   { path: '/', name: 'Home', component: <Home />, hidden: true },
