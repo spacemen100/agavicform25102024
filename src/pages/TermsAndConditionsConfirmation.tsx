@@ -13,8 +13,8 @@ import {
     AlertDialogContent,
     AlertDialogOverlay,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
 import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
 import { useUuid } from '../context/UuidContext';
 
@@ -36,12 +36,12 @@ const theme = extendTheme({
     },
 });
 
-const contactPermissionOptions = [
+const termsConditionsOptions = [
     { value: 'oui', label: 'Oui' },
     { value: 'non', label: 'Non' },
 ];
 
-const ContactPermission: React.FC = () => {
+const TermsAndConditionsConfirmation: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
@@ -51,7 +51,7 @@ const ContactPermission: React.FC = () => {
 
     useEffect(() => {
         const fetchResponse = async () => {
-            const response = await getResponse(18); // Adjust the step number as needed
+            const response = await getResponse(19); // Adjust the step number as needed
             if (response !== null) {
                 setSelectedOption(response);
             }
@@ -66,8 +66,8 @@ const ContactPermission: React.FC = () => {
 
     const handleNext = async () => {
         if (selectedOption !== undefined) {
-            await updateResponse(18, selectedOption); // Adjust the step number as needed
-            navigate('/terms-and-conditions-confirmation'); // Replace with the actual next route
+            await updateResponse(19, selectedOption); // Adjust the step number as needed
+            navigate('/next-step'); // Replace with the actual next route
         } else {
             setIsAlertOpen(true);
         }
@@ -75,16 +75,16 @@ const ContactPermission: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={18} totalSubSteps={24} title="Contactez-moi pour des offres personnalisées" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={19} totalSubSteps={24} title="Confirmation des Termes et Conditions" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Autorisez-vous EPARGNE+ à vous contacter pour vous proposer des offres personnalisées ?
+                    Avez-vous lu et compris les termes et conditions liés aux investissements proposés par EPARGNE+ ?
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
-                    Votre réponse nous aidera à vous fournir des offres adaptées à vos besoins.
+                    Cette confirmation est requise pour poursuivre.
                 </Text>
                 <VStack spacing={4} align="stretch">
-                    {contactPermissionOptions.map((option) => (
+                    {termsConditionsOptions.map((option) => (
                         <Button
                             key={option.value}
                             variant="outline"
@@ -147,4 +147,4 @@ const ContactPermission: React.FC = () => {
     );
 };
 
-export default ContactPermission;
+export default TermsAndConditionsConfirmation;

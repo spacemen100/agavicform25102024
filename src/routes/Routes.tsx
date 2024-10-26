@@ -36,7 +36,8 @@ import CombinedRiskScoreComponent from '../pages/26CombinedRiskScoreComponent';
 import Recommandation from '../recommandation/Recommandation';
 import ContactInformation from '../pages/InformationsDeContact';
 import InformationsDeContactPhone from '../pages/InformationsDeContactPhone';
-import ContactPermission from '../pages/ContactPermission'; // Import du composant ContactPermission
+import ContactPermission from '../pages/ContactPermission';
+import TermsAndConditionsConfirmation from '../pages/TermsAndConditionsConfirmation'; // Import du composant TermsAndConditionsConfirmation
 
 export const routes = [
   { path: '/', name: 'Home', component: <Home />, hidden: true },
@@ -73,7 +74,8 @@ export const routes = [
   { path: '/recommandation', name: 'Recommandation', component: <Recommandation />, hidden: true },
   { path: '/contact-information', name: 'ContactInformation', component: <ContactInformation />, hidden: true },
   { path: '/contact-information-phone', name: 'InformationsDeContactPhone', component: <InformationsDeContactPhone />, hidden: true },
-  { path: '/contact-permission', name: 'ContactPermission', component: <ContactPermission />, hidden: true }, // Ajout de la route pour ContactPermission
+  { path: '/contact-permission', name: 'ContactPermission', component: <ContactPermission />, hidden: true },
+  { path: '/terms-and-conditions-confirmation', name: 'TermsAndConditionsConfirmation', component: <TermsAndConditionsConfirmation />, hidden: true }, // Ajout de la route pour TermsAndConditionsConfirmation
 ];
 
 const Routes: React.FC = () => {
