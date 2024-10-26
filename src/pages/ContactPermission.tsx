@@ -51,7 +51,7 @@ const ContactPermission: React.FC = () => {
 
     useEffect(() => {
         const fetchResponse = async () => {
-            const response = await getResponse(18); // Adjust the step number as needed
+            const response = await getResponse(27); // Adjust the step number as needed
             if (response !== null) {
                 setSelectedOption(response);
             }
@@ -66,7 +66,7 @@ const ContactPermission: React.FC = () => {
 
     const handleNext = async () => {
         if (selectedOption !== undefined) {
-            await updateResponse(18, selectedOption); // Adjust the step number as needed
+            await updateResponse(27, selectedOption); // Adjust the step number as needed
             navigate('/terms-and-conditions-confirmation'); // Replace with the actual next route
         } else {
             setIsAlertOpen(true);
@@ -75,7 +75,7 @@ const ContactPermission: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={18} totalSubSteps={24} title="Contactez-moi pour des offres personnalisées" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={27} totalSubSteps={24} title="Contactez-moi pour des offres personnalisées" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
                     Autorisez-vous EPARGNE+ à vous contacter pour vous proposer des offres personnalisées ?

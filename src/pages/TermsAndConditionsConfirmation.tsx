@@ -51,7 +51,7 @@ const TermsAndConditionsConfirmation: React.FC = () => {
 
     useEffect(() => {
         const fetchResponse = async () => {
-            const response = await getResponse(19); // Adjust the step number as needed
+            const response = await getResponse(28); // Adjust the step number as needed
             if (response !== null) {
                 setSelectedOption(response);
             }
@@ -66,7 +66,7 @@ const TermsAndConditionsConfirmation: React.FC = () => {
 
     const handleNext = async () => {
         if (selectedOption !== undefined) {
-            await updateResponse(19, selectedOption); // Adjust the step number as needed
+            await updateResponse(28, selectedOption); // Adjust the step number as needed
             navigate('/next-step'); // Replace with the actual next route
         } else {
             setIsAlertOpen(true);
@@ -75,7 +75,7 @@ const TermsAndConditionsConfirmation: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={19} totalSubSteps={24} title="Confirmation des Termes et Conditions" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={28} totalSubSteps={24} title="Confirmation des Termes et Conditions" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
                     Avez-vous lu et compris les termes et conditions liés aux investissements proposés par EPARGNE+ ?
