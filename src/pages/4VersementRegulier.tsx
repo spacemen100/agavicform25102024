@@ -1,3 +1,4 @@
+// src/pages/QuelEstVotreHorizonDInvestissement.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import {
     ChakraProvider,
@@ -11,7 +12,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogContent,
-    AlertDialogOverlay
+    AlertDialogOverlay,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { WarningIcon } from '@chakra-ui/icons';
@@ -30,45 +31,41 @@ const theme = extendTheme({
     },
 });
 
-// Options pour les versements réguliers
-const monthlyInvestmentOptions = [
-    "50 €",
-    "100 €",
-    "200 €",
-    "500 €",
-    "1000 €",
-    "Non, je préfère ajuster plus tard."
+// Options pour l'horizon d'investissement
+const investmentHorizonOptions = [
+    "Moins de 2 ans",
+    "2 à 5 ans",
+    "5 à 10 ans",
+    "Plus de 10 ans",
 ];
 
-const VersementRegulier: React.FC = () => {
-    const [selectedAmount, setSelectedAmount] = useState<string | null>(null);
+const QuelEstVotreHorizonDInvestissement: React.FC = () => {
+    const [selectedHorizon, setSelectedHorizon] = useState<string | null>(null);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const onClose = () => setIsAlertOpen(false);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
-    // eslint-disable-next-line
-    const { uuid, updateResponse, getResponse } = useUuid();
+    const { updateResponse, getResponse } = useUuid();
 
     // Récupération de la valeur initiale lors du chargement
     useEffect(() => {
-        const fetchInitialAmount = async () => {
+        const fetchInitialHorizon = async () => {
             const response = await getResponse(4);
-            if (response && monthlyInvestmentOptions.includes(response)) {
-                setSelectedAmount(response); // Définit la sélection initiale à partir de la base de données
+            if (response && investmentHorizonOptions.includes(response)) {
+                setSelectedHorizon(response); // Définit la sélection initiale à partir de la base de données
             }
         };
-
-        fetchInitialAmount();
+        fetchInitialHorizon();
     }, [getResponse]);
 
-    const handleSelect = (amount: string) => {
-        setSelectedAmount(amount);
+    const handleSelect = (horizon: string) => {
+        setSelectedHorizon(horizon);
     };
 
     const handleNext = async () => {
-        if (selectedAmount) {
-            await updateResponse(4, selectedAmount);
-            navigate('/revenus-annuels');
+        if (selectedHorizon) {
+            await updateResponse(4, selectedHorizon);
+            navigate('/quel-est-votre-date-de-naissance'); // Remplacez par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }
@@ -76,64 +73,49 @@ const VersementRegulier: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={2} currentSubStep={4} totalSubSteps={24} title="Parlons de votre projet" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={4} totalSubSteps={24} title="Parlons de votre projet" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Souhaitez-vous mettre en place un versement régulier ?
+                    Dans combien de temps souhaitez-vous profiter de cet investissement ?
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
-                    Vous pouvez choisir de verser un montant chaque mois, ou de revenir à cette option plus tard.
+                    Cette information nous permet de vous proposer une simulation en accord avec votre horizon d'investissement.
                 </Text>
                 <HStack justifyContent="center" spacing="4" flexWrap="wrap">
-                    {monthlyInvestmentOptions.map((amount) => (
+                    {investmentHorizonOptions.map((horizon) => (
                         <Button
-                            key={amount}
+                            key={horizon}
                             variant="outline"
                             size="lg"
-                            colorScheme={selectedAmount === amount ? 'green' : 'blue'}
-                            onClick={() => handleSelect(amount)}
+                            colorScheme={selectedHorizon === horizon ? 'green' : 'blue'}
+                            onClick={() => handleSelect(horizon)}
                             px={6}
                             py={6}
                             textAlign="left"
                             justifyContent="flex-start"
                             _hover={{ bg: 'gray.200' }}
-                            borderColor={selectedAmount === amount ? 'green.400' : 'gray.200'}
+                            borderColor={selectedHorizon === horizon ? 'green.400' : 'gray.200'}
                         >
-                            {amount}
+                            {horizon}
                         </Button>
                     ))}
                 </HStack>
-                {selectedAmount && (
+                {selectedHorizon && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
-                        <Text fontSize="2xl" color="green.500">{selectedAmount}</Text>
+                        <Text fontSize="2xl" color="green.500">{selectedHorizon}</Text>
                     </Box>
                 )}
                 <HStack justifyContent="flex-end" mt="8" spacing="4">
-                    <Button
-                        colorScheme="gray"
-                        variant="outline"
-                        onClick={() => navigate(-1)}
-                        px={6}
-                        py={6}
-                        size="lg">
+                    <Button colorScheme="gray" variant="outline" onClick={() => navigate(-1)} px={6} py={6} size="lg">
                         Retour
                     </Button>
-                    <Button
-                        colorScheme="green"
-                        onClick={handleNext}
-                        px={6}
-                        py={6}
-                        size="lg">
+                    <Button colorScheme="green" onClick={handleNext} px={6} py={6} size="lg">
                         Suivant
                     </Button>
                 </HStack>
             </Box>
 
-            <AlertDialog
-                isOpen={isAlertOpen}
-                leastDestructiveRef={cancelRef}
-                onClose={onClose}
-            >
+            <AlertDialog isOpen={isAlertOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
                 <AlertDialogOverlay>
                     <AlertDialogContent>
                         <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -141,7 +123,7 @@ const VersementRegulier: React.FC = () => {
                             Sélection requise
                         </AlertDialogHeader>
                         <AlertDialogBody>
-                            Veuillez sélectionner un montant ou l'option de revenir plus tard avant de continuer. 😊
+                            Veuillez sélectionner un horizon d'investissement avant de continuer. 😊
                         </AlertDialogBody>
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={onClose}>
@@ -155,4 +137,4 @@ const VersementRegulier: React.FC = () => {
     );
 };
 
-export default VersementRegulier;
+export default QuelEstVotreHorizonDInvestissement;
