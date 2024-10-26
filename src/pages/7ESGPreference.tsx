@@ -64,7 +64,7 @@ const ESGPreference: React.FC = () => {
     const handleNext = async () => {
         if (esgPreference !== undefined) {
             await updateResponse(7, esgPreference);
-            navigate('/nombre-enfants-a-charge');
+            navigate('/etes-vous-resident-fiscal-francais');
         } else {
             setIsAlertOpen(true);
         }
@@ -75,7 +75,7 @@ const ESGPreference: React.FC = () => {
             <StepperWithSubStepCounter currentStep={1} currentSubStep={7} totalSubSteps={24} title="Préférence pour les investissements ESG" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Avez-vous une préférence pour des investissements respectant les critères environnementaux, sociaux et de gouvernance (ESG) ?
+                    Avez-vous une préférence pour des investissements respectant les critères ESG (environnementaux, sociaux et de gouvernance) ?
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
                     L’ESG est un ensemble de critères utilisés pour évaluer les pratiques durables et socialement responsables des entreprises. Cela inclut des facteurs tels que l'impact environnemental, les relations avec les employés et la qualité de la gouvernance.

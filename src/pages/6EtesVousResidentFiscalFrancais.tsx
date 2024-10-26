@@ -58,7 +58,7 @@ const EtesVousResidentFiscalFrancais: React.FC = () => {
     const handleNext = async () => {
         if (residentFiscal !== undefined) {
             await updateResponse(6, residentFiscal);
-            navigate('/esg-preference');
+            navigate('/nombre-enfants-a-charge');
         } else {
             setIsAlertOpen(true);
         }

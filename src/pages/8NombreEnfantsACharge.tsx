@@ -65,7 +65,7 @@ const NombreEnfantsACharge: React.FC = () => {
     const handleNext = async () => {
         if (selectedOption !== undefined) {
             await updateResponse(8, selectedOption);
-            navigate('/revenus-annuels'); // Replace '/revenus-annuels' with the appropriate next route
+            navigate('/nombre-enfants-a-charge'); // Replace '/revenus-annuels' with the appropriate next route
         } else {
             setIsAlertOpen(true);
         }

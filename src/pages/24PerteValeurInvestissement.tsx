@@ -73,7 +73,7 @@ const PerteValeurInvestissement: React.FC = () => {
     const handleNext = async () => {
         if (selectedOption !== undefined) {
             await updateResponse(24, selectedOption);
-            navigate('/creation-compte'); // Remplacez par la route suivante appropriée
+            navigate('/placement-assurance-vie'); // Remplacez par la route suivante appropriée
         } else {
             setIsAlertOpen(true);
         }

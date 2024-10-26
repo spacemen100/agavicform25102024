@@ -72,7 +72,7 @@ const PlacementAssuranceVie: React.FC = () => {
     const handleNext = async () => {
         if (selectedOption !== undefined) {
             await updateResponse(17, selectedOption);
-            navigate('/perception-gain-risque');
+            navigate('/esg-preference');
         } else {
             setIsAlertOpen(true);
         }
@@ -83,7 +83,7 @@ const PlacementAssuranceVie: React.FC = () => {
             <StepperWithSubStepCounter currentStep={1} currentSubStep={17} totalSubSteps={24} title="Avez-vous déjà placé de l'argent sur un contrat d'assurance-vie, un compte-titres ou un plan d'épargne en actions (PEA) ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Avez-vous déjà placé de l'argent sur un contrat d'assurance-vie, un compte-titres ou un plan d'épargne en actions (PEA) ?
+                    Avez-vous déjà placé de l'argent sur un contrat d'assurance-vie, un compte-titres ou un PEA (plan d'épargne en actions) ?
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
                     Cette question nous permet d'en savoir plus sur vos expériences précédentes en matière d'investissement.
