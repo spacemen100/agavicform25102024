@@ -31,71 +31,71 @@ const theme = extendTheme({
     },
 });
 
-const InformationsDeContact: React.FC = () => {
-    const [email, setEmail] = useState<string>('');
+const InformationsDeContactPhone: React.FC = () => {
+    const [phone, setPhone] = useState<string>('');
     const [isAlertOpen, setIsAlertOpen] = useState(false);
-    const [isEmailValid, setIsEmailValid] = useState(true);
+    const [isPhoneValid, setIsPhoneValid] = useState(true);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
     const { updateResponse, getResponse } = useUuid();
 
-    // Fetch initial email from step25 when the component mounts
+    // Fetch initial phone number from step26 when the component mounts
     useEffect(() => {
-        const fetchInitialEmail = async () => {
-            const response = await getResponse(25); // Get response from step 25
+        const fetchInitialPhone = async () => {
+            const response = await getResponse(26); // Get response from step 26
             if (response) {
-                setEmail(response); // Set initial email if available
+                setPhone(response); // Set initial phone number if available
             }
         };
-        fetchInitialEmail();
+        fetchInitialPhone();
     }, [getResponse]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
+        setPhone(e.target.value);
     };
 
-    const validateEmail = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+    const validatePhone = (phone: string) => {
+        const phoneRegex = /^\+?[0-9]{10,15}$/; // Accepts international format with optional "+" and 10-15 digits
+        return phoneRegex.test(phone);
     };
 
     const handleNext = async () => {
-        if (email && validateEmail(email)) {
-            await updateResponse(25, email); // Save to step 25
+        if (phone && validatePhone(phone)) {
+            await updateResponse(26, phone); // Save to step 26
             navigate('/contact-information-phone'); // Replace with the next route
         } else {
-            setIsEmailValid(false);
+            setIsPhoneValid(false);
             setIsAlertOpen(true);
         }
     };
 
     const onClose = () => {
         setIsAlertOpen(false);
-        setIsEmailValid(true);
+        setIsPhoneValid(true);
     };
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={3} totalSubSteps={24} title="Vos Informations de Contact" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={4} totalSubSteps={24} title="Vos Informations de Contact" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
-                    Veuillez entrer votre adresse e-mail
+                    Veuillez entrer votre numéro de téléphone
                 </Text>
                 <Text fontSize="md" textAlign="center" mb={6}>
                     Nous vous contacterons avec des informations importantes sur votre investissement.
                 </Text>
                 <HStack justifyContent="center" spacing="4" flexWrap="wrap">
                     <Input
-                        placeholder="Adresse e-mail"
-                        value={email}
+                        placeholder="Numéro de téléphone"
+                        value={phone}
                         onChange={handleInputChange}
                         size="lg"
-                        borderColor={isEmailValid ? 'gray.200' : 'red.400'}
+                        borderColor={isPhoneValid ? 'gray.200' : 'red.400'}
                     />
                 </HStack>
-                {email && (
+                {phone && (
                     <Box borderWidth="1px" borderRadius="md" p={4} mt={4} textAlign="center" borderColor="green.400">
-                        <Text fontSize="2xl" color="green.500">{email}</Text>
+                        <Text fontSize="2xl" color="green.500">{phone}</Text>
                     </Box>
                 )}
                 <HStack justifyContent="flex-end" mt="8" spacing="4">
@@ -113,12 +113,12 @@ const InformationsDeContact: React.FC = () => {
                     <AlertDialogContent>
                         <AlertDialogHeader fontSize="lg" fontWeight="bold">
                             <WarningIcon color="orange" mr={2} />
-                            {isEmailValid ? "E-mail requis" : "E-mail invalide"}
+                            {isPhoneValid ? "Numéro requis" : "Numéro invalide"}
                         </AlertDialogHeader>
                         <AlertDialogBody>
-                            {isEmailValid
-                                ? "Veuillez entrer une adresse e-mail avant de continuer. 😊"
-                                : "L'adresse e-mail entrée n'est pas valide. Veuillez vérifier et réessayer. 😊"}
+                            {isPhoneValid
+                                ? "Veuillez entrer un numéro de téléphone avant de continuer. 😊"
+                                : "Le numéro de téléphone entré n'est pas valide. Veuillez vérifier et réessayer. 😊"}
                         </AlertDialogBody>
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={onClose}>
@@ -132,4 +132,4 @@ const InformationsDeContact: React.FC = () => {
     );
 };
 
-export default InformationsDeContact;
+export default InformationsDeContactPhone;

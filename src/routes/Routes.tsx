@@ -35,6 +35,7 @@ import NotificationPreferences from '../pages/25NotificationPreferences';
 import CombinedRiskScoreComponent from '../pages/26CombinedRiskScoreComponent';
 import Recommandation from '../recommandation/Recommandation';
 import ContactInformation from '../pages/InformationsDeContact'; // Import du composant ContactInformation
+import InformationsDeContactPhone from '../pages/InformationsDeContactPhone'; // Import du composant InformationsDeContactPhone
 
 export const routes = [
   { path: '/', name: 'Home', component: <Home />, hidden: true },
@@ -69,7 +70,8 @@ export const routes = [
   { path: '/notification-preferences', name: 'NotificationPreferences', component: <NotificationPreferences />, hidden: true },
   { path: '/combined-risk-score', name: 'CombinedRiskScoreComponent', component: <CombinedRiskScoreComponent />, hidden: true },
   { path: '/recommandation', name: 'Recommandation', component: <Recommandation />, hidden: true },
-  { path: '/contact-information', name: 'ContactInformation', component: <ContactInformation />, hidden: true }, // Ajout de la route pour ContactInformation
+  { path: '/contact-information', name: 'ContactInformation', component: <ContactInformation />, hidden: true },
+  { path: '/contact-information-phone', name: 'InformationsDeContactPhone', component: <InformationsDeContactPhone />, hidden: true }, // Ajout de la route pour InformationsDeContactPhone
 ];
 
 const Routes: React.FC = () => {
