@@ -4,14 +4,21 @@ import {
     extendTheme,
     Box,
     Text,
-    Input,
     Button,
-    VStack,
+    Stack,
+    Input,
     FormControl,
     FormLabel,
-    FormHelperText,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
 } from '@chakra-ui/react';
+import { WarningIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
+import StepperWithSubStepCounter from '../components/StepperWithSubStepCounter';
 
 const theme = extendTheme({
     colors: {
@@ -34,21 +41,29 @@ const theme = extendTheme({
 const ContactInformation: React.FC = () => {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
+    const onClose = () => setIsAlertOpen(false);
     const navigate = useNavigate();
+    const cancelRef = React.useRef<HTMLButtonElement>(null);
 
     const handleNext = () => {
-        // Logique pour sauvegarder les données ou valider les entrées
-        navigate('/next-step'); // Remplacez par la route suivante appropriée
+        if (email && phone) {
+            // Logique pour sauvegarder les données ou valider les entrées
+            navigate('/next-step'); // Remplacez par la route suivante appropriée
+        } else {
+            setIsAlertOpen(true);
+        }
     };
 
     return (
         <ChakraProvider theme={theme}>
-            <Box p={5} maxW="500px" mx="auto" mt={10}>
-                <Text fontSize="2xl" fontWeight="bold" mb={5} textAlign="center">
-                    Informations de contact
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={9} totalSubSteps={24} title="Informations de contact" />
+            <Box p={5} maxW="1000px" mx="auto">
+                <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
+                    Merci de renseigner vos informations de contact
                 </Text>
-                <VStack spacing={5}>
-                    <FormControl id="email">
+                <Stack spacing={6} align="center" justifyContent="center" direction={{ base: 'column', md: 'row' }}>
+                    <FormControl id="email" maxW="400px">
                         <FormLabel>Adresse e-mail :</FormLabel>
                         <Input
                             type="email"
@@ -56,9 +71,8 @@ const ContactInformation: React.FC = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Entrez votre adresse e-mail"
                         />
-                        <FormHelperText>Nous ne partagerons jamais votre adresse e-mail.</FormHelperText>
                     </FormControl>
-                    <FormControl id="phone">
+                    <FormControl id="phone" maxW="400px">
                         <FormLabel>Numéro de téléphone mobile :</FormLabel>
                         <Input
                             type="tel"
@@ -67,19 +81,36 @@ const ContactInformation: React.FC = () => {
                             placeholder="Entrez votre numéro de téléphone"
                         />
                     </FormControl>
-                </VStack>
-                <Box mt={8} display="flex" justifyContent="flex-end">
-                    <Button
-                        colorScheme="green"
-                        onClick={handleNext}
-                        px={6}
-                        py={6}
-                        size="lg"
-                    >
+                </Stack>
+
+                <Stack justifyContent="flex-end" mt="8" spacing="4" direction={{ base: 'column', md: 'row' }}>
+                    <Button colorScheme="gray" variant="outline" onClick={() => navigate(-1)} px={6} py={6} size="lg">
+                        Retour
+                    </Button>
+                    <Button colorScheme="green" onClick={handleNext} px={6} py={6} size="lg">
                         Suivant
                     </Button>
-                </Box>
+                </Stack>
             </Box>
+
+            <AlertDialog isOpen={isAlertOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            <WarningIcon color="orange" mr={2} />
+                            Sélection requise
+                        </AlertDialogHeader>
+                        <AlertDialogBody>
+                            Veuillez remplir les champs obligatoires avant de continuer. 😊
+                        </AlertDialogBody>
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onClose}>
+                                OK
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
         </ChakraProvider>
     );
 };
