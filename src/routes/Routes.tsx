@@ -33,7 +33,8 @@ import SimulationReady from '../pages/CreationCompte';
 import CreationCompte from '../pages/CreationCompte';
 import NotificationPreferences from '../pages/25NotificationPreferences';
 import CombinedRiskScoreComponent from '../pages/26CombinedRiskScoreComponent';
-import Recommandation from '../recommandation/Recommandation'; // Ajout de l'import pour Recommandation
+import Recommandation from '../recommandation/Recommandation';
+import ContactInformation from '../pages/ContactInformation'; // Import du composant ContactInformation
 
 export const routes = [
   { path: '/', name: 'Home', component: <Home />, hidden: true },
@@ -66,8 +67,9 @@ export const routes = [
   { path: '/simulation-ready', name: 'SimulationReady', component: <SimulationReady />, hidden: true },
   { path: '/creation-compte', name: 'CreationCompte', component: <CreationCompte />, hidden: true },
   { path: '/notification-preferences', name: 'NotificationPreferences', component: <NotificationPreferences />, hidden: true },
-  { path: '/combined-risk-score', name: 'CombinedRiskScoreComponent', component: <CombinedRiskScoreComponent />, hidden: true }, // Ajout de la route pour CombinedRiskScoreComponent
-  { path: '/recommandation', name: 'Recommandation', component: <Recommandation />, hidden: true }, // Ajout de la route pour Recommandation
+  { path: '/combined-risk-score', name: 'CombinedRiskScoreComponent', component: <CombinedRiskScoreComponent />, hidden: true },
+  { path: '/recommandation', name: 'Recommandation', component: <Recommandation />, hidden: true },
+  { path: '/contact-information', name: 'ContactInformation', component: <ContactInformation />, hidden: true }, // Ajout de la route pour ContactInformation
 ];
 
 const Routes: React.FC = () => {
