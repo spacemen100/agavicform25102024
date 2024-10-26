@@ -4,6 +4,7 @@ import {
     ChakraProvider,
     extendTheme,
     Box,
+    HStack,
     Text,
     Button,
     VStack,
@@ -87,7 +88,7 @@ const RapportGainsPertes: React.FC = () => {
                 <Text fontSize="md" textAlign="center" mb={6}>
                     Il n'y a pas de bonne ou de mauvaise réponse. Les montants proposés nous permettent de mieux comprendre votre attitude face au risque.
                 </Text>
-                
+
                 <VStack spacing={4} align="stretch">
                     {gainLossOptions.map((option) => (
                         <Button
@@ -109,27 +110,28 @@ const RapportGainsPertes: React.FC = () => {
                         </Button>
                     ))}
                 </VStack>
-
-                <Box mt={8} display="flex" justifyContent="space-between">
-                    <Button
-                        colorScheme="gray"
-                        variant="outline"
-                        onClick={() => navigate(-1)}
-                        px={6}
-                        py={6}
-                        size="lg"
-                    >
-                        Retour
-                    </Button>
-                    <Button
-                        colorScheme="green"
-                        onClick={handleNext}
-                        px={6}
-                        py={6}
-                        size="lg"
-                    >
-                        Suivant
-                    </Button>
+                <Box mt={8} display="flex" justifyContent="flex-end">
+                    <HStack spacing="4">
+                        <Button
+                            colorScheme="gray"
+                            variant="outline"
+                            onClick={() => navigate(-1)}
+                            px={6}
+                            py={6}
+                            size="lg"
+                        >
+                            Retour
+                        </Button>
+                        <Button
+                            colorScheme="green"
+                            onClick={handleNext}
+                            px={6}
+                            py={6}
+                            size="lg"
+                        >
+                            Suivant
+                        </Button>
+                    </HStack>
                 </Box>
             </Box>
 
