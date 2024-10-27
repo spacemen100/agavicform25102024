@@ -20,7 +20,7 @@ const SignUp: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
-    const { user, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) {
       toast({
         title: 'Erreur lors de l\'inscription',
@@ -29,7 +29,7 @@ const SignUp: React.FC = () => {
         duration: 5000,
         isClosable: true,
       });
-    } else if (user) {
+    } else if (data.user) {
       toast({
         title: 'Inscription réussie',
         description: 'Veuillez vérifier votre e-mail pour confirmer votre inscription.',

@@ -20,7 +20,7 @@ const SignIn: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSignIn = async () => {
-    const { user, error } = await supabase.auth.signIn({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       toast({
         title: 'Erreur lors de la connexion',
@@ -29,15 +29,15 @@ const SignIn: React.FC = () => {
         duration: 5000,
         isClosable: true,
       });
-    } else if (user) {
+    } else if (data.user) {
       toast({
         title: 'Connexion réussie',
-        description: `Bienvenue ${user.email}`,
+        description: `Bienvenue ${data.user.email}`,
         status: 'success',
         duration: 5000,
         isClosable: true,
       });
-      navigate('/'); // Rediriger vers la page d'accueil ou une autre page
+      navigate('/'); // Rediriger vers la page souhaitée
     }
   };
 
