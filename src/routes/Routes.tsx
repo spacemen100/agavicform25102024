@@ -1,3 +1,4 @@
+// src/routes/Routes.tsx
 import React from 'react';
 import { Route, Routes as Switch } from 'react-router-dom';
 
@@ -39,6 +40,7 @@ import InformationsDeContactPhone from '../pages/InformationsDeContactPhone';
 import ContactPermission from '../pages/ContactPermission';
 import TermsAndConditionsConfirmation from '../pages/TermsAndConditionsConfirmation';
 import SubscriptionChoice from '../2emepartiesouscription/SubscriptionChoice'; // Import du composant SubscriptionChoice
+import ConseillerRappel from '../2emepartiesouscription/ConseillerRappel'; 
 
 export const routes = [
   { path: '/', name: 'Home', component: <Home />, hidden: true },
@@ -77,7 +79,8 @@ export const routes = [
   { path: '/contact-information-phone', name: 'InformationsDeContactPhone', component: <InformationsDeContactPhone />, hidden: true },
   { path: '/contact-permission', name: 'ContactPermission', component: <ContactPermission />, hidden: true },
   { path: '/terms-and-conditions-confirmation', name: 'TermsAndConditionsConfirmation', component: <TermsAndConditionsConfirmation />, hidden: true },
-  { path: '/subscription-choice', name: 'SubscriptionChoice', component: <SubscriptionChoice />, hidden: true }, // Ajout de la route pour SubscriptionChoice
+  { path: '/subscription-choice', name: 'SubscriptionChoice', component: <SubscriptionChoice />, hidden: true }, 
+  { path: '/conseiller-rappel', name: 'ConseillerRappel', component: <ConseillerRappel />, hidden: true }, // Route pour ConseillerRappel
 ];
 
 const Routes: React.FC = () => {
