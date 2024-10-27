@@ -7,7 +7,7 @@ import QuelEstVotreProjetDInvestissement from '../pages/1QuelEstVotreProjetDInve
 import QuelMontantSouhaitezVousPlacer from '../pages/2QuelMontantSouhaitezVousPlacer';
 import QuelMontantRegulierSouhaitezVousPlacer from '../pages/3QuelMontantRegulierSouhaitezVousPlacer';
 import QuelEstVotreHorizonDInvestissement from '../pages/4QuelEstVotreHorizonDInvestissement';
-import VersementRegulier from '../pages/4VersementRegulier'; // Ajout de l'import pour 4VersementRegulier
+import VersementRegulier from '../pages/4VersementRegulier';
 import ESGPreference from '../pages/7ESGPreference';
 import QuelEstVotreDateDeNaissance from '../pages/5QuelEstVotreDateDeNaissance';
 import EtesVousResidentFiscalFrancais from '../pages/6EtesVousResidentFiscalFrancais';
@@ -37,7 +37,8 @@ import Recommandation from '../recommandation/Recommandation';
 import ContactInformation from '../pages/InformationsDeContact';
 import InformationsDeContactPhone from '../pages/InformationsDeContactPhone';
 import ContactPermission from '../pages/ContactPermission';
-import TermsAndConditionsConfirmation from '../pages/TermsAndConditionsConfirmation'; // Import du composant TermsAndConditionsConfirmation
+import TermsAndConditionsConfirmation from '../pages/TermsAndConditionsConfirmation';
+import SubscriptionChoice from '../2emepartiesouscription/SubscriptionChoice'; // Import du composant SubscriptionChoice
 
 export const routes = [
   { path: '/', name: 'Home', component: <Home />, hidden: true },
@@ -75,7 +76,8 @@ export const routes = [
   { path: '/contact-information', name: 'ContactInformation', component: <ContactInformation />, hidden: true },
   { path: '/contact-information-phone', name: 'InformationsDeContactPhone', component: <InformationsDeContactPhone />, hidden: true },
   { path: '/contact-permission', name: 'ContactPermission', component: <ContactPermission />, hidden: true },
-  { path: '/terms-and-conditions-confirmation', name: 'TermsAndConditionsConfirmation', component: <TermsAndConditionsConfirmation />, hidden: true }, // Ajout de la route pour TermsAndConditionsConfirmation
+  { path: '/terms-and-conditions-confirmation', name: 'TermsAndConditionsConfirmation', component: <TermsAndConditionsConfirmation />, hidden: true },
+  { path: '/subscription-choice', name: 'SubscriptionChoice', component: <SubscriptionChoice />, hidden: true }, // Ajout de la route pour SubscriptionChoice
 ];
 
 const Routes: React.FC = () => {

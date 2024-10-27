@@ -67,7 +67,7 @@ const TermsAndConditionsConfirmation: React.FC = () => {
     const handleNext = async () => {
         if (selectedOption !== undefined) {
             await updateResponse(28, selectedOption); // Adjust the step number as needed
-            navigate('/next-step'); // Replace with the actual next route
+            navigate('/subscription-choice'); // Replace with the actual next route
         } else {
             setIsAlertOpen(true);
         }
