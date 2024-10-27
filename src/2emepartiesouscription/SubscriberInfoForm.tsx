@@ -284,23 +284,25 @@ const SubscriberInfoForm: React.FC = () => {
                         </List>
                     )}
 
-                    {/* Champs d'adresse auto-complétés */}
-                    <Input 
-                        name="postalCode" 
-                        placeholder="Code postal" 
-                        value={formData.postalCode} 
-                        onChange={handleInputChange}
-                        isReadOnly={isTaxResidenceFrance}
-                        bg={isTaxResidenceFrance ? "gray.50" : "white"}
-                    />
-                    <Input 
-                        name="city" 
-                        placeholder="Ville" 
-                        value={formData.city} 
-                        onChange={handleInputChange}
-                        isReadOnly={isTaxResidenceFrance}
-                        bg={isTaxResidenceFrance ? "gray.50" : "white"}
-                    />
+                    {/* Champs d'adresse - maintenant conditionnellement affichés */}
+                    {!isTaxResidenceFrance && (
+                        <>
+                            <Input 
+                                name="postalCode" 
+                                placeholder="Code postal" 
+                                value={formData.postalCode} 
+                                onChange={handleInputChange}
+                            />
+                            <Input 
+                                name="city" 
+                                placeholder="Ville" 
+                                value={formData.city} 
+                                onChange={handleInputChange}
+                            />
+                        </>
+                    )}
+                    
+                    {/* Le pays reste toujours visible mais en lecture seule pour la France */}
                     <Input 
                         name="country" 
                         placeholder="Pays" 
@@ -353,7 +355,11 @@ const SubscriberInfoForm: React.FC = () => {
                             isChecked={isTaxResidenceFrance}
                             onChange={() => {
                                 setIsTaxResidenceFrance(true);
-                                setFormData((prev) => ({ ...prev, taxResidence: 'France' }));
+                                setFormData((prev) => ({ 
+                                    ...prev, 
+                                    taxResidence: 'France',
+                                    country: 'France'  // On s'assure que le pays est mis à jour
+                                }));
                             }}
                         >
                             Résidence fiscale en France
@@ -362,7 +368,11 @@ const SubscriberInfoForm: React.FC = () => {
                             isChecked={!isTaxResidenceFrance}
                             onChange={() => {
                                 setIsTaxResidenceFrance(false);
-                                setFormData((prev) => ({ ...prev, taxResidence: '' }));
+                                setFormData((prev) => ({ 
+                                    ...prev, 
+                                    taxResidence: '',
+                                    country: ''  // On réinitialise le pays
+                                }));
                             }}
                         >
                             Autre résidence fiscale
