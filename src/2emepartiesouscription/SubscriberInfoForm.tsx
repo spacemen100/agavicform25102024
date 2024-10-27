@@ -66,6 +66,8 @@ interface FormData {
     protectionStatus: string;
     minorStatus: string;
     contractNumber: string;
+    identityDocumentFront: File | null;
+    identityDocumentBack: File | null;
 }
 
 interface FormErrors {
@@ -101,6 +103,8 @@ const fieldStepMapping: Partial<Record<keyof FormData, number>> = {
     protectionStatus: 52,
     minorStatus: 53,
     contractNumber: 54,
+    identityDocumentFront: 60,
+    identityDocumentBack: 61,
 };
 
 interface AddressFeature {
@@ -141,6 +145,8 @@ const SubscriberInfoForm: React.FC = () => {
         protectionStatus: '',
         minorStatus: '',
         contractNumber: '',
+        identityDocumentFront: null,
+        identityDocumentBack: null,
     });
 
     const [formErrors, setFormErrors] = useState<FormErrors>({});
@@ -152,6 +158,14 @@ const SubscriberInfoForm: React.FC = () => {
     const { updateResponse, getResponse } = useUuid();
 
     const toast = useToast(); // Initialisation du hook useToast
+
+    // Mapping des documents aux nombres de fichiers requis
+    const documentFileRequirements: Record<string, number> = {
+        'CNI': 2,
+        'Passeport': 1,
+        'Permis de conduire': 2,
+        'Carte de séjour ou de résident': 2,
+    };
 
     // Fonction pour charger les données sauvegardées
     const fetchData = useCallback(async () => {
@@ -270,6 +284,35 @@ const SubscriberInfoForm: React.FC = () => {
         setSuggestions([]);
     };
 
+    const handleFileChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+        name: 'identityDocumentFront' | 'identityDocumentBack'
+    ) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setFormData((prev) => ({ ...prev, [name]: file }));
+        }
+    };
+
+    // Fonction pour uploader un fichier
+    const uploadFile = async (file: File): Promise<string> => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error('File upload failed');
+        }
+
+        const data = await response.json();
+
+        return data.fileUrl; // Ajustez selon la réponse de votre API
+    };
+
     const handleSave = async () => {
         // Vérifier si le NIR est valide avant de sauvegarder
         if (formData.nir && !validateNIR(formData.nir)) {
@@ -284,15 +327,63 @@ const SubscriberInfoForm: React.FC = () => {
             return;
         }
 
+        // Vérifier que les documents d'identité requis sont téléchargés
+        const requiredFiles = documentFileRequirements[formData.presentedDocument];
+
+        if (requiredFiles === 1 && !formData.identityDocumentFront) {
+            toast({
+                title: 'Erreur',
+                description: 'Veuillez télécharger le document d\'identité requis.',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+            return;
+        }
+
+        if (requiredFiles === 2 && (!formData.identityDocumentFront || !formData.identityDocumentBack)) {
+            toast({
+                title: 'Erreur',
+                description: 'Veuillez télécharger les documents d\'identité requis (recto et verso).',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+            return;
+        }
+
+        // Enregistrer les réponses du formulaire
         for (const [field, step] of Object.entries(fieldStepMapping) as [keyof FormData, number][]) {
             const value = formData[field];
             if (field === 'hasProtectionRegime') {
                 await updateResponse(step, value ? 'oui' : 'non');
-            } else {
+            } else if (field !== 'identityDocumentFront' && field !== 'identityDocumentBack') {
                 await updateResponse(step, String(value));
             }
         }
         await updateResponse(6, isTaxResidenceFrance ? 'oui' : formData.taxResidence);
+
+        // Upload des fichiers
+        try {
+            if (formData.identityDocumentFront) {
+                const frontFileUrl = await uploadFile(formData.identityDocumentFront);
+                await updateResponse(fieldStepMapping.identityDocumentFront!, frontFileUrl);
+            }
+            if (formData.identityDocumentBack) {
+                const backFileUrl = await uploadFile(formData.identityDocumentBack);
+                await updateResponse(fieldStepMapping.identityDocumentBack!, backFileUrl);
+            }
+        } catch (error) {
+            console.error('Erreur lors du téléchargement des fichiers:', error);
+            toast({
+                title: 'Erreur',
+                description: 'Échec du téléchargement des fichiers.',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+            return;
+        }
 
         toast({
             title: 'Succès',
@@ -578,6 +669,32 @@ const SubscriberInfoForm: React.FC = () => {
                         </option>
                     </Select>
 
+                    {/* Upload des documents d'identité */}
+                    {formData.presentedDocument && (
+                        <VStack align="start" spacing={2}>
+                            <FormControl>
+                                <FormLabel>Pièce d'identité - Recto</FormLabel>
+                                <Input
+                                    type="file"
+                                    accept="image/*,application/pdf"
+                                    onChange={(e) => handleFileChange(e, 'identityDocumentFront')}
+                                />
+                            </FormControl>
+                            {documentFileRequirements[formData.presentedDocument] === 2 && (
+                                <FormControl>
+                                    <FormLabel>Pièce d'identité - Verso</FormLabel>
+                                    <Input
+                                        type="file"
+                                        accept="image/*,application/pdf"
+                                        onChange={(e) => handleFileChange(e, 'identityDocumentBack')}
+                                    />
+                                </FormControl>
+                            )}
+                        </VStack>
+                    )}
+
+                    {/* ... le reste du formulaire ... */}
+
                     {/* Situation familiale */}
                     <Text fontWeight="bold">Situation familiale</Text>
                     <RadioGroup
@@ -679,8 +796,6 @@ const SubscriberInfoForm: React.FC = () => {
                             </RadioGroup>
                         </>
                     )}
-
-                    {/* Bouton de sauvegarde */}
                     <Button colorScheme="green" size="lg" onClick={handleSave} mt={4}>
                         Enregistrer
                     </Button>
