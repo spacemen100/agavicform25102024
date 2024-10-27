@@ -6,6 +6,7 @@ import { Route, Routes as Switch } from 'react-router-dom';
 import Home from '../pages/Home';
 import QuelEstVotreProjetDInvestissement from '../pages/1QuelEstVotreProjetDInvestissement';
 import QuelMontantSouhaitezVousPlacer from '../pages/2QuelMontantSouhaitezVousPlacer';
+import SouscrireEnLigne from '../2emepartiesouscription/SouscrireEnLigne'; 
 import QuelMontantRegulierSouhaitezVousPlacer from '../pages/3QuelMontantRegulierSouhaitezVousPlacer';
 import QuelEstVotreHorizonDInvestissement from '../pages/4QuelEstVotreHorizonDInvestissement';
 import VersementRegulier from '../pages/4VersementRegulier';
@@ -80,7 +81,8 @@ export const routes = [
   { path: '/contact-permission', name: 'ContactPermission', component: <ContactPermission />, hidden: true },
   { path: '/terms-and-conditions-confirmation', name: 'TermsAndConditionsConfirmation', component: <TermsAndConditionsConfirmation />, hidden: true },
   { path: '/subscription-choice', name: 'SubscriptionChoice', component: <SubscriptionChoice />, hidden: true }, 
-  { path: '/conseiller-rappel', name: 'ConseillerRappel', component: <ConseillerRappel />, hidden: true }, // Route pour ConseillerRappel
+  { path: '/conseiller-rappel', name: 'ConseillerRappel', component: <ConseillerRappel />, hidden: true }, 
+  { path: '/souscrire-en-ligne', name: 'SouscrireEnLigne', component: <SouscrireEnLigne />, hidden: true },
 ];
 
 const Routes: React.FC = () => {
