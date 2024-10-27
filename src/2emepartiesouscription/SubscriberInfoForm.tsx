@@ -42,7 +42,7 @@ const SubscriberInfoForm: React.FC = () => {
         birthCountry: '',
         nir: '',
         nationality: '',
-        taxResidence: '',
+        taxResidence: 'France', // Par défaut à France
         taxResidenceAddress: '',
         phone: '',
         email: '',
@@ -52,6 +52,7 @@ const SubscriberInfoForm: React.FC = () => {
         minorStatus: '',
     });
     const [birthDate, setBirthDate] = useState(''); // Pour charger la date de naissance depuis step5
+    const [isTaxResidenceFrance, setIsTaxResidenceFrance] = useState(true); // État pour gérer la résidence fiscale
 
     const { updateResponse, getResponse } = useUuid();
 
@@ -61,6 +62,16 @@ const SubscriberInfoForm: React.FC = () => {
             // Charger la date de naissance depuis step5
             const dateOfBirth = await getResponse(5);
             if (dateOfBirth !== null) setBirthDate(dateOfBirth);
+
+            // Charger la résidence fiscale depuis step6 et définir le pays si c'est "oui"
+            const taxResidenceResponse = await getResponse(6);
+            if (taxResidenceResponse === 'oui') {
+                setIsTaxResidenceFrance(true);
+                setFormData((prev) => ({ ...prev, taxResidence: 'France' }));
+            } else if (taxResidenceResponse !== null) {
+                setIsTaxResidenceFrance(false);
+                setFormData((prev) => ({ ...prev, taxResidence: taxResidenceResponse }));
+            }
 
             // Charger les autres informations depuis step31 et suivantes
             const keys = Object.keys(formData);
@@ -163,18 +174,33 @@ const SubscriberInfoForm: React.FC = () => {
 
                     {/* Nationality and Tax Residence */}
                     <HStack spacing={4}>
-                        <Select name="nationality" placeholder="Nationalité" value={formData.nationality} onChange={handleInputChange}>
-                            <option value="France">France</option>
-                            <option value="Union Européenne">Union Européenne</option>
-                            <option value="Autre">Autre</option>
-                        </Select>
-                        <Select name="taxResidence" placeholder="Résidence fiscale" value={formData.taxResidence} onChange={handleInputChange}>
-                            <option value="France">France</option>
-                            <option value="Union Européenne">Union Européenne</option>
-                            <option value="Autre">Autre</option>
-                        </Select>
+                        <Checkbox
+                            isChecked={isTaxResidenceFrance}
+                            onChange={() => {
+                                setIsTaxResidenceFrance(true);
+                                setFormData((prev) => ({ ...prev, taxResidence: 'France' }));
+                            }}
+                        >
+                            Résidence fiscale en France
+                        </Checkbox>
+                        <Checkbox
+                            isChecked={!isTaxResidenceFrance}
+                            onChange={() => {
+                                setIsTaxResidenceFrance(false);
+                                setFormData((prev) => ({ ...prev, taxResidence: '' })); // Efface la résidence fiscale pour entrer un pays personnalisé
+                            }}
+                        >
+                            Autre résidence fiscale
+                        </Checkbox>
                     </HStack>
-                    <Input name="taxResidenceAddress" placeholder="Adresse de résidence fiscale complète" value={formData.taxResidenceAddress} onChange={handleInputChange} />
+                    {!isTaxResidenceFrance && (
+                        <Input
+                            name="taxResidence"
+                            placeholder="Précisez le pays de résidence fiscale"
+                            value={formData.taxResidence}
+                            onChange={handleInputChange}
+                        />
+                    )}
 
                     {/* Contact Information */}
                     <Input name="phone" placeholder="Téléphone" value={formData.phone} onChange={handleInputChange} />
