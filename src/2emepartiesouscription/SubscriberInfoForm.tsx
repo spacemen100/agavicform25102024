@@ -20,7 +20,7 @@ import {
     Stack,
     FormErrorMessage,
     FormHelperText,
-    useToast, // Import du hook useToast
+    useToast,
 } from '@chakra-ui/react';
 import { useUuid } from '../context/UuidContext';
 import countries from './countries.json';
@@ -66,8 +66,8 @@ interface FormData {
     protectionStatus: string;
     minorStatus: string;
     contractNumber: string;
-    identityDocumentFront: File | null;
-    identityDocumentBack: File | null;
+    identityDocumentFront: File | string | null;
+    identityDocumentBack: File | string | null;
 }
 
 interface FormErrors {
@@ -216,17 +216,15 @@ const SubscriberInfoForm: React.FC = () => {
         const nirNumberPart = nir.substr(0, 13);
         const nirKey = parseInt(nir.substr(13, 2), 10);
 
-        // Remplacer les codes particuliers (si nécessaire)
-        let nirNumber = nirNumberPart;
-
         // Convertir en nombre entier
-        const nirNum = parseInt(nirNumber, 10);
+        const nirNum = parseInt(nirNumberPart, 10);
 
         // Calculer la clé attendue
         const expectedKey = 97 - (nirNum % 97);
+        const adjustedExpectedKey = expectedKey === 97 ? 0 : expectedKey;
 
         // Vérifier que la clé calculée correspond à la clé fournie
-        return expectedKey === nirKey;
+        return adjustedExpectedKey === nirKey;
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -366,12 +364,20 @@ const SubscriberInfoForm: React.FC = () => {
         // Upload des fichiers
         try {
             if (formData.identityDocumentFront) {
-                const frontFileUrl = await uploadFile(formData.identityDocumentFront);
-                await updateResponse(fieldStepMapping.identityDocumentFront!, frontFileUrl);
+                if (formData.identityDocumentFront instanceof File) {
+                    const frontFileUrl = await uploadFile(formData.identityDocumentFront);
+                    await updateResponse(fieldStepMapping.identityDocumentFront!, frontFileUrl);
+                } else {
+                    await updateResponse(fieldStepMapping.identityDocumentFront!, formData.identityDocumentFront);
+                }
             }
             if (formData.identityDocumentBack) {
-                const backFileUrl = await uploadFile(formData.identityDocumentBack);
-                await updateResponse(fieldStepMapping.identityDocumentBack!, backFileUrl);
+                if (formData.identityDocumentBack instanceof File) {
+                    const backFileUrl = await uploadFile(formData.identityDocumentBack);
+                    await updateResponse(fieldStepMapping.identityDocumentBack!, backFileUrl);
+                } else {
+                    await updateResponse(fieldStepMapping.identityDocumentBack!, formData.identityDocumentBack);
+                }
             }
         } catch (error) {
             console.error('Erreur lors du téléchargement des fichiers:', error);
