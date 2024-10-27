@@ -14,6 +14,7 @@ import {
     ListItem,
 } from '@chakra-ui/react';
 import { useUuid } from '../context/UuidContext';
+import countries from './countries.json';
 
 const theme = extendTheme({
     colors: {
@@ -231,23 +232,23 @@ const SubscriberInfoForm: React.FC = () => {
                     </HStack>
 
                     {/* Informations personnelles */}
-                    <Input 
-                        name="lastName" 
-                        placeholder="Nom" 
-                        value={formData.lastName} 
-                        onChange={handleInputChange} 
+                    <Input
+                        name="lastName"
+                        placeholder="Nom"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
                     />
-                    <Input 
-                        name="firstName" 
-                        placeholder="Prénom" 
-                        value={formData.firstName} 
-                        onChange={handleInputChange} 
+                    <Input
+                        name="firstName"
+                        placeholder="Prénom"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
                     />
-                    <Input 
-                        name="birthLastName" 
-                        placeholder="Nom de naissance" 
-                        value={formData.birthLastName} 
-                        onChange={handleInputChange} 
+                    <Input
+                        name="birthLastName"
+                        placeholder="Nom de naissance"
+                        value={formData.birthLastName}
+                        onChange={handleInputChange}
                     />
 
                     {/* Adresse avec autocomplétion */}
@@ -260,13 +261,13 @@ const SubscriberInfoForm: React.FC = () => {
 
                     {/* Liste des suggestions d'adresse */}
                     {suggestions.length > 0 && (
-                        <List 
-                            bg="white" 
-                            border="1px solid" 
-                            borderColor="gray.200" 
-                            borderRadius="md" 
-                            mt={1} 
-                            position="relative" 
+                        <List
+                            bg="white"
+                            border="1px solid"
+                            borderColor="gray.200"
+                            borderRadius="md"
+                            mt={1}
+                            position="relative"
                             zIndex="dropdown"
                             boxShadow="md"
                         >
@@ -287,66 +288,72 @@ const SubscriberInfoForm: React.FC = () => {
                     {/* Champs d'adresse - maintenant conditionnellement affichés */}
                     {!isTaxResidenceFrance && (
                         <>
-                            <Input 
-                                name="postalCode" 
-                                placeholder="Code postal" 
-                                value={formData.postalCode} 
+                            <Input
+                                name="postalCode"
+                                placeholder="Code postal"
+                                value={formData.postalCode}
                                 onChange={handleInputChange}
                             />
-                            <Input 
-                                name="city" 
-                                placeholder="Ville" 
-                                value={formData.city} 
+                            <Input
+                                name="city"
+                                placeholder="Ville"
+                                value={formData.city}
                                 onChange={handleInputChange}
                             />
                         </>
                     )}
-                    
+
                     {/* Le pays reste toujours visible mais en lecture seule pour la France */}
-                    <Input 
-                        name="country" 
-                        placeholder="Pays" 
-                        value={formData.country} 
+                    <Input
+                        name="country"
+                        placeholder="Pays"
+                        value={formData.country}
                         onChange={handleInputChange}
                         isReadOnly={isTaxResidenceFrance}
                         bg={isTaxResidenceFrance ? "gray.50" : "white"}
                     />
 
                     {/* Informations de naissance */}
-                    <Input 
-                        name="birthDate" 
-                        placeholder="Date de naissance" 
-                        type="date" 
-                        value={formData.birthDate} 
-                        onChange={handleInputChange} 
+                    <Input
+                        name="birthDate"
+                        placeholder="Date de naissance"
+                        type="date"
+                        value={formData.birthDate}
+                        onChange={handleInputChange}
                     />
                     <HStack spacing={4}>
-                        <Input 
-                            name="birthPostalCode" 
-                            placeholder="Code postal de naissance" 
-                            value={formData.birthPostalCode} 
-                            onChange={handleInputChange} 
+                        <Input
+                            name="birthPostalCode"
+                            placeholder="Code postal de naissance"
+                            value={formData.birthPostalCode}
+                            onChange={handleInputChange}
                         />
-                        <Input 
-                            name="birthCity" 
-                            placeholder="Ville de naissance" 
-                            value={formData.birthCity} 
-                            onChange={handleInputChange} 
+                        <Input
+                            name="birthCity"
+                            placeholder="Ville de naissance"
+                            value={formData.birthCity}
+                            onChange={handleInputChange}
                         />
                     </HStack>
-                    <Input 
-                        name="birthCountry" 
-                        placeholder="Pays de naissance" 
-                        value={formData.birthCountry} 
-                        onChange={handleInputChange} 
-                    />
+                    <Select
+                        name="birthCountry"
+                        placeholder="Pays de naissance"
+                        value={formData.birthCountry}
+                        onChange={handleInputChange}
+                    >
+                        {countries.map((country, index) => (
+                            <option key={index} value={country.name}>
+                                {country.name}
+                            </option>
+                        ))}
+                    </Select>
 
                     {/* NIR */}
-                    <Input 
-                        name="nir" 
-                        placeholder="NIR ou Numéro de sécurité sociale" 
-                        value={formData.nir} 
-                        onChange={handleInputChange} 
+                    <Input
+                        name="nir"
+                        placeholder="NIR ou Numéro de sécurité sociale"
+                        value={formData.nir}
+                        onChange={handleInputChange}
                     />
 
                     {/* Résidence fiscale */}
@@ -355,8 +362,8 @@ const SubscriberInfoForm: React.FC = () => {
                             isChecked={isTaxResidenceFrance}
                             onChange={() => {
                                 setIsTaxResidenceFrance(true);
-                                setFormData((prev) => ({ 
-                                    ...prev, 
+                                setFormData((prev) => ({
+                                    ...prev,
                                     taxResidence: 'France',
                                     country: 'France'  // On s'assure que le pays est mis à jour
                                 }));
@@ -368,8 +375,8 @@ const SubscriberInfoForm: React.FC = () => {
                             isChecked={!isTaxResidenceFrance}
                             onChange={() => {
                                 setIsTaxResidenceFrance(false);
-                                setFormData((prev) => ({ 
-                                    ...prev, 
+                                setFormData((prev) => ({
+                                    ...prev,
                                     taxResidence: '',
                                     country: ''  // On réinitialise le pays
                                 }));
@@ -389,25 +396,25 @@ const SubscriberInfoForm: React.FC = () => {
                     )}
 
                     {/* Contact */}
-                    <Input 
-                        name="phone" 
-                        placeholder="Téléphone" 
-                        value={formData.phone} 
-                        onChange={handleInputChange} 
+                    <Input
+                        name="phone"
+                        placeholder="Téléphone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
                     />
-                    <Input 
-                        name="email" 
-                        placeholder="E-mail" 
-                        type="email" 
-                        value={formData.email} 
-                        onChange={handleInputChange} 
+                    <Input
+                        name="email"
+                        placeholder="E-mail"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
                     />
 
                     {/* Document d'identité */}
-                    <Select 
-                        name="presentedDocument" 
-                        placeholder="Document présenté" 
-                        value={formData.presentedDocument} 
+                    <Select
+                        name="presentedDocument"
+                        placeholder="Document présenté"
+                        value={formData.presentedDocument}
                         onChange={handleInputChange}
                     >
                         <option value="CNI">CNI</option>
@@ -417,10 +424,10 @@ const SubscriberInfoForm: React.FC = () => {
                     </Select>
 
                     {/* Situation familiale */}
-                    <Select 
-                        name="familySituation" 
-                        placeholder="Situation familiale" 
-                        value={formData.familySituation} 
+                    <Select
+                        name="familySituation"
+                        placeholder="Situation familiale"
+                        value={formData.familySituation}
                         onChange={handleInputChange}
                     >
                         <option value="Célibataire">Célibataire</option>
@@ -432,10 +439,10 @@ const SubscriberInfoForm: React.FC = () => {
                     </Select>
 
                     {/* Protection Status */}
-                    <Select 
-                        name="protectionStatus" 
-                        placeholder="Régime de protection" 
-                        value={formData.protectionStatus} 
+                    <Select
+                        name="protectionStatus"
+                        placeholder="Régime de protection"
+                        value={formData.protectionStatus}
                         onChange={handleInputChange}
                     >
                         <option value="Sauvegarde de justice">Sauvegarde de justice</option>
@@ -446,10 +453,10 @@ const SubscriberInfoForm: React.FC = () => {
                     </Select>
 
                     {/* Minor Status */}
-                    <Select 
-                        name="minorStatus" 
-                        placeholder="Mineur" 
-                        value={formData.minorStatus} 
+                    <Select
+                        name="minorStatus"
+                        placeholder="Mineur"
+                        value={formData.minorStatus}
                         onChange={handleInputChange}
                     >
                         <option value="Emancipé">Emancipé</option>
@@ -458,9 +465,9 @@ const SubscriberInfoForm: React.FC = () => {
                     </Select>
 
                     {/* Bouton de sauvegarde */}
-                    <Button 
-                        colorScheme="green" 
-                        size="lg" 
+                    <Button
+                        colorScheme="green"
+                        size="lg"
                         onClick={handleSave}
                         mt={4}
                     >
