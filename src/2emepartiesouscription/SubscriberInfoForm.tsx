@@ -37,7 +37,6 @@ const SubscriberInfoForm: React.FC = () => {
         postalCode: '',
         city: '',
         country: '',
-        birthDate: '',
         birthPostalCode: '',
         birthCity: '',
         birthCountry: '',
@@ -52,12 +51,18 @@ const SubscriberInfoForm: React.FC = () => {
         protectionStatus: '',
         minorStatus: '',
     });
+    const [birthDate, setBirthDate] = useState(''); // Pour charger la date de naissance depuis step5
 
     const { updateResponse, getResponse } = useUuid();
 
     // Charger les données depuis la base de données
     useEffect(() => {
         const fetchData = async () => {
+            // Charger la date de naissance depuis step5
+            const dateOfBirth = await getResponse(5);
+            if (dateOfBirth !== null) setBirthDate(dateOfBirth);
+
+            // Charger les autres informations depuis step31 et suivantes
             const keys = Object.keys(formData);
             const updatedData = { ...formData };
             for (let i = 0; i < keys.length; i++) {
@@ -73,10 +78,20 @@ const SubscriberInfoForm: React.FC = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (name === "birthDate") {
+            setBirthDate(value); // Gérer directement birthDate si modifiée
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSave = async () => {
+        // Sauvegarder la date de naissance dans step5 si elle a changé
+        if (birthDate) {
+            await updateResponse(5, birthDate);
+        }
+
+        // Sauvegarder les autres informations dans step31 et suivants
         const keys = Object.keys(formData);
         for (let i = 0; i < keys.length; i++) {
             await updateResponse(31 + i, formData[keys[i] as keyof typeof formData]);
@@ -136,7 +151,7 @@ const SubscriberInfoForm: React.FC = () => {
                     <Input name="country" placeholder="Pays" value={formData.country} onChange={handleInputChange} />
 
                     {/* Birth Information */}
-                    <Input name="birthDate" placeholder="Date de naissance" type="date" value={formData.birthDate} onChange={handleInputChange} />
+                    <Input name="birthDate" placeholder="Date de naissance" type="date" value={birthDate} onChange={handleInputChange} />
                     <HStack spacing={4}>
                         <Input name="birthPostalCode" placeholder="Code postal de naissance" value={formData.birthPostalCode} onChange={handleInputChange} />
                         <Input name="birthCity" placeholder="Ville de naissance" value={formData.birthCity} onChange={handleInputChange} />
