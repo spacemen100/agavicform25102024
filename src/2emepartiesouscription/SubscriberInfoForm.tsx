@@ -81,11 +81,14 @@ const SubscriberInfoForm: React.FC = () => {
         contractNumber: '',
     });
     const [isTaxResidenceFrance, setIsTaxResidenceFrance] = useState(true);
+    const [isInitialLoad, setIsInitialLoad] = useState(true); // Ajout pour gérer la première charge de données
 
     const { updateResponse, getResponse } = useUuid();
 
     // Fonction pour charger les données sauvegardées
     const fetchData = useCallback(async () => {
+        if (!isInitialLoad) return; // Ne charge les données qu'une seule fois
+
         const initialData = { ...formData }; // Utilisation de la structure actuelle de `formData`
 
         // Récupération des valeurs pour chaque champ en fonction de son étape
@@ -107,7 +110,8 @@ const SubscriberInfoForm: React.FC = () => {
         }
 
         setFormData(initialData);
-    }, [getResponse, formData]);
+        setIsInitialLoad(false); // Une fois les données chargées, désactive la charge initiale
+    }, [getResponse, formData, isInitialLoad]);
 
     useEffect(() => {
         fetchData();
