@@ -28,7 +28,9 @@ const theme = extendTheme({
 
 const SubscriberInfoForm: React.FC = () => {
     const [formData, setFormData] = useState({
+        birthDate: '',
         clientType: '',
+        contractNumber: '', // Nouveau champ pour le numéro de contrat
         title: '',
         lastName: '',
         firstName: '',
@@ -42,7 +44,7 @@ const SubscriberInfoForm: React.FC = () => {
         birthCountry: '',
         nir: '',
         nationality: '',
-        taxResidence: 'France', // Par défaut à France
+        taxResidence: 'France',
         taxResidenceAddress: '',
         phone: '',
         email: '',
@@ -51,7 +53,6 @@ const SubscriberInfoForm: React.FC = () => {
         protectionStatus: '',
         minorStatus: '',
     });
-    const [birthDate, setBirthDate] = useState(''); // Pour charger la date de naissance depuis step5
     const [isTaxResidenceFrance, setIsTaxResidenceFrance] = useState(true); // État pour gérer la résidence fiscale
 
     const { updateResponse, getResponse } = useUuid();
@@ -59,29 +60,26 @@ const SubscriberInfoForm: React.FC = () => {
     // Charger les données depuis la base de données
     useEffect(() => {
         const fetchData = async () => {
-            // Charger la date de naissance depuis step5
-            const dateOfBirth = await getResponse(5);
-            if (dateOfBirth !== null) setBirthDate(dateOfBirth);
-
-            // Charger la résidence fiscale depuis step6 et définir le pays si c'est "oui"
-            const taxResidenceResponse = await getResponse(6);
-            if (taxResidenceResponse === 'oui') {
-                setIsTaxResidenceFrance(true);
-                setFormData((prev) => ({ ...prev, taxResidence: 'France' }));
-            } else if (taxResidenceResponse !== null) {
-                setIsTaxResidenceFrance(false);
-                setFormData((prev) => ({ ...prev, taxResidence: taxResidenceResponse }));
-            }
-
-            // Charger les autres informations depuis step31 et suivantes
             const keys = Object.keys(formData);
             const updatedData = { ...formData };
+
             for (let i = 0; i < keys.length; i++) {
                 const response = await getResponse(31 + i);
                 if (response !== null) {
                     updatedData[keys[i] as keyof typeof formData] = response;
                 }
             }
+
+            // Charger la résidence fiscale depuis step6 et définir le pays si c'est "oui"
+            const taxResidenceResponse = await getResponse(6);
+            if (taxResidenceResponse === 'oui') {
+                setIsTaxResidenceFrance(true);
+                updatedData.taxResidence = 'France';
+            } else if (taxResidenceResponse !== null) {
+                setIsTaxResidenceFrance(false);
+                updatedData.taxResidence = taxResidenceResponse;
+            }
+
             setFormData(updatedData);
         };
         fetchData();
@@ -89,20 +87,11 @@ const SubscriberInfoForm: React.FC = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        if (name === "birthDate") {
-            setBirthDate(value); // Gérer directement birthDate si modifiée
-        } else {
-            setFormData((prev) => ({ ...prev, [name]: value }));
-        }
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSave = async () => {
-        // Sauvegarder la date de naissance dans step5 si elle a changé
-        if (birthDate) {
-            await updateResponse(5, birthDate);
-        }
-
-        // Sauvegarder les autres informations dans step31 et suivants
+        // Sauvegarder toutes les informations dans step31 et suivants
         const keys = Object.keys(formData);
         for (let i = 0; i < keys.length; i++) {
             await updateResponse(31 + i, formData[keys[i] as keyof typeof formData]);
@@ -122,7 +111,9 @@ const SubscriberInfoForm: React.FC = () => {
                     <HStack spacing={4}>
                         <Checkbox
                             isChecked={formData.clientType === 'Nouveau client'}
-                            onChange={() => setFormData((prev) => ({ ...prev, clientType: 'Nouveau client' }))}
+                            onChange={() => setFormData((prev) => ({
+                                ...prev, clientType: 'Nouveau client', contractNumber: '' // Efface le numéro de contrat si "Nouveau client"
+                            }))}
                         >
                             Nouveau client
                         </Checkbox>
@@ -133,6 +124,16 @@ const SubscriberInfoForm: React.FC = () => {
                             Si Client existant N° contrat
                         </Checkbox>
                     </HStack>
+
+                    {/* Champ pour le numéro de contrat si "Client existant" est sélectionné */}
+                    {formData.clientType === 'Client existant' && (
+                        <Input
+                            name="contractNumber"
+                            placeholder="Numéro de contrat"
+                            value={formData.contractNumber}
+                            onChange={handleInputChange}
+                        />
+                    )}
 
                     {/* Title */}
                     <HStack spacing={4}>
@@ -162,7 +163,7 @@ const SubscriberInfoForm: React.FC = () => {
                     <Input name="country" placeholder="Pays" value={formData.country} onChange={handleInputChange} />
 
                     {/* Birth Information */}
-                    <Input name="birthDate" placeholder="Date de naissance" type="date" value={birthDate} onChange={handleInputChange} />
+                    <Input name="birthDate" placeholder="Date de naissance" type="date" value={formData.birthDate} onChange={handleInputChange} />
                     <HStack spacing={4}>
                         <Input name="birthPostalCode" placeholder="Code postal de naissance" value={formData.birthPostalCode} onChange={handleInputChange} />
                         <Input name="birthCity" placeholder="Ville de naissance" value={formData.birthCity} onChange={handleInputChange} />
