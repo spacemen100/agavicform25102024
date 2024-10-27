@@ -18,6 +18,8 @@ import {
     RadioGroup,
     Radio,
     Stack,
+    FormErrorMessage,
+    FormHelperText,
 } from '@chakra-ui/react';
 import { useUuid } from '../context/UuidContext';
 import countries from './countries.json';
@@ -63,6 +65,10 @@ interface FormData {
     protectionStatus: string;
     minorStatus: string;
     contractNumber: string;
+}
+
+interface FormErrors {
+    nir?: string;
 }
 
 // Correspondance stricte entre les champs et les étapes
@@ -136,6 +142,8 @@ const SubscriberInfoForm: React.FC = () => {
         contractNumber: '',
     });
 
+    const [formErrors, setFormErrors] = useState<FormErrors>({});
+
     const [isTaxResidenceFrance, setIsTaxResidenceFrance] = useState(true);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [suggestions, setSuggestions] = useState<AddressFeature[]>([]);
@@ -177,9 +185,46 @@ const SubscriberInfoForm: React.FC = () => {
         fetchData();
     }, [fetchData]);
 
+    // Fonction de validation du NIR
+    const validateNIR = (nir: string): boolean => {
+        // Retirer les espaces éventuels
+        nir = nir.replace(/\s/g, '');
+
+        // Vérifier que le NIR contient exactement 15 caractères numériques
+        if (!/^\d{15}$/.test(nir)) {
+            return false;
+        }
+
+        // Extraire les 13 premiers chiffres et les 2 chiffres de la clé
+        const nirNumberPart = nir.substr(0, 13);
+        const nirKey = parseInt(nir.substr(13, 2), 10);
+
+        // Remplacer les codes particuliers (si nécessaire)
+        let nirNumber = nirNumberPart;
+
+        // Convertir en nombre entier
+        const nirNum = parseInt(nirNumber, 10);
+
+        // Calculer la clé attendue
+        const expectedKey = 97 - (nirNum % 97);
+
+        // Vérifier que la clé calculée correspond à la clé fournie
+        return expectedKey === nirKey;
+    };
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+
         setFormData((prev) => ({ ...prev, [name]: value }));
+
+        // Validation spécifique pour le NIR
+        if (name === 'nir') {
+            if (value === '' || validateNIR(value)) {
+                setFormErrors((prev) => ({ ...prev, nir: undefined }));
+            } else {
+                setFormErrors((prev) => ({ ...prev, nir: 'Numéro de sécurité sociale invalide' }));
+            }
+        }
     };
 
     const handleSwitchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -223,6 +268,13 @@ const SubscriberInfoForm: React.FC = () => {
     };
 
     const handleSave = async () => {
+        // Vérifier si le NIR est valide avant de sauvegarder
+        if (formData.nir && !validateNIR(formData.nir)) {
+            setFormErrors((prev) => ({ ...prev, nir: 'Numéro de sécurité sociale invalide' }));
+            alert('Veuillez corriger les erreurs avant de sauvegarder.');
+            return;
+        }
+
         for (const [field, step] of Object.entries(fieldStepMapping) as [keyof FormData, number][]) {
             const value = formData[field];
             if (field === 'hasProtectionRegime') {
@@ -421,12 +473,19 @@ const SubscriberInfoForm: React.FC = () => {
                     </Select>
 
                     {/* NIR */}
-                    <Input
-                        name="nir"
-                        placeholder="NIR ou Numéro de sécurité sociale"
-                        value={formData.nir}
-                        onChange={handleInputChange}
-                    />
+                    <FormControl isInvalid={!!formErrors.nir}>
+                        <Input
+                            name="nir"
+                            placeholder="NIR ou Numéro de sécurité sociale"
+                            value={formData.nir}
+                            onChange={handleInputChange}
+                        />
+                        {formErrors.nir ? (
+                            <FormErrorMessage>{formErrors.nir}</FormErrorMessage>
+                        ) : (
+                            <FormHelperText>Entrez votre numéro de sécurité sociale</FormHelperText>
+                        )}
+                    </FormControl>
 
                     {/* Résidence fiscale */}
                     <HStack spacing={4}>
