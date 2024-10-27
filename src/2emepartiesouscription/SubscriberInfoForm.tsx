@@ -1,5 +1,4 @@
-// src/pages/SubscriberInfoForm.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Box,
     VStack,
@@ -45,8 +44,8 @@ const fieldStepMapping = {
     nationality: 45,
     taxResidence: 46,
     taxResidenceAddress: 47,
-    phone: 48,
-    email: 49,
+    phone: 26, // Téléphone est en step26
+    email: 25, // Email est en step25
     presentedDocument: 50,
     familySituation: 51,
     protectionStatus: 52,
@@ -85,33 +84,34 @@ const SubscriberInfoForm: React.FC = () => {
 
     const { updateResponse, getResponse } = useUuid();
 
-    // useEffect pour charger les données sauvegardées
+    // Fonction pour charger les données sauvegardées
+    const fetchData = useCallback(async () => {
+        const initialData = { ...formData }; // Utilisation de la structure actuelle de `formData`
+
+        // Récupération des valeurs pour chaque champ en fonction de son étape
+        for (const [field, step] of Object.entries(fieldStepMapping)) {
+            const response = await getResponse(step);
+            if (response !== null) {
+                initialData[field as keyof typeof formData] = response;
+            }
+        }
+
+        // Gestion de la résidence fiscale
+        const taxResidenceResponse = await getResponse(6);
+        if (taxResidenceResponse === 'oui') {
+            setIsTaxResidenceFrance(true);
+            initialData.taxResidence = 'France';
+        } else if (taxResidenceResponse !== null) {
+            setIsTaxResidenceFrance(false);
+            initialData.taxResidence = taxResidenceResponse;
+        }
+
+        setFormData(initialData);
+    }, [getResponse, formData]);
+
     useEffect(() => {
-        const fetchData = async () => {
-            const updatedData = { ...formData };
-
-            // Récupération des valeurs pour chaque champ en fonction de son étape
-            for (const [field, step] of Object.entries(fieldStepMapping)) {
-                const response = await getResponse(step);
-                if (response !== null) {
-                    updatedData[field as keyof typeof formData] = response;
-                }
-            }
-
-            // Gestion de la résidence fiscale
-            const taxResidenceResponse = await getResponse(6);
-            if (taxResidenceResponse === 'oui') {
-                setIsTaxResidenceFrance(true);
-                updatedData.taxResidence = 'France';
-            } else if (taxResidenceResponse !== null) {
-                setIsTaxResidenceFrance(false);
-                updatedData.taxResidence = taxResidenceResponse;
-            }
-
-            setFormData(updatedData);
-        };
         fetchData();
-    }, [getResponse]);
+    }, [fetchData]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -145,7 +145,7 @@ const SubscriberInfoForm: React.FC = () => {
                         </Checkbox>
                         <Checkbox
                             isChecked={formData.clientType === 'Client existant'}
-                            onChange={() => setFormData((prev) => ({ ...prev, clientType: 'Client existant' }))}
+                            onChange={() => setFormData((prev) => ({ ...prev, clientType: 'Client existant' })) }
                         >
                             Si Client existant N° contrat
                         </Checkbox>
