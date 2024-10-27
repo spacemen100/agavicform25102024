@@ -20,6 +20,7 @@ import {
     Stack,
     FormErrorMessage,
     FormHelperText,
+    useToast, // Import du hook useToast
 } from '@chakra-ui/react';
 import { useUuid } from '../context/UuidContext';
 import countries from './countries.json';
@@ -150,6 +151,8 @@ const SubscriberInfoForm: React.FC = () => {
 
     const { updateResponse, getResponse } = useUuid();
 
+    const toast = useToast(); // Initialisation du hook useToast
+
     // Fonction pour charger les données sauvegardées
     const fetchData = useCallback(async () => {
         if (!isInitialLoad) return;
@@ -271,7 +274,13 @@ const SubscriberInfoForm: React.FC = () => {
         // Vérifier si le NIR est valide avant de sauvegarder
         if (formData.nir && !validateNIR(formData.nir)) {
             setFormErrors((prev) => ({ ...prev, nir: 'Numéro de sécurité sociale invalide' }));
-            alert('Veuillez corriger les erreurs avant de sauvegarder.');
+            toast({
+                title: 'Erreur',
+                description: 'Veuillez corriger les erreurs avant de sauvegarder.',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
             return;
         }
 
@@ -284,7 +293,14 @@ const SubscriberInfoForm: React.FC = () => {
             }
         }
         await updateResponse(6, isTaxResidenceFrance ? 'oui' : formData.taxResidence);
-        alert('Informations sauvegardées avec succès');
+
+        toast({
+            title: 'Succès',
+            description: 'Informations sauvegardées avec succès',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        });
     };
 
     return (
