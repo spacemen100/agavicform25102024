@@ -10,6 +10,8 @@ import {
     Text,
     ChakraProvider,
     extendTheme,
+    List,
+    ListItem,
 } from '@chakra-ui/react';
 import { useUuid } from '../context/UuidContext';
 
@@ -81,15 +83,16 @@ const SubscriberInfoForm: React.FC = () => {
         contractNumber: '',
     });
     const [isTaxResidenceFrance, setIsTaxResidenceFrance] = useState(true);
-    const [isInitialLoad, setIsInitialLoad] = useState(true); // Ajout pour gérer la première charge de données
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+    const [suggestions, setSuggestions] = useState<string[]>([]); // Pour stocker les suggestions d'adresse
 
     const { updateResponse, getResponse } = useUuid();
 
     // Fonction pour charger les données sauvegardées
     const fetchData = useCallback(async () => {
-        if (!isInitialLoad) return; // Ne charge les données qu'une seule fois
+        if (!isInitialLoad) return;
 
-        const initialData = { ...formData }; // Utilisation de la structure actuelle de `formData`
+        const initialData = { ...formData };
 
         // Récupération des valeurs pour chaque champ en fonction de son étape
         for (const [field, step] of Object.entries(fieldStepMapping)) {
@@ -99,7 +102,6 @@ const SubscriberInfoForm: React.FC = () => {
             }
         }
 
-        // Gestion de la résidence fiscale
         const taxResidenceResponse = await getResponse(6);
         if (taxResidenceResponse === 'oui') {
             setIsTaxResidenceFrance(true);
@@ -110,7 +112,7 @@ const SubscriberInfoForm: React.FC = () => {
         }
 
         setFormData(initialData);
-        setIsInitialLoad(false); // Une fois les données chargées, désactive la charge initiale
+        setIsInitialLoad(false);
     }, [getResponse, formData, isInitialLoad]);
 
     useEffect(() => {
@@ -120,6 +122,32 @@ const SubscriberInfoForm: React.FC = () => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleAddressChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = e.target;
+        setFormData((prev) => ({ ...prev, address: value }));
+
+        if (isTaxResidenceFrance && value.length > 3) {
+            try {
+                const response = await fetch(
+                    `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(value)}&limit=5`
+                );
+                const data = await response.json();
+                const addresses = data.features.map((feature: any) => feature.properties.label);
+                setSuggestions(addresses);
+            } catch (error) {
+                console.error("Erreur lors de la récupération de l'adresse:", error);
+                setSuggestions([]);
+            }
+        } else {
+            setSuggestions([]);
+        }
+    };
+
+    const handleSuggestionClick = (address: string) => {
+        setFormData((prev) => ({ ...prev, address }));
+        setSuggestions([]);
     };
 
     const handleSave = async () => {
@@ -149,7 +177,7 @@ const SubscriberInfoForm: React.FC = () => {
                         </Checkbox>
                         <Checkbox
                             isChecked={formData.clientType === 'Client existant'}
-                            onChange={() => setFormData((prev) => ({ ...prev, clientType: 'Client existant' })) }
+                            onChange={() => setFormData((prev) => ({ ...prev, clientType: 'Client existant' }))}
                         >
                             Si Client existant N° contrat
                         </Checkbox>
@@ -185,11 +213,33 @@ const SubscriberInfoForm: React.FC = () => {
                     <Input name="lastName" placeholder="Nom" value={formData.lastName} onChange={handleInputChange} />
                     <Input name="firstName" placeholder="Prénom" value={formData.firstName} onChange={handleInputChange} />
                     <Input name="birthLastName" placeholder="Nom de naissance" value={formData.birthLastName} onChange={handleInputChange} />
-                    <Input name="address" placeholder="Adresse postale" value={formData.address} onChange={handleInputChange} />
-                    <HStack spacing={4}>
-                        <Input name="postalCode" placeholder="Code postal" value={formData.postalCode} onChange={handleInputChange} />
-                        <Input name="city" placeholder="Ville" value={formData.city} onChange={handleInputChange} />
-                    </HStack>
+                    <Input
+                        name="address"
+                        placeholder="Adresse postale"
+                        value={formData.address}
+                        onChange={handleAddressChange}
+                    />
+
+                    {/* Dropdown des suggestions */}
+                    {suggestions.length > 0 && (
+                        <List bg="white" border="1px solid #e2e8f0" borderRadius="md" mt={1} spacing={1}>
+                            {suggestions.map((suggestion, index) => (
+                                <ListItem
+                                    key={index}
+                                    p={2}
+                                    cursor="pointer"
+                                    _hover={{ backgroundColor: 'gray.100' }}
+                                    onClick={() => handleSuggestionClick(suggestion)}
+                                >
+                                    {suggestion}
+                                </ListItem>
+                            ))}
+                        </List>
+                    )}
+
+                    {/* Autres champs */}
+                    <Input name="postalCode" placeholder="Code postal" value={formData.postalCode} onChange={handleInputChange} />
+                    <Input name="city" placeholder="Ville" value={formData.city} onChange={handleInputChange} />
                     <Input name="country" placeholder="Pays" value={formData.country} onChange={handleInputChange} />
 
                     {/* Birth Information */}
