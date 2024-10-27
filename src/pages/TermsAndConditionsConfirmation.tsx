@@ -3,6 +3,7 @@ import {
     ChakraProvider,
     extendTheme,
     Box,
+    HStack,
     Text,
     Button,
     VStack,
@@ -102,27 +103,14 @@ const TermsAndConditionsConfirmation: React.FC = () => {
                     ))}
                 </VStack>
 
-                <Box mt={8} display="flex" justifyContent="space-between">
-                    <Button
-                        colorScheme="gray"
-                        variant="outline"
-                        onClick={() => navigate(-1)}
-                        px={6}
-                        py={6}
-                        size="lg"
-                    >
+                <HStack justifyContent="flex-end" mt="8" spacing="4">
+                    <Button colorScheme="gray" variant="outline" onClick={() => navigate(-1)} px={6} py={6} size="lg">
                         Retour
                     </Button>
-                    <Button
-                        colorScheme="green"
-                        onClick={handleNext}
-                        px={6}
-                        py={6}
-                        size="lg"
-                    >
+                    <Button colorScheme="green" onClick={handleNext} px={6} py={6} size="lg">
                         Suivant
                     </Button>
-                </Box>
+                </HStack>
             </Box>
 
             <AlertDialog isOpen={isAlertOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
