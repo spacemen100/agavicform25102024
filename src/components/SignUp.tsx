@@ -1,5 +1,4 @@
-// src/components/SignUp.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import {
   Box,
@@ -20,73 +19,140 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useUuid } from '../context/UuidContext'; // Utiliser le hook useUuid
+import { useUuid } from '../context/UuidContext';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 const SignUp: React.FC = () => {
-  const { email: storedEmail, setEmail } = useUuid(); // Accéder au contexte
-  const [emailLocal, setEmailLocal] = useState<string>(storedEmail || '');
+  const { uuid, getResponse } = useUuid();
+  const [emailLocal, setEmailLocal] = useState<string>('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<{ confirmPassword?: string }>({});
+  const [errors, setErrors] = useState<{ confirmPassword?: string; general?: string }>({});
+  const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchStoredEmail = async () => {
+      try {
+        const storedEmail = await getResponse(25);
+        if (storedEmail) {
+          setEmailLocal(storedEmail);
+        }
+      } catch (error) {
+        console.error('Error fetching stored email:', error);
+      }
+    };
+    fetchStoredEmail();
+  }, [getResponse]);
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newEmail = e.target.value;
-    setEmailLocal(newEmail); // Mettre à jour l'état local
-    setEmail(newEmail);      // Mettre à jour le contexte
+    setEmailLocal(e.target.value);
+    setErrors(prev => ({ ...prev, general: undefined }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     if (confirmPassword && e.target.value !== confirmPassword) {
-      setErrors((prev) => ({ ...prev, confirmPassword: 'Les mots de passe ne correspondent pas.' }));
+      setErrors(prev => ({
+        ...prev,
+        confirmPassword: 'Les mots de passe ne correspondent pas.',
+      }));
     } else {
-      setErrors((prev) => ({ ...prev, confirmPassword: undefined }));
+      setErrors(prev => ({ ...prev, confirmPassword: undefined }));
     }
   };
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
     if (password !== e.target.value) {
-      setErrors((prev) => ({ ...prev, confirmPassword: 'Les mots de passe ne correspondent pas.' }));
+      setErrors(prev => ({
+        ...prev,
+        confirmPassword: 'Les mots de passe ne correspondent pas.',
+      }));
     } else {
-      setErrors((prev) => ({ ...prev, confirmPassword: undefined }));
+      setErrors(prev => ({ ...prev, confirmPassword: undefined }));
     }
   };
 
-  const handleSignUp = async () => {
-    if (password !== confirmPassword) {
-      toast({
-        title: 'Erreur',
-        description: 'Les mots de passe ne correspondent pas.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-      return;
+  const validateInputs = () => {
+    const newErrors: { confirmPassword?: string; general?: string } = {};
+    
+    if (!emailLocal) {
+      newErrors.general = 'L\'email est requis';
+      return false;
     }
+    
+    if (!password) {
+      newErrors.general = 'Le mot de passe est requis';
+      return false;
+    }
+    
+    if (password !== confirmPassword) {
+      newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
+      return false;
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-    const { data, error } = await supabase.auth.signUp({ email: emailLocal, password });
-    if (error) {
+  const handleSignUp = async () => {
+    try {
+      if (!validateInputs()) {
+        return;
+      }
+
+      setIsLoading(true);
+      setErrors({});
+
+      // Test connection to Supabase
+      const { error: pingError } = await supabase.auth.getSession();
+      if (pingError) {
+        throw new Error('Unable to connect to authentication service');
+      }
+
+      const { data, error } = await supabase.auth.signUp({
+        email: emailLocal,
+        password,
+        options: {
+          emailRedirectTo: window.location.origin + '/auth/callback',
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data.user) {
+        toast({
+          title: 'Inscription réussie',
+          description: 'Veuillez vérifier votre e-mail pour confirmer votre inscription.',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
+        navigate('/signin');
+      }
+    } catch (error) {
+      console.error('SignUp error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue lors de l\'inscription';
+      
       toast({
         title: 'Erreur lors de l\'inscription',
-        description: error.message,
+        description: errorMessage,
         status: 'error',
         duration: 5000,
         isClosable: true,
       });
-    } else if (data.user) {
-      toast({
-        title: 'Inscription réussie',
-        description: 'Veuillez vérifier votre e-mail pour confirmer votre inscription.',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-      navigate('/signin');
+      
+      setErrors(prev => ({
+        ...prev,
+        general: errorMessage,
+      }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -97,7 +163,13 @@ const SignUp: React.FC = () => {
           Inscription
         </Text>
 
-        {/* Alerte informative */}
+        {errors.general && (
+          <Alert status="error" borderRadius="md">
+            <AlertIcon />
+            <AlertDescription>{errors.general}</AlertDescription>
+          </Alert>
+        )}
+
         <Alert status="info" borderRadius="md">
           <AlertIcon />
           <Box flex="1">
@@ -116,6 +188,7 @@ const SignUp: React.FC = () => {
             placeholder="Votre e-mail"
             value={emailLocal}
             onChange={handleEmailChange}
+            isDisabled={isLoading}
           />
         </FormControl>
 
@@ -127,11 +200,13 @@ const SignUp: React.FC = () => {
               placeholder="Votre mot de passe"
               value={password}
               onChange={handlePasswordChange}
+              isDisabled={isLoading}
             />
             <InputRightElement h="full">
               <Button
                 variant="ghost"
-                onClick={() => setShowPassword((showPassword) => !showPassword)}
+                onClick={() => setShowPassword(!showPassword)}
+                isDisabled={isLoading}
               >
                 {showPassword ? <ViewOffIcon /> : <ViewIcon />}
               </Button>
@@ -147,11 +222,13 @@ const SignUp: React.FC = () => {
               placeholder="Confirmez votre mot de passe"
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
+              isDisabled={isLoading}
             />
             <InputRightElement h="full">
               <Button
                 variant="ghost"
-                onClick={() => setShowPassword((showPassword) => !showPassword)}
+                onClick={() => setShowPassword(!showPassword)}
+                isDisabled={isLoading}
               >
                 {showPassword ? <ViewOffIcon /> : <ViewIcon />}
               </Button>
@@ -162,9 +239,16 @@ const SignUp: React.FC = () => {
           )}
         </FormControl>
 
-        <Button colorScheme="blue" onClick={handleSignUp} width="full">
+        <Button
+          colorScheme="blue"
+          onClick={handleSignUp}
+          width="full"
+          isLoading={isLoading}
+          loadingText="Inscription en cours..."
+        >
           S'inscrire
         </Button>
+        
         <Text>
           Déjà un compte ? <Link to="/signin">Se connecter</Link>
         </Text>
