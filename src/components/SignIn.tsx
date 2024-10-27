@@ -10,17 +10,34 @@ import {
   FormControl,
   FormLabel,
   useToast,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  CloseButton,
+  InputGroup,
+  InputRightElement,
 } from '@chakra-ui/react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useUuid } from '../context/UuidContext'; // Utiliser le hook useUuid
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 const SignIn: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const { email: storedEmail, setEmail } = useUuid(); // Accéder au contexte
+  const [emailLocal, setEmailLocal] = useState<string>(storedEmail || '');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value;
+    setEmailLocal(newEmail); // Mettre à jour l'état local
+    setEmail(newEmail);      // Mettre à jour le contexte
+  };
+
   const handleSignIn = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email: emailLocal, password });
     if (error) {
       toast({
         title: 'Erreur lors de la connexion',
@@ -47,24 +64,49 @@ const SignIn: React.FC = () => {
         <Text fontSize="2xl" fontWeight="bold">
           Connexion
         </Text>
+
+        {/* Alerte informative */}
+        <Alert status="info" borderRadius="md">
+          <AlertIcon />
+          <Box flex="1">
+            <AlertTitle>Connexion Obligatoire</AlertTitle>
+            <AlertDescription>
+              L'utilisation d'un compte est obligatoire pour souscrire afin de protéger vos données personnelles.
+            </AlertDescription>
+          </Box>
+          <CloseButton position="absolute" right="8px" top="8px" />
+        </Alert>
+
         <FormControl id="email" isRequired>
           <FormLabel>E-mail</FormLabel>
           <Input
             type="email"
             placeholder="Votre e-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={emailLocal}
+            onChange={handleEmailChange}
           />
         </FormControl>
+
         <FormControl id="password" isRequired>
           <FormLabel>Mot de passe</FormLabel>
-          <Input
-            type="password"
-            placeholder="Votre mot de passe"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <InputGroup>
+            <Input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Votre mot de passe"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <InputRightElement h="full">
+              <Button
+                variant="ghost"
+                onClick={() => setShowPassword((showPassword) => !showPassword)}
+              >
+                {showPassword ? <ViewOffIcon /> : <ViewIcon />}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
         </FormControl>
+
         <Button colorScheme="blue" onClick={handleSignIn} width="full">
           Se connecter
         </Button>
