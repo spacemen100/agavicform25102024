@@ -69,7 +69,13 @@ const SubscriptionChoice: React.FC = () => {
     const handleNext = async () => {
         if (selectedOption !== undefined) {
             await updateResponse(29, selectedOption); // Enregistre la réponse dans step29
-            navigate('/next-step'); // Remplacez par la route suivante
+            
+            // Redirection en fonction du choix de l'utilisateur
+            if (selectedOption === 'online') {
+                navigate('/souscrire-en-ligne'); // Route pour la souscription en ligne
+            } else if (selectedOption === 'callback') {
+                navigate('/conseiller-rappel'); // Route pour être rappelé par un conseiller
+            }
         } else {
             setIsAlertOpen(true);
         }

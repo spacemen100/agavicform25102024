@@ -42,6 +42,7 @@ import ContactPermission from '../pages/ContactPermission';
 import TermsAndConditionsConfirmation from '../pages/TermsAndConditionsConfirmation';
 import SubscriptionChoice from '../2emepartiesouscription/SubscriptionChoice'; // Import du composant SubscriptionChoice
 import ConseillerRappel from '../2emepartiesouscription/ConseillerRappel'; 
+import SubscriberInfoForm from '../2emepartiesouscription/SubscriberInfoForm';
 
 export const routes = [
   { path: '/', name: 'Home', component: <Home />, hidden: true },
@@ -83,6 +84,7 @@ export const routes = [
   { path: '/subscription-choice', name: 'SubscriptionChoice', component: <SubscriptionChoice />, hidden: true }, 
   { path: '/conseiller-rappel', name: 'ConseillerRappel', component: <ConseillerRappel />, hidden: true }, 
   { path: '/souscrire-en-ligne', name: 'SouscrireEnLigne', component: <SouscrireEnLigne />, hidden: true },
+  { path: '/subscriber-info', name: 'SubscriberInfoForm', component: <SubscriberInfoForm />, hidden: true }, // Route pour SubscriberInfoForm
 ];
 
 const Routes: React.FC = () => {
