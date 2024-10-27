@@ -34,8 +34,39 @@ const theme = extendTheme({
     },
 });
 
+// Définition de l'interface pour formData
+interface FormData {
+    birthDate: string;
+    clientType: string;
+    title: string;
+    lastName: string;
+    firstName: string;
+    birthLastName: string;
+    address: string;
+    postalCode: string;
+    city: string;
+    country: string;
+    birthPostalCode: string;
+    birthCity: string;
+    birthCountry: string;
+    nir: string;
+    nationality: string;
+    taxResidence: string;
+    taxResidenceAddress: string;
+    phone: string;
+    email: string;
+    presentedDocument: string;
+    familySituation: string;
+    propertyRegime: string;
+    otherPropertyRegime: string;
+    hasProtectionRegime: boolean;
+    protectionStatus: string;
+    minorStatus: string;
+    contractNumber: string;
+}
+
 // Correspondance stricte entre les champs et les étapes
-const fieldStepMapping = {
+const fieldStepMapping: Partial<Record<keyof FormData, number>> = {
     birthDate: 31,
     clientType: 32,
     title: 33,
@@ -75,7 +106,7 @@ interface AddressFeature {
 }
 
 const SubscriberInfoForm: React.FC = () => {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         birthDate: '',
         clientType: '',
         title: '',
@@ -115,16 +146,16 @@ const SubscriberInfoForm: React.FC = () => {
     const fetchData = useCallback(async () => {
         if (!isInitialLoad) return;
 
-        const initialData = { ...formData };
+        const initialData: FormData = { ...formData };
 
         // Récupération des valeurs pour chaque champ en fonction de son étape
-        for (const [field, step] of Object.entries(fieldStepMapping)) {
+        for (const [field, step] of Object.entries(fieldStepMapping) as [keyof FormData, number][]) {
             const response = await getResponse(step);
             if (response !== null) {
                 if (field === 'hasProtectionRegime') {
-                    initialData[field as keyof typeof formData] = response === 'oui';
+                    initialData.hasProtectionRegime = response === 'oui';
                 } else {
-                    initialData[field as keyof typeof formData] = response;
+                    initialData[field] = response;
                 }
             }
         }
@@ -192,11 +223,12 @@ const SubscriberInfoForm: React.FC = () => {
     };
 
     const handleSave = async () => {
-        for (const [field, step] of Object.entries(fieldStepMapping)) {
+        for (const [field, step] of Object.entries(fieldStepMapping) as [keyof FormData, number][]) {
+            const value = formData[field];
             if (field === 'hasProtectionRegime') {
-                await updateResponse(step, formData[field] ? 'oui' : 'non');
+                await updateResponse(step, value ? 'oui' : 'non');
             } else {
-                await updateResponse(step, formData[field as keyof typeof formData]);
+                await updateResponse(step, String(value));
             }
         }
         await updateResponse(6, isTaxResidenceFrance ? 'oui' : formData.taxResidence);
