@@ -1,407 +1,439 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-    Box,
-    VStack,
-    HStack,
-    Input,
-    Select,
-    Checkbox,
-    Button,
-    Text,
-    ChakraProvider,
-    extendTheme,
-    List,
-    ListItem,
-    Switch,
-    FormControl,
-    FormLabel,
-    RadioGroup,
-    Radio,
-    Stack,
-    FormErrorMessage,
-    FormHelperText,
-    useToast,
+  Box,
+  VStack,
+  HStack,
+  Input,
+  Select,
+  Checkbox,
+  Button,
+  Text,
+  ChakraProvider,
+  extendTheme,
+  List,
+  ListItem,
+  Switch,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  Radio,
+  Stack,
+  FormErrorMessage,
+  FormHelperText,
+  useToast,
 } from '@chakra-ui/react';
 import { useUuid } from '../context/UuidContext';
 import countries from './countries.json';
+import { supabase } from '../supabaseClient';
 
 const theme = extendTheme({
-    colors: {
-        navy: '#0A1128',
-        gray: {
-            200: '#e2e8f0',
-            500: '#718096',
-        },
-        white: '#FFFFFF',
-        orange: '#FF8C00',
+  colors: {
+    navy: '#0A1128',
+    gray: {
+      200: '#e2e8f0',
+      500: '#718096',
     },
+    white: '#FFFFFF',
+    orange: '#FF8C00',
+  },
 });
 
 // Définition de l'interface pour formData
 interface FormData {
-    birthDate: string;
-    clientType: string;
-    title: string;
-    lastName: string;
-    firstName: string;
-    birthLastName: string;
-    address: string;
-    postalCode: string;
-    city: string;
-    country: string;
-    birthPostalCode: string;
-    birthCity: string;
-    birthCountry: string;
-    nir: string;
-    nationality: string;
-    taxResidence: string;
-    taxResidenceAddress: string;
-    phone: string;
-    email: string;
-    presentedDocument: string;
-    familySituation: string;
-    propertyRegime: string;
-    otherPropertyRegime: string;
-    hasProtectionRegime: boolean;
-    protectionStatus: string;
-    minorStatus: string;
-    contractNumber: string;
-    identityDocumentFront: File | string | null;
-    identityDocumentBack: File | string | null;
+  birthDate: string;
+  clientType: string;
+  title: string;
+  lastName: string;
+  firstName: string;
+  birthLastName: string;
+  address: string;
+  postalCode: string;
+  city: string;
+  country: string;
+  birthPostalCode: string;
+  birthCity: string;
+  birthCountry: string;
+  nir: string;
+  nationality: string;
+  taxResidence: string;
+  taxResidenceAddress: string;
+  phone: string;
+  email: string;
+  presentedDocument: string;
+  familySituation: string;
+  propertyRegime: string;
+  otherPropertyRegime: string;
+  hasProtectionRegime: boolean;
+  protectionStatus: string;
+  minorStatus: string;
+  contractNumber: string;
+  identityDocumentFront: File | string | null;
+  identityDocumentBack: File | string | null;
 }
 
 interface FormErrors {
-    nir?: string;
+  nir?: string;
 }
 
 // Correspondance stricte entre les champs et les étapes
 const fieldStepMapping: Partial<Record<keyof FormData, number>> = {
-    birthDate: 31,
-    clientType: 32,
-    title: 33,
-    lastName: 34,
-    firstName: 35,
-    birthLastName: 36,
-    address: 37,
-    postalCode: 38,
-    city: 39,
-    country: 40,
-    birthPostalCode: 41,
-    birthCity: 42,
-    birthCountry: 43,
-    nir: 44,
-    nationality: 45,
-    taxResidence: 46,
-    taxResidenceAddress: 47,
-    phone: 26,
-    email: 25,
-    presentedDocument: 50,
-    familySituation: 51,
-    propertyRegime: 55,
-    otherPropertyRegime: 57,
-    hasProtectionRegime: 58,
-    protectionStatus: 52,
-    minorStatus: 53,
-    contractNumber: 54,
-    identityDocumentFront: 60,
-    identityDocumentBack: 61,
+  birthDate: 31,
+  clientType: 32,
+  title: 33,
+  lastName: 34,
+  firstName: 35,
+  birthLastName: 36,
+  address: 37,
+  postalCode: 38,
+  city: 39,
+  country: 40,
+  birthPostalCode: 41,
+  birthCity: 42,
+  birthCountry: 43,
+  nir: 44,
+  nationality: 45,
+  taxResidence: 46,
+  taxResidenceAddress: 47,
+  phone: 26,
+  email: 25,
+  presentedDocument: 50,
+  familySituation: 51,
+  propertyRegime: 55,
+  otherPropertyRegime: 57,
+  hasProtectionRegime: 58,
+  protectionStatus: 52,
+  minorStatus: 53,
+  contractNumber: 54,
+  identityDocumentFront: 60,
+  identityDocumentBack: 61,
 };
 
 interface AddressFeature {
-    properties: {
-        label: string;
-        postcode: string;
-        city: string;
-        name: string;
-    };
+  properties: {
+    label: string;
+    postcode: string;
+    city: string;
+    name: string;
+  };
 }
 
 const SubscriberInfoForm: React.FC = () => {
-    const [formData, setFormData] = useState<FormData>({
-        birthDate: '',
-        clientType: '',
-        title: '',
-        lastName: '',
-        firstName: '',
-        birthLastName: '',
-        address: '',
-        postalCode: '',
-        city: '',
-        country: '',
-        birthPostalCode: '',
-        birthCity: '',
-        birthCountry: '',
-        nir: '',
-        nationality: '',
-        taxResidence: 'France',
-        taxResidenceAddress: '',
-        phone: '',
-        email: '',
-        presentedDocument: '',
-        familySituation: '',
-        propertyRegime: '',
-        otherPropertyRegime: '',
-        hasProtectionRegime: false,
-        protectionStatus: '',
-        minorStatus: '',
-        contractNumber: '',
-        identityDocumentFront: null,
-        identityDocumentBack: null,
-    });
+  const [formData, setFormData] = useState<FormData>({
+    birthDate: '',
+    clientType: '',
+    title: '',
+    lastName: '',
+    firstName: '',
+    birthLastName: '',
+    address: '',
+    postalCode: '',
+    city: '',
+    country: '',
+    birthPostalCode: '',
+    birthCity: '',
+    birthCountry: '',
+    nir: '',
+    nationality: '',
+    taxResidence: 'France',
+    taxResidenceAddress: '',
+    phone: '',
+    email: '',
+    presentedDocument: '',
+    familySituation: '',
+    propertyRegime: '',
+    otherPropertyRegime: '',
+    hasProtectionRegime: false,
+    protectionStatus: '',
+    minorStatus: '',
+    contractNumber: '',
+    identityDocumentFront: null,
+    identityDocumentBack: null,
+  });
 
-    const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
-    const [isTaxResidenceFrance, setIsTaxResidenceFrance] = useState(true);
-    const [isInitialLoad, setIsInitialLoad] = useState(true);
-    const [suggestions, setSuggestions] = useState<AddressFeature[]>([]);
+  const [isTaxResidenceFrance, setIsTaxResidenceFrance] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [suggestions, setSuggestions] = useState<AddressFeature[]>([]);
 
-    const { updateResponse, getResponse } = useUuid();
+  const { updateResponse, getResponse } = useUuid();
 
-    const toast = useToast(); // Initialisation du hook useToast
+  const toast = useToast(); // Initialisation du hook useToast
 
-    // Mapping des documents aux nombres de fichiers requis
-    const documentFileRequirements: Record<string, number> = {
-        'CNI': 2,
-        'Passeport': 1,
-        'Permis de conduire': 2,
-        'Carte de séjour ou de résident': 2,
-    };
+  // Mapping des documents aux nombres de fichiers requis
+  const documentFileRequirements: Record<string, number> = {
+    'CNI': 2,
+    'Passeport': 1,
+    'Permis de conduire': 2,
+    'Carte de séjour ou de résident': 2,
+  };
 
-    // Fonction pour charger les données sauvegardées
-    const fetchData = useCallback(async () => {
-        if (!isInitialLoad) return;
+  // Fonction pour charger les données sauvegardées
+  const fetchData = useCallback(async () => {
+    if (!isInitialLoad) return;
 
-        const initialData: FormData = { ...formData };
+    const initialData: FormData = { ...formData };
 
-        // Récupération des valeurs pour chaque champ en fonction de son étape
-        for (const [field, step] of Object.entries(fieldStepMapping) as [keyof FormData, number][]) {
-            const response = await getResponse(step);
-            if (response !== null) {
-                if (field === 'hasProtectionRegime') {
-                    initialData.hasProtectionRegime = response === 'oui';
-                } else {
-                    initialData[field] = response;
-                }
-            }
-        }
-
-        const taxResidenceResponse = await getResponse(6);
-        if (taxResidenceResponse === 'oui') {
-            setIsTaxResidenceFrance(true);
-            initialData.taxResidence = 'France';
-        } else if (taxResidenceResponse !== null) {
-            setIsTaxResidenceFrance(false);
-            initialData.taxResidence = taxResidenceResponse;
-        }
-
-        setFormData(initialData);
-        setIsInitialLoad(false);
-    }, [getResponse, formData, isInitialLoad]);
-
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
-
-    // Fonction de validation du NIR
-    const validateNIR = (nir: string): boolean => {
-        // Retirer les espaces éventuels
-        nir = nir.replace(/\s/g, '');
-
-        // Vérifier que le NIR contient exactement 15 caractères numériques
-        if (!/^\d{15}$/.test(nir)) {
-            return false;
-        }
-
-        // Extraire les 13 premiers chiffres et les 2 chiffres de la clé
-        const nirNumberPart = nir.substr(0, 13);
-        const nirKey = parseInt(nir.substr(13, 2), 10);
-
-        // Convertir en nombre entier
-        const nirNum = parseInt(nirNumberPart, 10);
-
-        // Calculer la clé attendue
-        const expectedKey = 97 - (nirNum % 97);
-        const adjustedExpectedKey = expectedKey === 97 ? 0 : expectedKey;
-
-        // Vérifier que la clé calculée correspond à la clé fournie
-        return adjustedExpectedKey === nirKey;
-    };
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-
-        setFormData((prev) => ({ ...prev, [name]: value }));
-
-        // Validation spécifique pour le NIR
-        if (name === 'nir') {
-            if (value === '' || validateNIR(value)) {
-                setFormErrors((prev) => ({ ...prev, nir: undefined }));
-            } else {
-                setFormErrors((prev) => ({ ...prev, nir: 'Numéro de sécurité sociale invalide' }));
-            }
-        }
-    };
-
-    const handleSwitchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, checked } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: checked }));
-    };
-
-    const handleRadioChange = (name: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleAddressChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = e.target;
-        setFormData((prev) => ({ ...prev, address: value }));
-
-        if (isTaxResidenceFrance && value.length > 3) {
-            try {
-                const response = await fetch(
-                    `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(value)}&limit=5`
-                );
-                const data = await response.json();
-                setSuggestions(data.features);
-            } catch (error) {
-                console.error("Erreur lors de la récupération de l'adresse:", error);
-                setSuggestions([]);
-            }
+    // Récupération des valeurs pour chaque champ en fonction de son étape
+    for (const [field, step] of Object.entries(fieldStepMapping) as [keyof FormData, number][]) {
+      const response = await getResponse(step);
+      if (response !== null) {
+        if (field === 'hasProtectionRegime') {
+          initialData.hasProtectionRegime = response === 'oui';
         } else {
-            setSuggestions([]);
+          initialData[field] = response;
         }
-    };
+      }
+    }
 
-    const handleSuggestionClick = (feature: AddressFeature) => {
-        setFormData((prev) => ({
-            ...prev,
-            address: feature.properties.label,
-            postalCode: feature.properties.postcode,
-            city: feature.properties.city,
-            country: 'France',
-        }));
-        setSuggestions([]);
-    };
+    const taxResidenceResponse = await getResponse(6);
+    if (taxResidenceResponse === 'oui') {
+      setIsTaxResidenceFrance(true);
+      initialData.taxResidence = 'France';
+    } else if (taxResidenceResponse !== null) {
+      setIsTaxResidenceFrance(false);
+      initialData.taxResidence = taxResidenceResponse;
+    }
 
-    const handleFileChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-        name: 'identityDocumentFront' | 'identityDocumentBack'
-    ) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            setFormData((prev) => ({ ...prev, [name]: file }));
-        }
-    };
+    setFormData(initialData);
+    setIsInitialLoad(false);
+  }, [getResponse, formData, isInitialLoad]);
 
-    // Fonction pour uploader un fichier
-    const uploadFile = async (file: File): Promise<string> => {
-        const formData = new FormData();
-        formData.append('file', file);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-        const response = await fetch('/api/upload', {
-            method: 'POST',
-            body: formData,
-        });
+  // Fonction de validation du NIR
+  const validateNIR = (nir: string): boolean => {
+    // Retirer les espaces éventuels
+    nir = nir.replace(/\s/g, '');
 
-        if (!response.ok) {
-            throw new Error('File upload failed');
-        }
+    // Vérifier que le NIR contient exactement 15 caractères numériques
+    if (!/^\d{15}$/.test(nir)) {
+      return false;
+    }
 
+    // Extraire les 13 premiers chiffres et les 2 chiffres de la clé
+    const nirNumberPart = nir.substr(0, 13);
+    const nirKey = parseInt(nir.substr(13, 2), 10);
+
+    // Convertir en nombre entier
+    const nirNum = parseInt(nirNumberPart, 10);
+
+    // Calculer la clé attendue
+    const expectedKey = 97 - (nirNum % 97);
+    const adjustedExpectedKey = expectedKey === 97 ? 0 : expectedKey;
+
+    // Vérifier que la clé calculée correspond à la clé fournie
+    return adjustedExpectedKey === nirKey;
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Validation spécifique pour le NIR
+    if (name === 'nir') {
+      if (value === '' || validateNIR(value)) {
+        setFormErrors((prev) => ({ ...prev, nir: undefined }));
+      } else {
+        setFormErrors((prev) => ({ ...prev, nir: 'Numéro de sécurité sociale invalide' }));
+      }
+    }
+  };
+
+  const handleSwitchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: checked }));
+  };
+
+  const handleRadioChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddressChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFormData((prev) => ({ ...prev, address: value }));
+
+    if (isTaxResidenceFrance && value.length > 3) {
+      try {
+        const response = await fetch(
+          `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(value)}&limit=5`
+        );
         const data = await response.json();
+        setSuggestions(data.features);
+      } catch (error) {
+        console.error("Erreur lors de la récupération de l'adresse:", error);
+        setSuggestions([]);
+      }
+    } else {
+      setSuggestions([]);
+    }
+  };
 
-        return data.fileUrl; // Ajustez selon la réponse de votre API
+  const handleSuggestionClick = (feature: AddressFeature) => {
+    setFormData((prev) => ({
+      ...prev,
+      address: feature.properties.label,
+      postalCode: feature.properties.postcode,
+      city: feature.properties.city,
+      country: 'France',
+    }));
+    setSuggestions([]);
+  };
+
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    name: 'identityDocumentFront' | 'identityDocumentBack'
+  ) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setFormData((prev) => ({ ...prev, [name]: file }));
+    }
+  };
+
+  // Fonction pour uploader un fichier
+  const uploadFile = async (file: File): Promise<string> => {
+    // Générer un nom de fichier unique
+    const fileName = `${Date.now()}_${file.name}`;
+
+    // Téléchargement du fichier vers le bucket 'documents-identite'
+    const { data, error } = await supabase.storage
+      .from('documents-identite')
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    // Retourner le chemin du fichier pour le stocker dans la base de données
+    return data.path;
+  };
+
+  const handleSave = async () => {
+    // Vérifier si le NIR est valide avant de sauvegarder
+    if (formData.nir && !validateNIR(formData.nir)) {
+      setFormErrors((prev) => ({ ...prev, nir: 'Numéro de sécurité sociale invalide' }));
+      toast({
+        title: 'Erreur',
+        description: 'Veuillez corriger les erreurs avant de sauvegarder.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    // Vérifier que les documents d'identité requis sont téléchargés
+    const requiredFiles = documentFileRequirements[formData.presentedDocument];
+
+    if (requiredFiles === 1 && !formData.identityDocumentFront) {
+      toast({
+        title: 'Erreur',
+        description: 'Veuillez télécharger le document d\'identité requis.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (requiredFiles === 2 && (!formData.identityDocumentFront || !formData.identityDocumentBack)) {
+      toast({
+        title: 'Erreur',
+        description: 'Veuillez télécharger les documents d\'identité requis (recto et verso).',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    // Enregistrer les réponses du formulaire
+    for (const [field, step] of Object.entries(fieldStepMapping) as [keyof FormData, number][]) {
+      const value = formData[field];
+      if (field === 'hasProtectionRegime') {
+        await updateResponse(step, value ? 'oui' : 'non');
+      } else if (field !== 'identityDocumentFront' && field !== 'identityDocumentBack') {
+        await updateResponse(step, String(value));
+      }
+    }
+    await updateResponse(6, isTaxResidenceFrance ? 'oui' : formData.taxResidence);
+
+    // Upload des fichiers
+    try {
+      if (formData.identityDocumentFront) {
+        if (formData.identityDocumentFront instanceof File) {
+          const frontFilePath = await uploadFile(formData.identityDocumentFront);
+          await updateResponse(fieldStepMapping.identityDocumentFront!, frontFilePath);
+        } else {
+          await updateResponse(fieldStepMapping.identityDocumentFront!, formData.identityDocumentFront);
+        }
+      }
+      if (formData.identityDocumentBack) {
+        if (formData.identityDocumentBack instanceof File) {
+          const backFilePath = await uploadFile(formData.identityDocumentBack);
+          await updateResponse(fieldStepMapping.identityDocumentBack!, backFilePath);
+        } else {
+          await updateResponse(fieldStepMapping.identityDocumentBack!, formData.identityDocumentBack);
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors du téléchargement des fichiers:', error);
+      toast({
+        title: 'Erreur',
+        description: 'Échec du téléchargement des fichiers.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    toast({
+      title: 'Succès',
+      description: 'Informations sauvegardées avec succès',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+  };
+
+  // Si vous souhaitez afficher les fichiers déjà téléchargés
+  useEffect(() => {
+    const fetchFileUrls = async () => {
+      if (formData.identityDocumentFront && typeof formData.identityDocumentFront === 'string') {
+        const signedUrl = await getSignedUrl(formData.identityDocumentFront);
+        // Stockez le signedUrl dans l'état ou affichez-le directement
+      }
+      if (formData.identityDocumentBack && typeof formData.identityDocumentBack === 'string') {
+        const signedUrl = await getSignedUrl(formData.identityDocumentBack);
+        // Stockez le signedUrl dans l'état ou affichez-le directement
+      }
     };
 
-    const handleSave = async () => {
-        // Vérifier si le NIR est valide avant de sauvegarder
-        if (formData.nir && !validateNIR(formData.nir)) {
-            setFormErrors((prev) => ({ ...prev, nir: 'Numéro de sécurité sociale invalide' }));
-            toast({
-                title: 'Erreur',
-                description: 'Veuillez corriger les erreurs avant de sauvegarder.',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-            return;
-        }
+    fetchFileUrls();
+  }, [formData.identityDocumentFront, formData.identityDocumentBack]);
 
-        // Vérifier que les documents d'identité requis sont téléchargés
-        const requiredFiles = documentFileRequirements[formData.presentedDocument];
+  const getSignedUrl = async (filePath: string): Promise<string | null> => {
+    const { data, error } = await supabase.storage
+      .from('documents-identite')
+      .createSignedUrl(filePath, 60); // URL valide pendant 60 secondes
 
-        if (requiredFiles === 1 && !formData.identityDocumentFront) {
-            toast({
-                title: 'Erreur',
-                description: 'Veuillez télécharger le document d\'identité requis.',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-            return;
-        }
+    if (error) {
+      console.error('Erreur lors de la génération de l\'URL signée:', error);
+      return null;
+    }
 
-        if (requiredFiles === 2 && (!formData.identityDocumentFront || !formData.identityDocumentBack)) {
-            toast({
-                title: 'Erreur',
-                description: 'Veuillez télécharger les documents d\'identité requis (recto et verso).',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-            return;
-        }
+    return data.signedUrl;
+  };
 
-        // Enregistrer les réponses du formulaire
-        for (const [field, step] of Object.entries(fieldStepMapping) as [keyof FormData, number][]) {
-            const value = formData[field];
-            if (field === 'hasProtectionRegime') {
-                await updateResponse(step, value ? 'oui' : 'non');
-            } else if (field !== 'identityDocumentFront' && field !== 'identityDocumentBack') {
-                await updateResponse(step, String(value));
-            }
-        }
-        await updateResponse(6, isTaxResidenceFrance ? 'oui' : formData.taxResidence);
-
-        // Upload des fichiers
-        try {
-            if (formData.identityDocumentFront) {
-                if (formData.identityDocumentFront instanceof File) {
-                    const frontFileUrl = await uploadFile(formData.identityDocumentFront);
-                    await updateResponse(fieldStepMapping.identityDocumentFront!, frontFileUrl);
-                } else {
-                    await updateResponse(fieldStepMapping.identityDocumentFront!, formData.identityDocumentFront);
-                }
-            }
-            if (formData.identityDocumentBack) {
-                if (formData.identityDocumentBack instanceof File) {
-                    const backFileUrl = await uploadFile(formData.identityDocumentBack);
-                    await updateResponse(fieldStepMapping.identityDocumentBack!, backFileUrl);
-                } else {
-                    await updateResponse(fieldStepMapping.identityDocumentBack!, formData.identityDocumentBack);
-                }
-            }
-        } catch (error) {
-            console.error('Erreur lors du téléchargement des fichiers:', error);
-            toast({
-                title: 'Erreur',
-                description: 'Échec du téléchargement des fichiers.',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-            return;
-        }
-
-        toast({
-            title: 'Succès',
-            description: 'Informations sauvegardées avec succès',
-            status: 'success',
-            duration: 5000,
-            isClosable: true,
-        });
-    };
-
-    return (
-        <ChakraProvider theme={theme}>
+  return (
+    <ChakraProvider theme={theme}>
             <Box p={5} maxW="800px" mx="auto" textAlign="left">
                 <Text fontSize="2xl" fontWeight="bold" mb={5}>
                     Vous connaître
@@ -807,8 +839,8 @@ const SubscriberInfoForm: React.FC = () => {
                     </Button>
                 </VStack>
             </Box>
-        </ChakraProvider>
-    );
+    </ChakraProvider>
+  );
 };
 
 export default SubscriberInfoForm;

@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Banner from './components/Banner';
 import Routes from './routes/Routes';
 import { UuidProvider } from './context/UuidContext';
+import { AuthProvider } from './context/AuthContext'; // Import AuthProvider
 
 const theme = extendTheme({
     colors: {
@@ -21,16 +22,18 @@ const theme = extendTheme({
 
 const App: React.FC = () => {
     return (
-        <ChakraProvider theme={theme}>
-            <UuidProvider>
-                <Router>
-                    <Header />
-                    <Banner />
-                    <Routes />
-                </Router>
-            </UuidProvider>
-        </ChakraProvider>
+      <ChakraProvider theme={theme}>
+        <AuthProvider>
+          <UuidProvider>
+            <Router>
+              <Header />
+              <Banner />
+              <Routes />
+            </Router>
+          </UuidProvider>
+        </AuthProvider>
+      </ChakraProvider>
     );
-};
-
-export default App;
+  };
+  
+  export default App;
