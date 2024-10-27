@@ -12,6 +12,12 @@ import {
     extendTheme,
     List,
     ListItem,
+    Switch,
+    FormControl,
+    FormLabel,
+    RadioGroup,
+    Radio,
+    Stack,
 } from '@chakra-ui/react';
 import { useUuid } from '../context/UuidContext';
 import countries from './countries.json';
@@ -51,6 +57,9 @@ const fieldStepMapping = {
     email: 25,
     presentedDocument: 50,
     familySituation: 51,
+    propertyRegime: 55,
+    otherPropertyRegime: 57,
+    hasProtectionRegime: 58,
     protectionStatus: 52,
     minorStatus: 53,
     contractNumber: 54,
@@ -88,6 +97,9 @@ const SubscriberInfoForm: React.FC = () => {
         email: '',
         presentedDocument: '',
         familySituation: '',
+        propertyRegime: '',
+        otherPropertyRegime: '',
+        hasProtectionRegime: false,
         protectionStatus: '',
         minorStatus: '',
         contractNumber: '',
@@ -109,7 +121,11 @@ const SubscriberInfoForm: React.FC = () => {
         for (const [field, step] of Object.entries(fieldStepMapping)) {
             const response = await getResponse(step);
             if (response !== null) {
-                initialData[field as keyof typeof formData] = response;
+                if (field === 'hasProtectionRegime') {
+                    initialData[field as keyof typeof formData] = response === 'oui';
+                } else {
+                    initialData[field as keyof typeof formData] = response;
+                }
             }
         }
 
@@ -132,6 +148,15 @@ const SubscriberInfoForm: React.FC = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSwitchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, checked } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: checked }));
+    };
+
+    const handleRadioChange = (name: string, value: string) => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -161,17 +186,21 @@ const SubscriberInfoForm: React.FC = () => {
             address: feature.properties.label,
             postalCode: feature.properties.postcode,
             city: feature.properties.city,
-            country: 'France'
+            country: 'France',
         }));
         setSuggestions([]);
     };
 
     const handleSave = async () => {
         for (const [field, step] of Object.entries(fieldStepMapping)) {
-            await updateResponse(step, formData[field as keyof typeof formData]);
+            if (field === 'hasProtectionRegime') {
+                await updateResponse(step, formData[field] ? 'oui' : 'non');
+            } else {
+                await updateResponse(step, formData[field as keyof typeof formData]);
+            }
         }
         await updateResponse(6, isTaxResidenceFrance ? 'oui' : formData.taxResidence);
-        alert('Information saved successfully');
+        alert('Informations sauvegardées avec succès');
     };
 
     return (
@@ -186,20 +215,24 @@ const SubscriberInfoForm: React.FC = () => {
                     <HStack spacing={4}>
                         <Checkbox
                             isChecked={formData.clientType === 'Nouveau client'}
-                            onChange={() => setFormData((prev) => ({
-                                ...prev,
-                                clientType: 'Nouveau client',
-                                contractNumber: ''
-                            }))}
+                            onChange={() =>
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    clientType: 'Nouveau client',
+                                    contractNumber: '',
+                                }))
+                            }
                         >
                             Nouveau client
                         </Checkbox>
                         <Checkbox
                             isChecked={formData.clientType === 'Client existant'}
-                            onChange={() => setFormData((prev) => ({
-                                ...prev,
-                                clientType: 'Client existant'
-                            }))}
+                            onChange={() =>
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    clientType: 'Client existant',
+                                }))
+                            }
                         >
                             Si Client existant N° contrat
                         </Checkbox>
@@ -317,12 +350,7 @@ const SubscriberInfoForm: React.FC = () => {
 
                     {/* Le pays en lecture seule pour la France */}
                     {isTaxResidenceFrance && (
-                        <Input
-                            name="country"
-                            value="France"
-                            isReadOnly
-                            bg="gray.50"
-                        />
+                        <Input name="country" value="France" isReadOnly bg="gray.50" />
                     )}
 
                     {/* Informations de naissance */}
@@ -377,7 +405,7 @@ const SubscriberInfoForm: React.FC = () => {
                                 setFormData((prev) => ({
                                     ...prev,
                                     taxResidence: 'France',
-                                    country: 'France'
+                                    country: 'France',
                                 }));
                             }}
                         >
@@ -390,7 +418,7 @@ const SubscriberInfoForm: React.FC = () => {
                                 setFormData((prev) => ({
                                     ...prev,
                                     taxResidence: '',
-                                    country: ''
+                                    country: '',
                                 }));
                             }}
                         >
@@ -438,57 +466,115 @@ const SubscriberInfoForm: React.FC = () => {
                         <option value="CNI">CNI</option>
                         <option value="Passeport">Passeport</option>
                         <option value="Permis de conduire">Permis de conduire</option>
-                        <option value="Carte de séjour ou de résident">Carte de séjour ou de résident</option>
+                        <option value="Carte de séjour ou de résident">
+                            Carte de séjour ou de résident
+                        </option>
                     </Select>
 
                     {/* Situation familiale */}
-                    <Select
+                    <Text fontWeight="bold">Situation familiale</Text>
+                    <RadioGroup
                         name="familySituation"
-                        placeholder="Situation familiale"
                         value={formData.familySituation}
-                        onChange={handleInputChange}
+                        onChange={(value) => handleRadioChange('familySituation', value)}
                     >
-                        <option value="Célibataire">Célibataire</option>
-                        <option value="Veuf(ve)">Veuf(ve)</option>
-                        <option value="Divorcé(e)">Divorcé(e)</option>
-                        <option value="Union libre">Union libre</option>
-                        <option value="Pacsé(e)">Pacsé(e)</option>
-                        <option value="Marié(e)">Marié(e)</option>
-                    </Select>
+                        <Stack direction="column">
+                            <Radio value="Célibataire">Célibataire</Radio>
+                            <Radio value="Veuf(ve)">Veuf(ve)</Radio>
+                            <Radio value="Divorcé(e)">Divorcé(e)</Radio>
+                            <Radio value="Union libre">Union libre</Radio>
+                            <Radio value="Pacsé(e)">Pacsé(e)</Radio>
+                            <Radio value="Marié(e)">Marié(e) sous le régime de la :</Radio>
+                        </Stack>
+                    </RadioGroup>
 
-                    {/* Protection Status */}
-                    <Select
-                        name="protectionStatus"
-                        placeholder="Régime de protection"
-                        value={formData.protectionStatus}
-                        onChange={handleInputChange}
-                    >
-                        <option value="Sauvegarde de justice">Sauvegarde de justice</option>
-                        <option value="Curatelle renforcée">Curatelle renforcée</option>
-                        <option value="Curatelle simple">Curatelle simple</option>
-                        <option value="Habilitation familiale">Habilitation familiale</option>
-                        <option value="Mandat de protection future">Mandat de protection future</option>
-                    </Select>
+                    {/* Régime matrimonial pour les mariés */}
+                    {formData.familySituation === 'Marié(e)' && (
+                        <VStack align="start" spacing={2}>
+                            <RadioGroup
+                                name="propertyRegime"
+                                value={formData.propertyRegime}
+                                onChange={(value) => handleRadioChange('propertyRegime', value)}
+                            >
+                                <Stack direction="column">
+                                    <Radio value="Communauté légale réduite aux acquêts">
+                                        Communauté légale réduite aux acquêts
+                                    </Radio>
+                                    <Radio value="Communauté universelle">Communauté universelle</Radio>
+                                    <Radio value="Séparation de biens">Séparation de biens</Radio>
+                                    <Radio value="Participation aux acquêts">Participation aux acquêts</Radio>
+                                    <Radio value="Communauté de meubles et acquêts">
+                                        Communauté de meubles et acquêts
+                                    </Radio>
+                                    <Radio value="Autre">Autre, préciser</Radio>
+                                </Stack>
+                            </RadioGroup>
+                            {formData.propertyRegime === 'Autre' && (
+                                <Input
+                                    name="otherPropertyRegime"
+                                    placeholder="Précisez le régime matrimonial"
+                                    value={formData.otherPropertyRegime}
+                                    onChange={handleInputChange}
+                                />
+                            )}
+                        </VStack>
+                    )}
 
-                    {/* Minor Status */}
-                    <Select
-                        name="minorStatus"
-                        placeholder="Mineur"
-                        value={formData.minorStatus}
-                        onChange={handleInputChange}
-                    >
-                        <option value="Emancipé">Emancipé</option>
-                        <option value="Sous tutelle">Sous tutelle</option>
-                        <option value="Sous administration légale">Sous administration légale</option>
-                    </Select>
+                    {/* Régime de protection */}
+                    <FormControl display="flex" alignItems="center" mt={4}>
+                        <FormLabel htmlFor="hasProtectionRegime" mb="0">
+                            Régime de protection
+                        </FormLabel>
+                        <Switch
+                            id="hasProtectionRegime"
+                            name="hasProtectionRegime"
+                            isChecked={formData.hasProtectionRegime}
+                            onChange={handleSwitchChange}
+                        />
+                    </FormControl>
+
+                    {/* Afficher les options si le régime de protection est activé */}
+                    {formData.hasProtectionRegime && (
+                        <>
+                            {/* Majeur protégé sous */}
+                            <Text>Majeur protégé sous :</Text>
+                            <RadioGroup
+                                name="protectionStatus"
+                                value={formData.protectionStatus}
+                                onChange={(value) => handleRadioChange('protectionStatus', value)}
+                            >
+                                <Stack direction="column">
+                                    <Radio value="Curatelle simple">Curatelle simple</Radio>
+                                    <Radio value="Sauvegarde de justice">Sauvegarde de justice</Radio>
+                                    <Radio value="Curatelle renforcée">Curatelle renforcée</Radio>
+                                    <Radio value="Habilitation familiale">Habilitation familiale</Radio>
+                                    <Radio value="Tutelle">Tutelle</Radio>
+                                    <Radio value="Mandat de protection future">
+                                        Mandat de protection future
+                                    </Radio>
+                                </Stack>
+                            </RadioGroup>
+
+                            {/* Mineur */}
+                            <Text>Mineur :</Text>
+                            <RadioGroup
+                                name="minorStatus"
+                                value={formData.minorStatus}
+                                onChange={(value) => handleRadioChange('minorStatus', value)}
+                            >
+                                <Stack direction="column">
+                                    <Radio value="Émancipé">Émancipé</Radio>
+                                    <Radio value="Sous administration légale">
+                                        Sous administration légale
+                                    </Radio>
+                                    <Radio value="Sous tutelle">Sous tutelle</Radio>
+                                </Stack>
+                            </RadioGroup>
+                        </>
+                    )}
 
                     {/* Bouton de sauvegarde */}
-                    <Button
-                        colorScheme="green"
-                        size="lg"
-                        onClick={handleSave}
-                        mt={4}
-                    >
+                    <Button colorScheme="green" size="lg" onClick={handleSave} mt={4}>
                         Enregistrer
                     </Button>
                 </VStack>
