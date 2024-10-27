@@ -46,14 +46,23 @@ const fieldStepMapping = {
     nationality: 45,
     taxResidence: 46,
     taxResidenceAddress: 47,
-    phone: 26, // Téléphone est en step26
-    email: 25, // Email est en step25
+    phone: 26,
+    email: 25,
     presentedDocument: 50,
     familySituation: 51,
     protectionStatus: 52,
     minorStatus: 53,
-    contractNumber: 54, // Nouveau champ pour le numéro de contrat client existant
+    contractNumber: 54,
 };
+
+interface AddressFeature {
+    properties: {
+        label: string;
+        postcode: string;
+        city: string;
+        name: string;
+    };
+}
 
 const SubscriberInfoForm: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -82,9 +91,10 @@ const SubscriberInfoForm: React.FC = () => {
         minorStatus: '',
         contractNumber: '',
     });
+
     const [isTaxResidenceFrance, setIsTaxResidenceFrance] = useState(true);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
-    const [suggestions, setSuggestions] = useState<string[]>([]); // Pour stocker les suggestions d'adresse
+    const [suggestions, setSuggestions] = useState<AddressFeature[]>([]);
 
     const { updateResponse, getResponse } = useUuid();
 
@@ -134,8 +144,7 @@ const SubscriberInfoForm: React.FC = () => {
                     `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(value)}&limit=5`
                 );
                 const data = await response.json();
-                const addresses = data.features.map((feature: any) => feature.properties.label);
-                setSuggestions(addresses);
+                setSuggestions(data.features);
             } catch (error) {
                 console.error("Erreur lors de la récupération de l'adresse:", error);
                 setSuggestions([]);
@@ -145,8 +154,14 @@ const SubscriberInfoForm: React.FC = () => {
         }
     };
 
-    const handleSuggestionClick = (address: string) => {
-        setFormData((prev) => ({ ...prev, address }));
+    const handleSuggestionClick = (feature: AddressFeature) => {
+        setFormData((prev) => ({
+            ...prev,
+            address: feature.properties.label,
+            postalCode: feature.properties.postcode,
+            city: feature.properties.city,
+            country: 'France'
+        }));
         setSuggestions([]);
     };
 
@@ -154,6 +169,7 @@ const SubscriberInfoForm: React.FC = () => {
         for (const [field, step] of Object.entries(fieldStepMapping)) {
             await updateResponse(step, formData[field as keyof typeof formData]);
         }
+        await updateResponse(6, isTaxResidenceFrance ? 'oui' : formData.taxResidence);
         alert('Information saved successfully');
     };
 
@@ -170,14 +186,19 @@ const SubscriberInfoForm: React.FC = () => {
                         <Checkbox
                             isChecked={formData.clientType === 'Nouveau client'}
                             onChange={() => setFormData((prev) => ({
-                                ...prev, clientType: 'Nouveau client', contractNumber: ''
+                                ...prev,
+                                clientType: 'Nouveau client',
+                                contractNumber: ''
                             }))}
                         >
                             Nouveau client
                         </Checkbox>
                         <Checkbox
                             isChecked={formData.clientType === 'Client existant'}
-                            onChange={() => setFormData((prev) => ({ ...prev, clientType: 'Client existant' }))}
+                            onChange={() => setFormData((prev) => ({
+                                ...prev,
+                                clientType: 'Client existant'
+                            }))}
                         >
                             Si Client existant N° contrat
                         </Checkbox>
@@ -209,10 +230,27 @@ const SubscriberInfoForm: React.FC = () => {
                         </Checkbox>
                     </HStack>
 
-                    {/* Name and Address Information */}
-                    <Input name="lastName" placeholder="Nom" value={formData.lastName} onChange={handleInputChange} />
-                    <Input name="firstName" placeholder="Prénom" value={formData.firstName} onChange={handleInputChange} />
-                    <Input name="birthLastName" placeholder="Nom de naissance" value={formData.birthLastName} onChange={handleInputChange} />
+                    {/* Informations personnelles */}
+                    <Input 
+                        name="lastName" 
+                        placeholder="Nom" 
+                        value={formData.lastName} 
+                        onChange={handleInputChange} 
+                    />
+                    <Input 
+                        name="firstName" 
+                        placeholder="Prénom" 
+                        value={formData.firstName} 
+                        onChange={handleInputChange} 
+                    />
+                    <Input 
+                        name="birthLastName" 
+                        placeholder="Nom de naissance" 
+                        value={formData.birthLastName} 
+                        onChange={handleInputChange} 
+                    />
+
+                    {/* Adresse avec autocomplétion */}
                     <Input
                         name="address"
                         placeholder="Adresse postale"
@@ -220,9 +258,18 @@ const SubscriberInfoForm: React.FC = () => {
                         onChange={handleAddressChange}
                     />
 
-                    {/* Dropdown des suggestions */}
+                    {/* Liste des suggestions d'adresse */}
                     {suggestions.length > 0 && (
-                        <List bg="white" border="1px solid #e2e8f0" borderRadius="md" mt={1} spacing={1}>
+                        <List 
+                            bg="white" 
+                            border="1px solid" 
+                            borderColor="gray.200" 
+                            borderRadius="md" 
+                            mt={1} 
+                            position="relative" 
+                            zIndex="dropdown"
+                            boxShadow="md"
+                        >
                             {suggestions.map((suggestion, index) => (
                                 <ListItem
                                     key={index}
@@ -231,29 +278,76 @@ const SubscriberInfoForm: React.FC = () => {
                                     _hover={{ backgroundColor: 'gray.100' }}
                                     onClick={() => handleSuggestionClick(suggestion)}
                                 >
-                                    {suggestion}
+                                    {suggestion.properties.label}
                                 </ListItem>
                             ))}
                         </List>
                     )}
 
-                    {/* Autres champs */}
-                    <Input name="postalCode" placeholder="Code postal" value={formData.postalCode} onChange={handleInputChange} />
-                    <Input name="city" placeholder="Ville" value={formData.city} onChange={handleInputChange} />
-                    <Input name="country" placeholder="Pays" value={formData.country} onChange={handleInputChange} />
+                    {/* Champs d'adresse auto-complétés */}
+                    <Input 
+                        name="postalCode" 
+                        placeholder="Code postal" 
+                        value={formData.postalCode} 
+                        onChange={handleInputChange}
+                        isReadOnly={isTaxResidenceFrance}
+                        bg={isTaxResidenceFrance ? "gray.50" : "white"}
+                    />
+                    <Input 
+                        name="city" 
+                        placeholder="Ville" 
+                        value={formData.city} 
+                        onChange={handleInputChange}
+                        isReadOnly={isTaxResidenceFrance}
+                        bg={isTaxResidenceFrance ? "gray.50" : "white"}
+                    />
+                    <Input 
+                        name="country" 
+                        placeholder="Pays" 
+                        value={formData.country} 
+                        onChange={handleInputChange}
+                        isReadOnly={isTaxResidenceFrance}
+                        bg={isTaxResidenceFrance ? "gray.50" : "white"}
+                    />
 
-                    {/* Birth Information */}
-                    <Input name="birthDate" placeholder="Date de naissance" type="date" value={formData.birthDate} onChange={handleInputChange} />
+                    {/* Informations de naissance */}
+                    <Input 
+                        name="birthDate" 
+                        placeholder="Date de naissance" 
+                        type="date" 
+                        value={formData.birthDate} 
+                        onChange={handleInputChange} 
+                    />
                     <HStack spacing={4}>
-                        <Input name="birthPostalCode" placeholder="Code postal de naissance" value={formData.birthPostalCode} onChange={handleInputChange} />
-                        <Input name="birthCity" placeholder="Ville de naissance" value={formData.birthCity} onChange={handleInputChange} />
+                        <Input 
+                            name="birthPostalCode" 
+                            placeholder="Code postal de naissance" 
+                            value={formData.birthPostalCode} 
+                            onChange={handleInputChange} 
+                        />
+                        <Input 
+                            name="birthCity" 
+                            placeholder="Ville de naissance" 
+                            value={formData.birthCity} 
+                            onChange={handleInputChange} 
+                        />
                     </HStack>
-                    <Input name="birthCountry" placeholder="Pays de naissance" value={formData.birthCountry} onChange={handleInputChange} />
+                    <Input 
+                        name="birthCountry" 
+                        placeholder="Pays de naissance" 
+                        value={formData.birthCountry} 
+                        onChange={handleInputChange} 
+                    />
 
-                    {/* Identification Numbers */}
-                    <Input name="nir" placeholder="NIR ou Numéro de sécurité sociale" value={formData.nir} onChange={handleInputChange} />
+                    {/* NIR */}
+                    <Input 
+                        name="nir" 
+                        placeholder="NIR ou Numéro de sécurité sociale" 
+                        value={formData.nir} 
+                        onChange={handleInputChange} 
+                    />
 
-                    {/* Nationality and Tax Residence */}
+                    {/* Résidence fiscale */}
                     <HStack spacing={4}>
                         <Checkbox
                             isChecked={isTaxResidenceFrance}
@@ -274,6 +368,7 @@ const SubscriberInfoForm: React.FC = () => {
                             Autre résidence fiscale
                         </Checkbox>
                     </HStack>
+
                     {!isTaxResidenceFrance && (
                         <Input
                             name="taxResidence"
@@ -283,20 +378,41 @@ const SubscriberInfoForm: React.FC = () => {
                         />
                     )}
 
-                    {/* Contact Information */}
-                    <Input name="phone" placeholder="Téléphone" value={formData.phone} onChange={handleInputChange} />
-                    <Input name="email" placeholder="E-mail" type="email" value={formData.email} onChange={handleInputChange} />
+                    {/* Contact */}
+                    <Input 
+                        name="phone" 
+                        placeholder="Téléphone" 
+                        value={formData.phone} 
+                        onChange={handleInputChange} 
+                    />
+                    <Input 
+                        name="email" 
+                        placeholder="E-mail" 
+                        type="email" 
+                        value={formData.email} 
+                        onChange={handleInputChange} 
+                    />
 
-                    {/* Document Presented */}
-                    <Select name="presentedDocument" placeholder="Document présenté" value={formData.presentedDocument} onChange={handleInputChange}>
+                    {/* Document d'identité */}
+                    <Select 
+                        name="presentedDocument" 
+                        placeholder="Document présenté" 
+                        value={formData.presentedDocument} 
+                        onChange={handleInputChange}
+                    >
                         <option value="CNI">CNI</option>
                         <option value="Passeport">Passeport</option>
                         <option value="Permis de conduire">Permis de conduire</option>
                         <option value="Carte de séjour ou de résident">Carte de séjour ou de résident</option>
                     </Select>
 
-                    {/* Family Situation */}
-                    <Select name="familySituation" placeholder="Situation familiale" value={formData.familySituation} onChange={handleInputChange}>
+                    {/* Situation familiale */}
+                    <Select 
+                        name="familySituation" 
+                        placeholder="Situation familiale" 
+                        value={formData.familySituation} 
+                        onChange={handleInputChange}
+                    >
                         <option value="Célibataire">Célibataire</option>
                         <option value="Veuf(ve)">Veuf(ve)</option>
                         <option value="Divorcé(e)">Divorcé(e)</option>
@@ -306,7 +422,12 @@ const SubscriberInfoForm: React.FC = () => {
                     </Select>
 
                     {/* Protection Status */}
-                    <Select name="protectionStatus" placeholder="Régime de protection" value={formData.protectionStatus} onChange={handleInputChange}>
+                    <Select 
+                        name="protectionStatus" 
+                        placeholder="Régime de protection" 
+                        value={formData.protectionStatus} 
+                        onChange={handleInputChange}
+                    >
                         <option value="Sauvegarde de justice">Sauvegarde de justice</option>
                         <option value="Curatelle renforcée">Curatelle renforcée</option>
                         <option value="Curatelle simple">Curatelle simple</option>
@@ -315,13 +436,24 @@ const SubscriberInfoForm: React.FC = () => {
                     </Select>
 
                     {/* Minor Status */}
-                    <Select name="minorStatus" placeholder="Mineur" value={formData.minorStatus} onChange={handleInputChange}>
+                    <Select 
+                        name="minorStatus" 
+                        placeholder="Mineur" 
+                        value={formData.minorStatus} 
+                        onChange={handleInputChange}
+                    >
                         <option value="Emancipé">Emancipé</option>
                         <option value="Sous tutelle">Sous tutelle</option>
                         <option value="Sous administration légale">Sous administration légale</option>
                     </Select>
 
-                    <Button colorScheme="green" size="lg" onClick={handleSave}>
+                    {/* Bouton de sauvegarde */}
+                    <Button 
+                        colorScheme="green" 
+                        size="lg" 
+                        onClick={handleSave}
+                        mt={4}
+                    >
                         Enregistrer
                     </Button>
                 </VStack>
