@@ -53,7 +53,7 @@ const RevenusAnnuels: React.FC = () => {
     // Récupération de la sélection initiale de la base de données
     useEffect(() => {
         const fetchResponse = async () => {
-            const response = await getResponse(5);
+            const response = await getResponse(21);
             if (response !== null) {
                 setSelectedOption(response);
             }
@@ -68,7 +68,7 @@ const RevenusAnnuels: React.FC = () => {
 
     const handleNext = async () => {
         if (selectedOption !== undefined) {
-            await updateResponse(5, selectedOption);
+            await updateResponse(21, selectedOption);
             navigate('/residence-principale');
         } else {
             setIsAlertOpen(true);
@@ -77,7 +77,7 @@ const RevenusAnnuels: React.FC = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <StepperWithSubStepCounter currentStep={1} currentSubStep={5} totalSubSteps={24} title="Quels sont les revenus annuels bruts de votre foyer ?" />
+            <StepperWithSubStepCounter currentStep={1} currentSubStep={21} totalSubSteps={24} title="Quels sont les revenus annuels bruts de votre foyer ?" />
             <Box p={5} maxW="1000px" mx="auto">
                 <Text fontSize="xl" fontWeight="bold" mb={5} textAlign="center">
                     Quels sont les revenus annuels bruts de votre foyer ?
