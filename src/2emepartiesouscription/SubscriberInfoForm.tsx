@@ -407,10 +407,12 @@ const SubscriberInfoForm: React.FC = () => {
   useEffect(() => {
     const fetchFileUrls = async () => {
       if (formData.identityDocumentFront && typeof formData.identityDocumentFront === 'string') {
+        // eslint-disable-next-line
         const signedUrl = await getSignedUrl(formData.identityDocumentFront);
         // Stockez le signedUrl dans l'état ou affichez-le directement
       }
       if (formData.identityDocumentBack && typeof formData.identityDocumentBack === 'string') {
+        // eslint-disable-next-line
         const signedUrl = await getSignedUrl(formData.identityDocumentBack);
         // Stockez le signedUrl dans l'état ou affichez-le directement
       }

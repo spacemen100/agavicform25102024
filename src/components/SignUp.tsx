@@ -23,6 +23,7 @@ import { useUuid } from '../context/UuidContext';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 const SignUp: React.FC = () => {
+  // eslint-disable-next-line
   const { uuid, getResponse } = useUuid();
   const [emailLocal, setEmailLocal] = useState<string>('');
   const [password, setPassword] = useState('');
