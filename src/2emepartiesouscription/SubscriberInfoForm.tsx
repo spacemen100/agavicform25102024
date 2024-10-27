@@ -300,18 +300,30 @@ const SubscriberInfoForm: React.FC = () => {
                                 value={formData.city}
                                 onChange={handleInputChange}
                             />
+                            <Select
+                                name="country"
+                                placeholder="Pays"
+                                value={formData.country}
+                                onChange={handleInputChange}
+                            >
+                                {countries.map((country, index) => (
+                                    <option key={index} value={country.name}>
+                                        {country.name}
+                                    </option>
+                                ))}
+                            </Select>
                         </>
                     )}
 
-                    {/* Le pays reste toujours visible mais en lecture seule pour la France */}
-                    <Input
-                        name="country"
-                        placeholder="Pays"
-                        value={formData.country}
-                        onChange={handleInputChange}
-                        isReadOnly={isTaxResidenceFrance}
-                        bg={isTaxResidenceFrance ? "gray.50" : "white"}
-                    />
+                    {/* Le pays en lecture seule pour la France */}
+                    {isTaxResidenceFrance && (
+                        <Input
+                            name="country"
+                            value="France"
+                            isReadOnly
+                            bg="gray.50"
+                        />
+                    )}
 
                     {/* Informations de naissance */}
                     <Input
@@ -365,7 +377,7 @@ const SubscriberInfoForm: React.FC = () => {
                                 setFormData((prev) => ({
                                     ...prev,
                                     taxResidence: 'France',
-                                    country: 'France'  // On s'assure que le pays est mis à jour
+                                    country: 'France'
                                 }));
                             }}
                         >
@@ -378,7 +390,7 @@ const SubscriberInfoForm: React.FC = () => {
                                 setFormData((prev) => ({
                                     ...prev,
                                     taxResidence: '',
-                                    country: ''  // On réinitialise le pays
+                                    country: ''
                                 }));
                             }}
                         >
@@ -387,12 +399,18 @@ const SubscriberInfoForm: React.FC = () => {
                     </HStack>
 
                     {!isTaxResidenceFrance && (
-                        <Input
+                        <Select
                             name="taxResidence"
-                            placeholder="Précisez le pays de résidence fiscale"
+                            placeholder="Pays de résidence fiscale"
                             value={formData.taxResidence}
                             onChange={handleInputChange}
-                        />
+                        >
+                            {countries.map((country, index) => (
+                                <option key={index} value={country.name}>
+                                    {country.name}
+                                </option>
+                            ))}
+                        </Select>
                     )}
 
                     {/* Contact */}
