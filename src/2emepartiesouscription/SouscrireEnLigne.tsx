@@ -73,9 +73,9 @@ const SouscrireEnLigne: React.FC = () => {
             
             // Rediriger en fonction du produit choisi
             if (selectedProduct === 'e-vie') {
-                navigate('/souscription-e-vie-generali');
+                navigate('/subscriber-info');
             } else if (selectedProduct === 'e-per') {
-                navigate('/souscription-e-per-generali');
+                navigate('/subscriber-info');
             }
         } else {
             setIsAlertOpen(true);
