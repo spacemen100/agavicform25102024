@@ -124,7 +124,7 @@ const ValeurPatrimoineImmobilierNet: React.FC = () => {
                         <AlertIcon />
                         <Box flex="1">
                             <AlertTitle>
-                                Par exemple, si vous êtes propriétaire d'un bien immobilier de 300 000 € et qu'il vous reste 200 000 € à rembourser sur votre crédit, il vous faut renseigner la différence entre les deux, soit 100 000 €.
+                                Par exemple, si vous êtes propriétaire d'un bien immobilier de 400 000 € et qu'il vous reste 100 000 € à rembourser sur votre crédit, il vous faut renseigner la différence entre les deux, soit 300 000 €.
                             </AlertTitle>
                         </Box>
                     </Alert>
