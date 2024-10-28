@@ -166,15 +166,15 @@ const ProfileSelection: React.FC = () => {
 };
 
 const ProfileOption: React.FC<any> = (props) => {
-  const { getInputProps, getCheckboxProps } = useRadio(props);
+  const { getInputProps, getRadioProps } = useRadio(props);
   const input = getInputProps();
-  const checkbox = getCheckboxProps();
+  const radio = getRadioProps();
 
   return (
     <Box as="label" w="100%">
       <input {...input} />
       <Box
-        {...checkbox}
+        {...radio}
         cursor="pointer"
         borderWidth="1px"
         borderRadius="md"
@@ -194,5 +194,6 @@ const ProfileOption: React.FC<any> = (props) => {
     </Box>
   );
 };
+
 
 export default ProfileSelection;
