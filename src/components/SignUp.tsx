@@ -26,7 +26,6 @@ import { useUuid } from '../context/UuidContext';
 import { ViewIcon, ViewOffIcon, InfoIcon, CheckIcon } from '@chakra-ui/icons';
 
 const SignUp = () => {
-    // eslint-disable-next-line
   const { uuid, getResponse } = useUuid();
   const [emailLocal, setEmailLocal] = useState('');
   const [password, setPassword] = useState('');
@@ -47,6 +46,7 @@ const SignUp = () => {
     const fetchStoredEmail = async () => {
       try {
         const storedEmail = await getResponse(25);
+        console.log('Email récupéré depuis getResponse:', storedEmail);
         if (storedEmail) {
           setEmailLocal(storedEmail);
         }
@@ -78,6 +78,7 @@ const SignUp = () => {
     setEmailLocal(email);
     const emailError = validateEmail(email);
     setErrors(prev => ({ ...prev, email: emailError, general: undefined }));
+    console.log('Email changé:', email, 'Erreur email:', emailError);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,6 +90,7 @@ const SignUp = () => {
       password: passwordError,
       confirmPassword: pass !== confirmPassword ? 'Les mots de passe ne correspondent pas' : undefined,
     }));
+    console.log('Mot de passe changé:', pass, 'Erreur mot de passe:', passwordError);
   };
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,6 +100,7 @@ const SignUp = () => {
       ...prev,
       confirmPassword: password !== confirmPass ? 'Les mots de passe ne correspondent pas' : undefined,
     }));
+    console.log('Confirmation mot de passe changée:', confirmPass);
   };
 
   const handleSignUp = async () => {
@@ -112,11 +115,13 @@ const SignUp = () => {
           password: passwordError,
           confirmPassword: confirmError,
         });
+        console.log('Erreur de validation:', { emailError, passwordError, confirmError });
         return;
       }
 
       setIsLoading(true);
-      
+      console.log('Tentative d\'inscription avec email:', emailLocal, 'password:', password);
+
       const { data, error } = await supabase.auth.signUp({
         email: emailLocal,
         password,
@@ -125,12 +130,10 @@ const SignUp = () => {
         },
       });
 
-      if (error) {
-        if (error.message.includes('not authorized')) {
-          throw new Error('Cette adresse email n\'est pas autorisée. Veuillez utiliser une adresse email valide.');
-        }
-        throw error;
-      }
+      
+    
+
+      console.log('Données de Supabase reçues après inscription:', data);
 
       if (data.user) {
         toast({
@@ -144,7 +147,8 @@ const SignUp = () => {
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue lors de l\'inscription';
-      
+      console.error('Erreur lors de l\'inscription:', errorMessage);
+
       toast({
         title: 'Erreur lors de l\'inscription',
         description: errorMessage,
@@ -152,7 +156,7 @@ const SignUp = () => {
         duration: 5000,
         isClosable: true,
       });
-      
+
       setErrors(prev => ({
         ...prev,
         general: errorMessage,
