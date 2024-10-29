@@ -17,20 +17,29 @@ import {
   InputGroup,
   InputRightElement,
   FormErrorMessage,
+  List,
+  ListItem,
+  ListIcon,
 } from '@chakra-ui/react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useUuid } from '../context/UuidContext';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { ViewIcon, ViewOffIcon, InfoIcon, CheckIcon } from '@chakra-ui/icons';
 
-const SignUp: React.FC = () => {
-  // eslint-disable-next-line
+const SignUp = () => {
+    // eslint-disable-next-line
   const { uuid, getResponse } = useUuid();
-  const [emailLocal, setEmailLocal] = useState<string>('');
+  const [emailLocal, setEmailLocal] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<{ confirmPassword?: string; general?: string }>({});
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+    general?: string;
+  }>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [showRequirements, setShowRequirements] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -42,87 +51,84 @@ const SignUp: React.FC = () => {
           setEmailLocal(storedEmail);
         }
       } catch (error) {
-        console.error('Error fetching stored email:', error);
+        console.error('Erreur lors de la récupération de l\'email stocké:', error);
       }
     };
     fetchStoredEmail();
   }, [getResponse]);
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) return 'L\'email est requis';
+    if (!emailRegex.test(email)) return 'Format d\'email invalide';
+    return '';
+  };
+
+  const validatePassword = (pass: string) => {
+    if (!pass) return 'Le mot de passe est requis';
+    if (pass.length < 8) return 'Le mot de passe doit contenir au moins 8 caractères';
+    if (!/[A-Z]/.test(pass)) return 'Le mot de passe doit contenir au moins une majuscule';
+    if (!/[a-z]/.test(pass)) return 'Le mot de passe doit contenir au moins une minuscule';
+    if (!/[0-9]/.test(pass)) return 'Le mot de passe doit contenir au moins un chiffre';
+    return '';
+  };
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmailLocal(e.target.value);
-    setErrors(prev => ({ ...prev, general: undefined }));
+    const email = e.target.value;
+    setEmailLocal(email);
+    const emailError = validateEmail(email);
+    setErrors(prev => ({ ...prev, email: emailError, general: undefined }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-    if (confirmPassword && e.target.value !== confirmPassword) {
-      setErrors(prev => ({
-        ...prev,
-        confirmPassword: 'Les mots de passe ne correspondent pas.',
-      }));
-    } else {
-      setErrors(prev => ({ ...prev, confirmPassword: undefined }));
-    }
+    const pass = e.target.value;
+    setPassword(pass);
+    const passwordError = validatePassword(pass);
+    setErrors(prev => ({
+      ...prev,
+      password: passwordError,
+      confirmPassword: pass !== confirmPassword ? 'Les mots de passe ne correspondent pas' : undefined,
+    }));
   };
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmPassword(e.target.value);
-    if (password !== e.target.value) {
-      setErrors(prev => ({
-        ...prev,
-        confirmPassword: 'Les mots de passe ne correspondent pas.',
-      }));
-    } else {
-      setErrors(prev => ({ ...prev, confirmPassword: undefined }));
-    }
-  };
-
-  const validateInputs = () => {
-    const newErrors: { confirmPassword?: string; general?: string } = {};
-    
-    if (!emailLocal) {
-      newErrors.general = 'L\'email est requis';
-      return false;
-    }
-    
-    if (!password) {
-      newErrors.general = 'Le mot de passe est requis';
-      return false;
-    }
-    
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
-      return false;
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const confirmPass = e.target.value;
+    setConfirmPassword(confirmPass);
+    setErrors(prev => ({
+      ...prev,
+      confirmPassword: password !== confirmPass ? 'Les mots de passe ne correspondent pas' : undefined,
+    }));
   };
 
   const handleSignUp = async () => {
     try {
-      if (!validateInputs()) {
+      const emailError = validateEmail(emailLocal);
+      const passwordError = validatePassword(password);
+      const confirmError = password !== confirmPassword ? 'Les mots de passe ne correspondent pas' : '';
+
+      if (emailError || passwordError || confirmError) {
+        setErrors({
+          email: emailError,
+          password: passwordError,
+          confirmPassword: confirmError,
+        });
         return;
       }
 
       setIsLoading(true);
-      setErrors({});
-
-      // Test connection to Supabase
-      const { error: pingError } = await supabase.auth.getSession();
-      if (pingError) {
-        throw new Error('Unable to connect to authentication service');
-      }
-
+      
       const { data, error } = await supabase.auth.signUp({
         email: emailLocal,
         password,
         options: {
-          emailRedirectTo: window.location.origin + '/auth/callback',
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
       if (error) {
+        if (error.message.includes('not authorized')) {
+          throw new Error('Cette adresse email n\'est pas autorisée. Veuillez utiliser une adresse email valide.');
+        }
         throw error;
       }
 
@@ -137,7 +143,6 @@ const SignUp: React.FC = () => {
         navigate('/signin');
       }
     } catch (error) {
-      console.error('SignUp error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue lors de l\'inscription';
       
       toast({
@@ -182,7 +187,7 @@ const SignUp: React.FC = () => {
           <CloseButton position="absolute" right="8px" top="8px" />
         </Alert>
 
-        <FormControl id="email" isRequired>
+        <FormControl isRequired isInvalid={!!errors.email}>
           <FormLabel>E-mail</FormLabel>
           <Input
             type="email"
@@ -191,10 +196,21 @@ const SignUp: React.FC = () => {
             onChange={handleEmailChange}
             isDisabled={isLoading}
           />
+          {errors.email && <FormErrorMessage>{errors.email}</FormErrorMessage>}
         </FormControl>
 
-        <FormControl id="password" isRequired>
-          <FormLabel>Mot de passe</FormLabel>
+        <FormControl isRequired isInvalid={!!errors.password}>
+          <FormLabel>
+            Mot de passe
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setShowRequirements(!showRequirements)}
+              ml={2}
+            >
+              <InfoIcon />
+            </Button>
+          </FormLabel>
           <InputGroup>
             <Input
               type={showPassword ? 'text' : 'password'}
@@ -202,6 +218,7 @@ const SignUp: React.FC = () => {
               value={password}
               onChange={handlePasswordChange}
               isDisabled={isLoading}
+              onFocus={() => setShowRequirements(true)}
             />
             <InputRightElement h="full">
               <Button
@@ -213,9 +230,32 @@ const SignUp: React.FC = () => {
               </Button>
             </InputRightElement>
           </InputGroup>
+          {errors.password && <FormErrorMessage>{errors.password}</FormErrorMessage>}
+          {showRequirements && (
+            <Box mt={2} p={3} bg="gray.50" borderRadius="md">
+              <List spacing={2} fontSize="sm">
+                <ListItem>
+                  <ListIcon as={password.length >= 8 ? CheckIcon : InfoIcon} color={password.length >= 8 ? 'green.500' : 'gray.500'} />
+                  Au moins 8 caractères
+                </ListItem>
+                <ListItem>
+                  <ListIcon as={/[A-Z]/.test(password) ? CheckIcon : InfoIcon} color={/[A-Z]/.test(password) ? 'green.500' : 'gray.500'} />
+                  Au moins une majuscule
+                </ListItem>
+                <ListItem>
+                  <ListIcon as={/[a-z]/.test(password) ? CheckIcon : InfoIcon} color={/[a-z]/.test(password) ? 'green.500' : 'gray.500'} />
+                  Au moins une minuscule
+                </ListItem>
+                <ListItem>
+                  <ListIcon as={/[0-9]/.test(password) ? CheckIcon : InfoIcon} color={/[0-9]/.test(password) ? 'green.500' : 'gray.500'} />
+                  Au moins un chiffre
+                </ListItem>
+              </List>
+            </Box>
+          )}
         </FormControl>
 
-        <FormControl id="confirm-password" isRequired isInvalid={!!errors.confirmPassword}>
+        <FormControl isRequired isInvalid={!!errors.confirmPassword}>
           <FormLabel>Confirmez le mot de passe</FormLabel>
           <InputGroup>
             <Input
@@ -246,6 +286,7 @@ const SignUp: React.FC = () => {
           width="full"
           isLoading={isLoading}
           loadingText="Inscription en cours..."
+          isDisabled={Object.keys(errors).some(key => !!errors[key as keyof typeof errors])}
         >
           S'inscrire
         </Button>
