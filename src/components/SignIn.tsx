@@ -74,6 +74,7 @@ const SignIn: React.FC = () => {
           console.error('Erreur lors de la liaison de l\'UUID avec l\'utilisateur :', linkError);
         }
 
+        // Afficher un toast de succès
         toast({
           title: 'Connexion réussie',
           description: `Bienvenue ${data.user.email}`,
@@ -81,6 +82,8 @@ const SignIn: React.FC = () => {
           duration: 5000,
           isClosable: true,
         });
+
+        // Rediriger vers la page d'accueil ou une autre page sécurisée
         navigate('/');
       }
     } catch (err) {
