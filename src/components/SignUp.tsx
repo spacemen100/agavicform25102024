@@ -26,6 +26,7 @@ import { useUuid } from '../context/UuidContext';
 import { ViewIcon, ViewOffIcon, InfoIcon, CheckIcon } from '@chakra-ui/icons';
 
 const SignUp = () => {
+  // eslint-disable-next-line
   const { uuid, getResponse } = useUuid();
   const [emailLocal, setEmailLocal] = useState('');
   const [password, setPassword] = useState('');
@@ -121,7 +122,7 @@ const SignUp = () => {
 
       setIsLoading(true);
       console.log('Tentative d\'inscription avec email:', emailLocal, 'password:', password);
-
+// eslint-disable-next-line
       const { data, error } = await supabase.auth.signUp({
         email: emailLocal,
         password,
