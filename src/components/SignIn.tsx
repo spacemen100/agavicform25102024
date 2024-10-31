@@ -51,7 +51,7 @@ const SignIn: React.FC = () => {
         email: emailLocal,
         password,
       });
-
+  
       if (error) {
         toast({
           title: 'Erreur lors de la connexion',
@@ -62,19 +62,19 @@ const SignIn: React.FC = () => {
         });
         return;
       }
-
+  
       if (data.user) {
-        // Lier l'UUID à l'utilisateur authentifié si nécessaire
+        // Link the UUID to the authenticated user if needed
         const { error: linkError } = await supabase
           .from('form_responses')
           .update({ user_id: data.user.id })
           .eq('id', uuid);
-
+  
         if (linkError) {
-          console.error('Erreur lors de la liaison de l\'UUID avec l\'utilisateur :', linkError);
+          console.error("Erreur lors de la liaison de l'UUID avec l'utilisateur :", linkError);
         }
-
-        // Afficher un toast de succès
+  
+        // Show a success toast
         toast({
           title: 'Connexion réussie',
           description: `Bienvenue ${data.user.email}`,
@@ -82,9 +82,9 @@ const SignIn: React.FC = () => {
           duration: 5000,
           isClosable: true,
         });
-
-        // Rediriger vers la page d'accueil ou une autre page sécurisée
-        navigate('/');
+  
+        // Redirect to /subscriber-info page after successful login
+        navigate('/subscriber-info');
       }
     } catch (err) {
       console.error('Erreur inattendue lors de la connexion :', err);
@@ -97,6 +97,7 @@ const SignIn: React.FC = () => {
       });
     }
   };
+  
 
   return (
     <Box maxW="md" mx="auto" mt={10}>

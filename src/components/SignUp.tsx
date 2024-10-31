@@ -109,7 +109,7 @@ const SignUp = () => {
       const emailError = validateEmail(emailLocal);
       const passwordError = validatePassword(password);
       const confirmError = password !== confirmPassword ? 'Les mots de passe ne correspondent pas' : '';
-
+  
       if (emailError || passwordError || confirmError) {
         setErrors({
           email: emailError,
@@ -119,7 +119,7 @@ const SignUp = () => {
         console.log('Erreur de validation:', { emailError, passwordError, confirmError });
         return;
       }
-
+  
       setIsLoading(true);
       console.log('Tentative d\'inscription avec email:', emailLocal, 'password:', password);
 // eslint-disable-next-line
@@ -130,26 +130,23 @@ const SignUp = () => {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
-
-      
-    
-
+  
       console.log('Données de Supabase reçues après inscription:', data);
-
+  
       if (data.user) {
         toast({
           title: 'Inscription réussie',
-          description: 'Veuillez vérifier votre e-mail pour confirmer votre inscription.',
+          description: 'Merci de vérifier votre e-mail ✉️ pour valider votre adresse.',
           status: 'success',
           duration: 5000,
           isClosable: true,
         });
-        navigate('/signin');
+        navigate('/signin'); // Redirect to sign-in page
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue lors de l\'inscription';
       console.error('Erreur lors de l\'inscription:', errorMessage);
-
+  
       toast({
         title: 'Erreur lors de l\'inscription',
         description: errorMessage,
@@ -157,7 +154,7 @@ const SignUp = () => {
         duration: 5000,
         isClosable: true,
       });
-
+  
       setErrors(prev => ({
         ...prev,
         general: errorMessage,
@@ -166,6 +163,7 @@ const SignUp = () => {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <Box maxW="md" mx="auto" mt={10}>
